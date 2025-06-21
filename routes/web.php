@@ -45,8 +45,13 @@ Route::post('/vehicle/update/{id}', [VehicleController::class, 'update'])->name(
 Route::delete('/vehicle/delete/{id}', [VehicleController::class, 'destroy'])->name('vehicle.destroy');
 
 
-Route::get('/VehicleAssignment', [VehicleController::class, 'VehicleAssignment']);
+Route::get('/VehicleAssignment', [VehicleController::class, 'VehicleAssignment'])->name('list.assignment');
 Route::get('/AddAssignment', [VehicleController::class, 'AddAssignment'])->name('add.assignment');
+Route::post('/assignments/store', [VehicleController::class, 'storeAssignment'])->name('assignments.store');
+// routes/web.php
+Route::get('/get-contact-info/{id}', [ContactController::class, 'getContactInfo']);
+
+
 
 Route::get('/MeterHistory', [VehicleController::class, 'MeterHistory']);
 

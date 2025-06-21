@@ -6,6 +6,7 @@ use App\Models\Type;
 use App\Models\Vendor;
 use App\Models\Vehicle;
 use App\Models\VehicleStatus;
+use App\Models\Assignment;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use function Termwind\render;
@@ -183,14 +184,98 @@ class VehicleController extends Controller
 
     public function VehicleAssignment()
     {
-        return view('vehicle.vehicleassignment');
+        $assignments = Assignment::all();
+        return view('vehicle.vehicleassignment', compact('assignments'));
     }
     public function AddAssignment()
     {
 
         $statuses = VehicleStatus::all();
+        $contacts = ContactForm::all();
+        $vehicles = Vehicle::whereHas('status', function ($q) {
+            $q->where('status_name', 'Inactive');
+        })->get();
 
-        return view('vehicle.addassignment', compact('statuses'));
+        return view('vehicle.addassignment', compact('statuses', 'vehicles', 'contacts'));
+    }
+    public function storeAssignment(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'contact' => 'required|string',
+            'address' => 'required|string',
+            'vin' => 'required|string',
+            'status' => 'required|exists:statuses,id',
+            'start_date' => 'required|date',
+            'start_time' => 'required',
+            'end_date' => 'required|date',
+            'end_time' => 'required',
+        ]);
+
+        $data = $request->only([
+            'name',
+            'contact',
+            'address',
+            'vin',
+            'status',
+            'booking_details',
+            'reference_number',
+            'expected_return',
+            'purpose',
+            'model',
+            'yard',
+            'start_km',
+            'end_km',
+            'start_fuel',
+            'start_fuel_unit',
+            'end_fuel',
+            'end_fuel_unit',
+            'deposit_given',
+            'deposit_final',
+            'rent_given',
+            'rent_final',
+            'gst_given',
+            'gst_final',
+            'km_given',
+            'km_final',
+            'hour_given',
+            'hour_final',
+            'other_given',
+            'other_final',
+            'total_given',
+            'total_final',
+            'driving_license',
+            'document_collected',
+            'document_number',
+            'cash_hand',
+            'cash_account',
+            'total_received',
+            'account_name',
+            'account_number',
+            'ifsc_code',
+            'refund_amount',
+        ]);
+
+        $data['rental_start'] = $request->start_date . ' ' . $request->start_time;
+        $data['rental_end'] = $request->end_date . ' ' . $request->end_time;
+
+        $data['docs'] = $request->has('docs') ? json_encode($request->docs) : null;
+
+        if ($request->hasFile('document_images')) {
+            $paths = [];
+            foreach ($request->file('document_images') as $file) {
+                $paths[] = $file->store('assignments/documents', 'public');
+            }
+            $data['document_images'] = json_encode($paths);
+        }
+
+        Assignment::create($data);
+
+        Vehicle::where('vin', $request->vin)->update([
+            'status_id' => $request->status
+        ]);
+
+        return redirect()->route('list.assignment')->with('success', 'Assignment created and vehicle status updated!');
     }
     public function MeterHistory()
     {

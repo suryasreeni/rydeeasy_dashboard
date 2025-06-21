@@ -433,22 +433,24 @@
                                                     <label for="status_id">Status</label>
                                                     <select name="status_id" id="status_id"
                                                         onchange="updateStatusDot(this)">
-                                                        <option value="" disabled selected>Please select
-                                                        </option>
+                                                        <option value="" disabled selected>Please select</option>
                                                         @foreach($statuses as $status)
                                                             <option value="{{ $status->id }}"
                                                                 data-color="{{ $status->status_color }}">
-
-                                                                <div id="status-dot"
-                                                                    style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-left: 6px; background-color: #ddd; vertical-align: middle;">
-                                                                </div>
                                                                 {{ $status->status_name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    <!-- Just add this dot next to your select -->
 
+
+                                                    <!-- Note: default inactive status -->
+                                                    <small class="form-text text-muted"
+                                                        style="color: #888; display: block; margin-top: 4px;">
+                                                        <strong>Note:</strong> Set all new vehicles as
+                                                        <strong>Inactive</strong> by default.
+                                                    </small>
                                                 </fieldset>
+
 
 
 
@@ -771,7 +773,8 @@
     <script>
         function toggleLoanForm() {
             var loanForm = document.getElementById("loan-form");
-            var selectedValue = document.querySelector('input[name="loan"]:checked').value;
+            var selectedValue = document.querySelector('input[name="purchase_type"]:checked').value;
+
 
             if (selectedValue === "loan") {
                 loanForm.style.display = "block";

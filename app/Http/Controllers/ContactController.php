@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Assignment;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 use App\Models\ContactForm;
@@ -10,7 +12,17 @@ class ContactController extends Controller
 {
     public function Contact()
     {
-        $contacts = ContactForm::all(); // Fetch all contacts from the database
+        $contacts = ContactForm::all()->map(function ($contact) {
+            $latestAssignment = Assignment::where('name', $contact->name)
+                ->orderByDesc(DB::raw("STR_TO_DATE(CONCAT(end_date, ' ', end_time), '%Y-%m-%d %H:%i')"))
+                ->first();
+
+            $contact->assigned_status = $latestAssignment ? 'Assigned' : null;
+            $contact->assigned_vin = $latestAssignment ? $latestAssignment->vin : null;
+
+            return $contact;
+        });
+
         return view('contact.contact', compact('contacts'));
 
     }
@@ -98,6 +110,16 @@ class ContactController extends Controller
     {
         $contact = ContactForm::findOrFail($id);
         return view('contact.profile-modal', compact('contact'));
+    }
+    public function getContactInfo($id)
+    {
+        $contact = ContactForm::findOrFail($id);
+
+        return response()->json([
+            'mobile' => $contact->mobile,
+            'address' => $contact->address1,
+            'license' => $contact->licensenum,
+        ]);
     }
 
 

@@ -143,70 +143,59 @@
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="wg-table table-product-list">
+                                    <div class="wg-table table-assignment-list">
                                         <ul class="table-title">
                                             <li class="body-title">VIN</li>
-                                            <li class="body-title">Name</li>
-                                            <li class="body-title">Year</li>
+                                            <li class="body-title">Customer</li>
+                                            <li class="body-title">Contact</li>
+                                            <li class="body-title">Start</li>
+                                            <li class="body-title">End</li>
                                             <li class="body-title">Model</li>
-                                            <li class="body-title">Type</li>
-                                            <li class="body-title">Group</li>
-                                            <li class="body-title">Status</li>
+                                            <li class="body-title">Yard</li>
+                                            <li class="body-title">Rent (₹)</li>
                                             <li class="body-title">Action</li>
                                         </ul>
 
+                                        @foreach ($assignments as $assignment)
+                                            <ul>
+                                                <li class="product-item">
+                                                    <div class="body-text">{{ $assignment->vin }}</div>
+                                                    <div class="body-text">{{ $assignment->name }}</div>
+                                                    <div class="body-text">{{ $assignment->contact }}</div>
+                                                    <div class="body-text">
+                                                        {{ date('d M Y, h:i A', strtotime($assignment->start_date . ' ' . $assignment->start_time)) }}
+                                                    </div>
+                                                    <div class="body-text">
+                                                        {{ date('d M Y, h:i A', strtotime($assignment->end_date . ' ' . $assignment->end_time)) }}
+                                                    </div>
+                                                    <div class="body-text">{{ $assignment->model }}</div>
+                                                    <div class="body-text">
+                                                        {{ $assignment->yard == 0 ? 'Malappuram' : 'Kochi' }}
+                                                    </div>
+                                                    <div class="body-text">₹{{ number_format($assignment->total_final, 2) }}
+                                                    </div>
+                                                    <div class="body-text d-flex justify-content-center gap-2">
+                                                        <!-- Edit -->
+                                                        <a href="" class="btn btn-icon btn-sm btn-outline-primary"
+                                                            title="Edit">
+                                                            <i class="icon-edit" style="font-size:15px;"></i>
+                                                        </a>
 
-                                        <ul>
-                                            <li class="product-item">
-                                                <div class="body-text" onclick=""
-                                                    style="display: flex; align-items: center; gap: 10px;cursor: pointer;">
-
-                                                    <img src="" alt="Vehicle Image"
-                                                        style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
-                                                    <span></span>
-
-
-
-
-                                                </div>
-                                                <div class="body-text">
-
-
-                                                </div>
-                                                <div class="body-text"></div>
-                                                <div class="body-text"></div>
-                                                <div class="body-text"></div>
-                                                <div class="body-text"></div>
-                                                <div class="body-text">
-                                                    <span
-                                                        style="width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px;"></span>
-
-                                                </div>
-                                                <div class="body-text d-flex justify-content-center gap-2">
-                                                    <!-- Edit -->
-                                                    <a href="#" class="btn btn-icon btn-sm btn-outline-primary"
-                                                        title="Edit" data-bs-toggle="modal" data-bs-target="">
-                                                        <i class="icon-edit" style="font-size:15px;"></i>
-                                                    </a>
-
-
-
-                                                    <!-- Delete -->
-                                                    <form action="" method="POST"
-                                                        onsubmit="return confirm('Are you sure you want to delete this vendor?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                            class="btn btn-icon btn-sm btn-outline-danger"
-                                                            title="Delete">
-                                                            <i class="icon-trash-2" style="font-size:15px;"></i>
-                                                        </button>
-                                                    </form>
-
-                                                </div>
-                                            </li>
-                                        </ul>
-
+                                                        <!-- Delete -->
+                                                        <form action="" method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to delete this assignment?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-icon btn-sm btn-outline-danger"
+                                                                title="Delete">
+                                                                <i class="icon-trash-2" style="font-size:15px;"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        @endforeach
                                     </div>
 
 

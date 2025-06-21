@@ -274,6 +274,8 @@
                                                 <li class="body-title">Email</li>
                                                 <li class="body-title">Mobile</li>
                                                 <li class="body-title">Group</li>
+                                                <li class="body-title">Status</li> {{-- ✅ NEW --}}
+                                                <li class="body-title">Vehicle VIN</li> {{-- ✅ NEW --}}
                                                 <li class="body-title column-action">Action</li>
                                             </ul>
 
@@ -281,12 +283,10 @@
                                             <ul>
                                                 @foreach ($contacts as $contact)
                                                     <li class="product-item">
-
-
-                                                        <!-- Contact Name -->
+                                                        <!-- Name -->
                                                         <div class="body-text column-name name-container"
                                                             onclick="viewContact({{ $contact->id }})"
-                                                            style=" cursor: pointer;">
+                                                            style="cursor: pointer;">
                                                             <span class="image">
                                                                 @if (
                                                                         $contact->filename &&
@@ -299,31 +299,36 @@
                                                                         alt="Default Profile Image">
                                                                 @endif
                                                             </span>
-
-                                                            <span class="contact-name">
-                                                                {{ $contact->name }} {{ $contact->lastname }}
-                                                            </span>
+                                                            <span class="contact-name">{{ $contact->name }}
+                                                                {{ $contact->lastname }}</span>
                                                         </div>
 
-                                                        <!-- Contact Email -->
+                                                        <!-- Email -->
                                                         <div class="body-text">{{ $contact->email }}</div>
 
-                                                        <!-- Mobile Column -->
+                                                        <!-- Mobile -->
                                                         <div class="body-text">{{ $contact->mobile }}</div>
 
-                                                        <!-- Group Column -->
+                                                        <!-- Group -->
                                                         <div class="body-text">{{ $contact->group }}</div>
 
-                                                        <!-- Action Column -->
+                                                        <!-- Assignment Status -->
+                                                        <div class="body-text">
+                                                            {{ $contact->assigned_status ?? '—' }}
+                                                        </div>
+
+                                                        <!-- Assigned Vehicle VIN -->
+                                                        <div class="body-text">
+                                                            {{ $contact->assigned_vin ?? '—' }}
+                                                        </div>
+
+                                                        <!-- Action Buttons -->
                                                         <div class="list-icon-function column-action d-flex gap-2">
-                                                            <!-- Edit Button -->
                                                             <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                                                 data-bs-target="#editModal{{ $contact->id }}">
                                                                 <i class="icon-edit-3"></i>
                                                             </button>
 
-
-                                                            <!-- Delete Button -->
                                                             <form action="{{ route('contact.delete', $contact->id) }}"
                                                                 method="POST" onsubmit="return confirm('Are you sure?')">
                                                                 @csrf
@@ -336,12 +341,9 @@
                                                     </li>
 
                                                     @include('contact.edit')
-
-
-
-
                                                 @endforeach
                                             </ul>
+
 
                                         </div>
 
