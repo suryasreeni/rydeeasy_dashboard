@@ -185,6 +185,13 @@ class VehicleController extends Controller
     {
         return view('vehicle.vehicleassignment');
     }
+    public function AddAssignment()
+    {
+
+        $statuses = VehicleStatus::all();
+
+        return view('vehicle.addassignment', compact('statuses'));
+    }
     public function MeterHistory()
     {
         return view('vehicle.meterhistory');

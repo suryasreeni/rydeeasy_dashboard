@@ -46,6 +46,8 @@ Route::delete('/vehicle/delete/{id}', [VehicleController::class, 'destroy'])->na
 
 
 Route::get('/VehicleAssignment', [VehicleController::class, 'VehicleAssignment']);
+Route::get('/AddAssignment', [VehicleController::class, 'AddAssignment'])->name('add.assignment');
+
 Route::get('/MeterHistory', [VehicleController::class, 'MeterHistory']);
 
 Route::get('/ExpenseHistory', [VehicleController::class, 'ExpenseHistory']);
