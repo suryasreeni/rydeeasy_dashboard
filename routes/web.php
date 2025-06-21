@@ -41,6 +41,9 @@ Route::get('/VehicleList', [VehicleController::class, 'VehicleList'])->name('veh
 Route::get('/AddVehicle', [VehicleController::class, 'AddVehicle'])->name('vehicle.addvehicle');
 Route::post('/vehicle/store', [VehicleController::class, 'vehiclestore'])->name('vehicle.store');
 Route::get('/vehicle-detail/{id}', [VehicleController::class, 'showAjax']);
+Route::post('/vehicle/update/{id}', [VehicleController::class, 'update'])->name('vehicle.update');
+Route::delete('/vehicle/delete/{id}', [VehicleController::class, 'destroy'])->name('vehicle.destroy');
+
 
 Route::get('/VehicleAssignment', [VehicleController::class, 'VehicleAssignment']);
 Route::get('/MeterHistory', [VehicleController::class, 'MeterHistory']);

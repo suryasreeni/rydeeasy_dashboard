@@ -8,76 +8,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vehicles List</title>
     <style>
-    .wg-table {
-        width: 100%;
-    }
+        .wg-table {
+            width: 100%;
+        }
 
-    .table-title,
-    .product-item {
-        display: flex;
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-    }
+        .table-title,
+        .product-item {
+            display: flex;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
 
-    .table-title {
-        background: #f4f4f4;
-        font-weight: bold;
-    }
+        .table-title {
+            background: #f4f4f4;
+            font-weight: bold;
+        }
 
-    .table-title li,
-    .product-item div {
-        flex: 1;
-        text-align: center;
-        padding: 5px;
-        box-sizing: border-box;
-    }
+        .table-title li,
+        .product-item div {
+            flex: 1;
+            text-align: center;
+            padding: 5px;
+            box-sizing: border-box;
+        }
 
-    .list-icon-function {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
+        .list-icon-function {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
 
-    .list-icon-function .item i {
-        cursor: pointer;
-        padding: 5px;
-    }
+        .list-icon-function .item i {
+            cursor: pointer;
+            padding: 5px;
+        }
 
-    .filter-options {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 15px;
-    }
+        .filter-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
 
-    .filter-options button {
-        padding: 8px 12px;
-        border: none;
-        background: #007bff;
-        color: white;
-        cursor: pointer;
-        border-radius: 4px;
-    }
+        .filter-options button {
+            padding: 8px 12px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
 
-    .filter-options button:hover {
-        background: #0056b3;
-    }
+        .filter-options button:hover {
+            background: #0056b3;
+        }
 
-    .add-new-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-    }
+        .add-new-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
 
-    .body-text {
-        font-size: 14px;
-    }
+        .body-text {
+            font-size: 14px;
+        }
     </style>
     <script>
-    function showTable(type) {
-        document.getElementById('vehicle-table').style.display = (type !== 'Archived') ? 'block' : 'none';
-        document.getElementById('archived-table').style.display = (type === 'Archived') ? 'block' : 'none';
-    }
+        function showTable(type) {
+            document.getElementById('vehicle-table').style.display = (type !== 'Archived') ? 'block' : 'none';
+            document.getElementById('archived-table').style.display = (type === 'Archived') ? 'block' : 'none';
+        }
     </script>
 </head>
 
@@ -106,9 +106,10 @@
 
                                 <div class="wg-box" id="vehicle-table">
                                     <div class="wg-filter flex-grow">
-                                        <form class="form-search">
+                                        <form class="form-search" method="GET" action="{{ route('vehicle.vehicle') }}">
                                             <fieldset class="name">
-                                                <input type="text" placeholder="Search here..." name="name" required>
+                                                <input type="text" placeholder="Search here..." name="name"
+                                                    value="{{ request('name') }}">
                                             </fieldset>
                                             <div class="button-submit">
                                                 <button type="submit"><i class="icon-search"></i></button>
@@ -124,54 +125,80 @@
                                             <li class="body-title">Type</li>
                                             <li class="body-title">Group</li>
                                             <li class="body-title">Status</li>
+                                            <li class="body-title">Action</li>
                                         </ul>
 
                                         @foreach($vehicles as $vehicle)
-                                        <ul>
-                                            <li class="product-item">
-                                                <div class="body-text" onclick="viewContact({{ $vehicle->id }})"
-                                                    style="display: flex; align-items: center; gap: 10px;cursor: pointer;">
+                                            <ul>
+                                                <li class="product-item">
+                                                    <div class="body-text" onclick="viewContact({{ $vehicle->id }})"
+                                                        style="display: flex; align-items: center; gap: 10px;cursor: pointer;">
 
-                                                    <img src="{{ asset('storage/' . $vehicle->vehicle_image) }}"
-                                                        alt="Vehicle Image"
-                                                        style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
-                                                    <span>{{ $vehicle->vin }}</span>
-
-
+                                                        <img src="{{ asset('storage/' . $vehicle->vehicle_image) }}"
+                                                            alt="Vehicle Image"
+                                                            style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
+                                                        <span>{{ $vehicle->vin }}</span>
 
 
-                                                </div>
-                                                <div class="body-text">
-                                                    {{ $vehicle->vehicle_name }} [{{ $vehicle->year }}
-                                                    {{ $vehicle->model }}]
-                                                </div>
-                                                <div class="body-text">{{ $vehicle->year }}</div>
-                                                <div class="body-text">{{ $vehicle->model }}</div>
-                                                <div class="body-text">{{ $vehicle->vehicle_type }}</div>
-                                                <div class="body-text">{{ $vehicle->group }}</div>
-                                                <div class="body-text">
-                                                    <span
-                                                        style="width: 10px; height: 10px; border-radius: 50%; background-color: {{ $vehicle->status->status_color }}; display: inline-block; margin-right: 6px;"></span>
-                                                    {{ $vehicle->status->status_name ?? 'N/A' }}
-                                                </div>
-                                            </li>
-                                        </ul>
+
+
+                                                    </div>
+                                                    <div class="body-text">
+                                                        {{ $vehicle->vehicle_name }} [{{ $vehicle->year }}
+                                                        {{ $vehicle->model }}]
+                                                    </div>
+                                                    <div class="body-text">{{ $vehicle->year }}</div>
+                                                    <div class="body-text">{{ $vehicle->model }}</div>
+                                                    <div class="body-text">{{ $vehicle->vehicle_type }}</div>
+                                                    <div class="body-text">{{ $vehicle->group }}</div>
+                                                    <div class="body-text">
+                                                        <span
+                                                            style="width: 10px; height: 10px; border-radius: 50%; background-color: {{ $vehicle->status->status_color }}; display: inline-block; margin-right: 6px;"></span>
+                                                        {{ $vehicle->status->status_name ?? 'N/A' }}
+                                                    </div>
+                                                    <div class="body-text d-flex justify-content-center gap-2">
+                                                        <!-- Edit -->
+                                                        <a href="#" class="btn btn-icon btn-sm btn-outline-primary"
+                                                            title="Edit" data-bs-toggle="modal"
+                                                            data-bs-target="#editModal{{ $vehicle->id }}">
+                                                            <i class="icon-edit" style="font-size:15px;"></i>
+                                                        </a>
+
+
+
+                                                        <!-- Delete -->
+                                                        <form action="{{ route('vehicle.destroy', $vehicle->id) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to delete this vendor?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-icon btn-sm btn-outline-danger"
+                                                                title="Delete">
+                                                                <i class="icon-trash-2" style="font-size:15px;"></i>
+                                                            </button>
+                                                        </form>
+
+                                                    </div>
+                                                </li>
+                                            </ul>
                                         @endforeach
                                     </div>
 
 
 
                                     <div class="divider"></div>
-                                    <div class="flex items-center justify-between flex-wrap gap10">
-                                        <div class="text-tiny">Showing 10 entries</div>
-                                        <ul class="wg-pagination">
-                                            <li><a href="#"><i class="icon-chevron-left"></i></a></li>
-                                            <li><a href="#">1</a></li>
-                                            <li class="active"><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li><a href="#"><i class="icon-chevron-right"></i></a></li>
-                                        </ul>
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap mt-4">
+                                        <div class="text-tiny">
+                                            Showing {{ $vehicles->firstItem() }} to {{ $vehicles->lastItem() }} of
+                                            {{ $vehicles->total() }} entries
+                                        </div>
+                                        <div>
+                                            {!! $vehicles->appends(request()->query())->links('pagination::bootstrap-5')
+                                            !!}
+                                        </div>
                                     </div>
+
                                 </div>
 
 
@@ -183,6 +210,8 @@
             </div>
         </div>
     </div>
+    <!-- Contact Detail Modal -->
+    @include('vehicle.edit')
     <!-- Contact Detail Modal -->
     <div class="modal fade" id="vehicleDetailModal" tabindex="-1" role="dialog"
         aria-labelledby="vehicleDetailModalLabel" aria-hidden="true">
@@ -208,49 +237,54 @@
     </div>
     @include('home.bottomlinks')
     <script>
-    function viewContact(id) {
-        // Show modal first
-        $('#vehicleDetailModal').modal('show');
+        function viewContact(id) {
+            // Show modal first
+            $('#vehicleDetailModal').modal('show');
 
-        // Show loading text
-        $('#vehicleDetailContent').html('<div class="text-center">Loading...</div>');
+            // Show loading text
+            $('#vehicleDetailContent').html('<div class="text-center">Loading...</div>');
 
-        // Fetch content via AJAX
-        fetch(`/vehicle-detail/${id}`)
-            .then(response => response.text())
-            .then(html => {
-                $('#vehicleDetailContent').html(html);
-            })
-            .catch(error => {
-                console.error('Error fetching contact:', error);
-                $('#vehicleDetailContent').html(
-                    '<div class="text-danger">Failed to load contact details.</div>');
-            });
-    }
+            // Fetch content via AJAX
+            fetch(`/vehicle-detail/${id}`)
+                .then(response => response.text())
+                .then(html => {
+                    $('#vehicleDetailContent').html(html);
+                })
+                .catch(error => {
+                    console.error('Error fetching contact:', error);
+                    $('#vehicleDetailContent').html(
+                        '<div class="text-danger">Failed to load contact details.</div>');
+                });
+        }
     </script>
     <style>
-    .modal-content {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: 16px;
-        line-height: 1.6;
-    }
+        .modal-content {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+        }
 
-    .modal-header h5 {
-        font-size: 20px;
-    }
+        .modal-header h5 {
+            font-size: 20px;
+        }
 
-    .btn-close {
-        width: 1.5rem;
-        height: 1.5rem;
-        border-radius: 50%;
-        background-color: #ff6a00 !important;
-        opacity: 1 !important;
-        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.9));
-    }
+        .btn-close {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background-color: #ff6a00 !important;
+            opacity: 1 !important;
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.9));
+        }
 
-    .btn-close:hover {
-        background-color: #e65a00 !important;
-    }
+        .btn-close:hover {
+            background-color: #e65a00 !important;
+        }
+
+        .pagination {
+            display: flex !important;
+            justify-content: center;
+        }
     </style>
 </body>
 

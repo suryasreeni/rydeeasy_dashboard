@@ -7,15 +7,38 @@ use App\Models\Vendor;
 use App\Models\Vehicle;
 use App\Models\VehicleStatus;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use function Termwind\render;
 
 class VehicleController extends Controller
 {
-    public function VehicleList()
+    public function VehicleList(Request $request)
     {
-        $vehicles = Vehicle::all();
-        return view('vehicle.vehiclelist', compact('vehicles'));
+        $types = Type::all();
+        $statuses = VehicleStatus::all();
+        $vendors = Vendor::all();
+        $contacts = ContactForm::all();
+
+        $query = Vehicle::with('status'); // eager load relationships
+
+        if ($request->has('name') && !empty($request->name)) {
+            $search = $request->name;
+            $query->where(function ($q) use ($search) {
+                $q->where('vin', 'like', "%$search%")
+                    ->orWhere('vehicle_name', 'like', "%$search%")
+                    ->orWhere('model', 'like', "%$search%")
+                    ->orWhere('year', 'like', "%$search%");
+            });
+        }
+
+        $vehicles = $query->orderBy('id', 'desc')->paginate(10);
+
+        return view('vehicle.vehiclelist', compact('vehicles', 'types', 'statuses', 'vendors', 'contacts'));
     }
+
+
+
+
     public function AddVehicle()
     {
         $vendors = Vendor::all();
@@ -102,6 +125,60 @@ class VehicleController extends Controller
     {
         $vehicle = Vehicle::findOrFail($id);
         return view('vehicle.vehicle-model', compact('vehicle'));
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+
+        $vehicle->vin = $request->vin;
+        $vehicle->vehicle_name = $request->vehicle_name;
+        $vehicle->vehicle_type = $request->vehicle_type;
+        $vehicle->model = $request->model;
+        $vehicle->year = $request->year;
+        $vehicle->status_id = $request->status_id;
+        $vehicle->ownership = $request->ownership;
+        $vehicle->group = $request->group;
+
+        if ($request->hasFile('vehicle_image')) {
+            $imagePath = $request->file('vehicle_image')->store('vehicle_images', 'public');
+            $vehicle->vehicle_image = $imagePath;
+        }
+
+        $vehicle->in_service_date = $request->in_service_date;
+        $vehicle->in_service_odometer = $request->in_service_odometer;
+        $vehicle->out_of_service_date = $request->out_of_service_date;
+        $vehicle->out_of_service_odometer = $request->out_of_service_odometer;
+
+        $vehicle->purchase_vendor = $request->purchase_vendor;
+        $vehicle->purchase_date = $request->purchase_date;
+        $vehicle->purchase_price = $request->purchase_price;
+        $vehicle->odometer = $request->odometer;
+        $vehicle->purchase_type = $request->purchase_type;
+
+        $vehicle->lender = $request->lender;
+        $vehicle->date_of_loan = $request->date_of_loan;
+        $vehicle->amount_of_loan = $request->amount_of_loan;
+        $vehicle->annual_percentage_rate = $request->annual_percentage_rate;
+        $vehicle->down_payment = $request->down_payment;
+        $vehicle->first_payment_date = $request->first_payment_date;
+        $vehicle->monthly_payment = $request->monthly_payment;
+        $vehicle->number_of_payment = $request->number_of_payment;
+        $vehicle->loan_end_date = $request->loan_end_date;
+        $vehicle->account_number = $request->account_number;
+
+        $vehicle->save();
+
+        return redirect()->route('vehicle.vehicle')->with('success', 'Vehicle updated successfully!');
+    }
+
+    public function destroy($id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->delete();
+
+        return redirect()->back()->with('success', 'Vehicle deleted successfully!');
     }
 
     public function VehicleAssignment()
