@@ -13,7 +13,7 @@ class ContactController extends Controller
     public function Contact()
     {
         $contacts = ContactForm::all()->map(function ($contact) {
-            $latestAssignment = Assignment::where('name', $contact->name)
+            $latestAssignment = Assignment::where('contact_id', $contact->contact_id) // Changed 'name' to 'contact_id'
                 ->orderByDesc(DB::raw("STR_TO_DATE(CONCAT(end_date, ' ', end_time), '%Y-%m-%d %H:%i')"))
                 ->first();
 

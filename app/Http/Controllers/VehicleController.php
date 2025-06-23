@@ -8,6 +8,8 @@ use App\Models\Vehicle;
 use App\Models\VehicleStatus;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+
 use Illuminate\Pagination\Paginator;
 use function Termwind\render;
 
@@ -184,7 +186,7 @@ class VehicleController extends Controller
 
     public function VehicleAssignment()
     {
-        $assignments = Assignment::all();
+        $assignments = Assignment::with(['contact', 'vehicle', 'statusRelation'])->latest()->get();
         return view('vehicle.vehicleassignment', compact('assignments'));
     }
     public function AddAssignment()
@@ -201,81 +203,88 @@ class VehicleController extends Controller
     public function storeAssignment(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'contact' => 'required|string',
-            'address' => 'required|string',
-            'vin' => 'required|string',
-            'status' => 'required|exists:statuses,id',
+            'contact_id' => 'nullable|exists:contact_forms,id',
+            'contact' => 'required|string|max:20',
+            'address' => 'nullable|string',
+            'booking_details' => 'nullable|string|max:500',
+            'reference_number' => 'nullable|string|max:100',
+            'expected_return' => 'nullable|date',
+            'purpose' => 'nullable|string|max:255',
+            'vin' => 'required|string|max:50',
+            'status' => 'nullable|integer',
+            'model' => 'nullable|string|max:100',
+            'yard' => 'nullable|integer',
             'start_date' => 'required|date',
             'start_time' => 'required',
-            'end_date' => 'required|date',
-            'end_time' => 'required',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'end_time' => 'nullable',
+            'start_km' => 'nullable|integer|min:0',
+            'end_km' => 'nullable|integer|min:0',
+            'start_fuel' => 'nullable|numeric|min:0',
+            'start_fuel_unit' => 'nullable|in:L,Gallons,%',
+            'end_fuel' => 'nullable|numeric|min:0',
+            'end_fuel_unit' => 'nullable|in:L,Gallons,%',
+            'deposit_given' => 'nullable|numeric|min:0',
+            'rent_given' => 'nullable|numeric|min:0',
+            'gst_given' => 'nullable|numeric|min:0',
+            'km_given' => 'nullable|numeric|min:0',
+            'hour_given' => 'nullable|numeric|min:0',
+            'other_given' => 'nullable|numeric|min:0',
+            'total_given' => 'nullable|numeric|min:0',
+            'deposit_final' => 'nullable|numeric|min:0',
+            'rent_final' => 'nullable|numeric|min:0',
+            'gst_final' => 'nullable|numeric|min:0',
+            'km_final' => 'nullable|numeric|min:0',
+            'hour_final' => 'nullable|numeric|min:0',
+            'other_final' => 'nullable|numeric|min:0',
+            'total_final' => 'nullable|numeric|min:0',
+            'driving_license' => 'nullable|string|max:50',
+            'document_collected' => 'nullable|in:Yes,No',
+            'docs' => 'nullable|array',
+            'document_number' => 'nullable|string|max:100',
+            'cash_hand' => 'nullable|numeric|min:0',
+            'cash_account' => 'nullable|numeric|min:0',
+            'total_received' => 'nullable|numeric|min:0',
+            'account_name' => 'nullable|string|max:100',
+            'account_number' => 'nullable|string|max:50',
+            'ifsc_code' => 'nullable|string|max:20',
+            'refund_amount' => 'nullable|numeric|min:0',
+            'document_images.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf,doc,docx|max:10240',
         ]);
 
-        $data = $request->only([
-            'name',
-            'contact',
-            'address',
-            'vin',
-            'status',
-            'booking_details',
-            'reference_number',
-            'expected_return',
-            'purpose',
-            'model',
-            'yard',
-            'start_km',
-            'end_km',
-            'start_fuel',
-            'start_fuel_unit',
-            'end_fuel',
-            'end_fuel_unit',
-            'deposit_given',
-            'deposit_final',
-            'rent_given',
-            'rent_final',
-            'gst_given',
-            'gst_final',
-            'km_given',
-            'km_final',
-            'hour_given',
-            'hour_final',
-            'other_given',
-            'other_final',
-            'total_given',
-            'total_final',
-            'driving_license',
-            'document_collected',
-            'document_number',
-            'cash_hand',
-            'cash_account',
-            'total_received',
-            'account_name',
-            'account_number',
-            'ifsc_code',
-            'refund_amount',
-        ]);
-
-        $data['rental_start'] = $request->start_date . ' ' . $request->start_time;
-        $data['rental_end'] = $request->end_date . ' ' . $request->end_time;
-
-        $data['docs'] = $request->has('docs') ? json_encode($request->docs) : null;
-
+        // Handle file uploads
+        $documentPaths = [];
         if ($request->hasFile('document_images')) {
-            $paths = [];
             foreach ($request->file('document_images') as $file) {
-                $paths[] = $file->store('assignments/documents', 'public');
+                $path = $file->store('assignments/documents', 'public');
+                $documentPaths[] = $path;
             }
-            $data['document_images'] = json_encode($paths);
         }
 
-        Assignment::create($data);
+        // Prepare data for storage
+        $assignmentData = $validated;
+        $assignmentData['documents_collected'] = $request->input('docs', []);
+        $assignmentData['document_images'] = $documentPaths;
 
-        Vehicle::where('vin', $request->vin)->update([
-            'status_id' => $request->status
+        // Create assignment
+        $assignment = Assignment::create($assignmentData);
+
+        return redirect()->route('list.assignment', $assignment)
+            ->with('success', 'Assignment created successfully!');
+    }
+    public function getContactInfo($id)
+    {
+        $contact = ContactForm::find($id);
+
+        if (!$contact) {
+            return response()->json(['error' => 'Contact not found'], 404);
+        }
+
+        return response()->json([
+            'mobile' => $contact->mobile ?? $contact->phone ?? '',
+            'address' => $contact->address ?? '',
+            'license' => $contact->driving_license ?? $contact->license ?? '',
         ]);
-
-        return redirect()->route('list.assignment')->with('success', 'Assignment created and vehicle status updated!');
     }
     public function MeterHistory()
     {

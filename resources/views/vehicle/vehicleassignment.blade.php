@@ -131,6 +131,11 @@
                                         </a>
                                     </ul>
                                 </div>
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
 
                                 <div class="wg-box" id="vehicle-table">
                                     <div class="wg-filter flex-grow">
@@ -160,7 +165,7 @@
                                             <ul>
                                                 <li class="product-item">
                                                     <div class="body-text">{{ $assignment->vin }}</div>
-                                                    <div class="body-text">{{ $assignment->name }}</div>
+                                                    <div class="body-text">{{ $assignment->contact->name ?? 'N/A' }}</div>
                                                     <div class="body-text">{{ $assignment->contact }}</div>
                                                     <div class="body-text">
                                                         {{ date('d M Y, h:i A', strtotime($assignment->start_date . ' ' . $assignment->start_time)) }}

@@ -2,26 +2,29 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Assignment extends Model
 {
-    protected $table = 'assignments';
+    use HasFactory;
 
     protected $fillable = [
-        'name',
+        'contact_id',
         'contact',
         'address',
-        'vin',
-        'status',
-        'rental_start',
-        'rental_end',
         'booking_details',
         'reference_number',
         'expected_return',
         'purpose',
+        'vin',
+        'status',
         'model',
         'yard',
+        'start_date',
+        'start_time',
+        'end_date',
+        'end_time',
         'start_km',
         'end_km',
         'start_fuel',
@@ -29,22 +32,22 @@ class Assignment extends Model
         'end_fuel',
         'end_fuel_unit',
         'deposit_given',
-        'deposit_final',
         'rent_given',
-        'rent_final',
         'gst_given',
-        'gst_final',
         'km_given',
-        'km_final',
         'hour_given',
-        'hour_final',
         'other_given',
-        'other_final',
         'total_given',
+        'deposit_final',
+        'rent_final',
+        'gst_final',
+        'km_final',
+        'hour_final',
+        'other_final',
         'total_final',
         'driving_license',
         'document_collected',
-        'docs',
+        'documents_collected',
         'document_number',
         'cash_hand',
         'cash_account',
@@ -57,10 +60,51 @@ class Assignment extends Model
     ];
 
     protected $casts = [
-        'docs' => 'array',
-        'document_images' => 'array',
         'expected_return' => 'datetime',
-        'rental_start' => 'datetime',
-        'rental_end' => 'datetime',
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'documents_collected' => 'array',
+        'document_images' => 'array',
+        'deposit_given' => 'decimal:2',
+        'rent_given' => 'decimal:2',
+        'gst_given' => 'decimal:2',
+        'km_given' => 'decimal:2',
+        'hour_given' => 'decimal:2',
+        'other_given' => 'decimal:2',
+        'total_given' => 'decimal:2',
+        'deposit_final' => 'decimal:2',
+        'rent_final' => 'decimal:2',
+        'gst_final' => 'decimal:2',
+        'km_final' => 'decimal:2',
+        'hour_final' => 'decimal:2',
+        'other_final' => 'decimal:2',
+        'total_final' => 'decimal:2',
+        'cash_hand' => 'decimal:2',
+        'cash_account' => 'decimal:2',
+        'total_received' => 'decimal:2',
+        'refund_amount' => 'decimal:2',
     ];
+
+    // Relationships
+    public function contact()
+    {
+        return $this->belongsTo(ContactForm::class, 'contact_id');
+    }
+
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class, 'vin', 'vin');
+    }
+
+    public function statusRelation()
+    {
+        return $this->belongsTo(VehicleStatus::class, 'status');
+    }
+
+    // Helper methods
+    public function getYardNameAttribute()
+    {
+        return $this->yard === 0 ? 'Malappuram' : 'Kochi';
+    }
 }

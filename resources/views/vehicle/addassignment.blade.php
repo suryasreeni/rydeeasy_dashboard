@@ -429,19 +429,17 @@
                     <h2 class="section-title">Customer Information</h2>
                     <div class="form-grid">
                         <div class="form-group" style="flex: 1;">
-                            <label for="name">Select Customer</label>
-                            <select id="name" name="name" class="form-control select2"
+                            <label for="contact_id">Select Customer</label>
+                            <select id="contact_id" name="contact_id" class="form-control select2"
                                 style="width: 100%; height: 45px; border-radius: 8px; padding: 6px 10px;">
-                                <option value="">Search and select a name
-                                </option>
+                                <option value="">Search and select a name</option>
                                 @foreach($contacts as $contact)
-                                    <option value="{{ $contact->id }}">
-                                        {{ $contact->name }}
-                                    </option>
+                                    <option value="{{ $contact->id }}">{{ $contact->name }}</option>
                                 @endforeach
                             </select>
-
                         </div>
+
+
 
 
                         <!-- Auto-filled contact number -->
@@ -906,12 +904,12 @@
     <!-- Your Custom Script -->
     <script>
         $(document).ready(function () {
-            $('#name').select2({
+            $('#contact_id').select2({
                 placeholder: 'Search and select a name',
                 allowClear: true
             });
 
-            $('#name').on('change', function () {
+            $('#contact_id').on('change', function () {
                 const contactId = $(this).val();
 
                 if (contactId) {
@@ -933,6 +931,7 @@
             });
         });
     </script>
+
 
     <script>
         function calculateTotals() {
