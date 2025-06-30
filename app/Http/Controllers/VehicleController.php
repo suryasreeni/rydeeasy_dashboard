@@ -8,6 +8,8 @@ use App\Models\Vehicle;
 use App\Models\VehicleStatus;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 use Carbon\Carbon;
 
 use Illuminate\Pagination\Paginator;
@@ -140,7 +142,7 @@ class VehicleController extends Controller
         $vehicle->vehicle_type = $request->vehicle_type;
         $vehicle->model = $request->model;
         $vehicle->year = $request->year;
-        $vehicle->status_id = $request->status_id;
+
         $vehicle->ownership = $request->ownership;
         $vehicle->group = $request->group;
 
@@ -175,6 +177,18 @@ class VehicleController extends Controller
 
         return redirect()->route('vehicle.vehicle')->with('success', 'Vehicle updated successfully!');
     }
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status_id' => 'required|exists:statuses,id',
+        ]);
+
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->status_id = $request->status_id;
+        $vehicle->save();
+
+        return redirect()->back()->with('success', 'Vehicle status updated successfully.');
+    }
 
     public function destroy($id)
     {
@@ -183,11 +197,14 @@ class VehicleController extends Controller
 
         return redirect()->back()->with('success', 'Vehicle deleted successfully!');
     }
-
     public function VehicleAssignment()
     {
-        $assignments = Assignment::with(['contact', 'vehicle', 'statusRelation'])->latest()->get();
-        return view('vehicle.vehicleassignment', compact('assignments'));
+        $assignments = Assignment::with(['contacts', 'vehicle', 'statusRelation'])->latest()->get();
+        $contacts = ContactForm::all(); // Fetch all contacts
+        $vehicles = Vehicle::all();
+        $statuses = VehicleStatus::all();
+
+        return view('vehicle.vehicleassignment', compact('assignments', 'contacts', 'vehicles', 'statuses'));
     }
     public function AddAssignment()
     {
@@ -272,6 +289,7 @@ class VehicleController extends Controller
         return redirect()->route('list.assignment', $assignment)
             ->with('success', 'Assignment created successfully!');
     }
+    // Controller
     public function getContactInfo($id)
     {
         $contact = ContactForm::find($id);
@@ -286,6 +304,155 @@ class VehicleController extends Controller
             'license' => $contact->driving_license ?? $contact->license ?? '',
         ]);
     }
+    public function updateAssignment(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'contact_id' => 'nullable|exists:contact_forms,id',
+            'contact' => 'required|string|max:20',
+            'address' => 'nullable|string',
+            'booking_details' => 'nullable|string|max:500',
+            'reference_number' => 'nullable|string|max:100',
+            'expected_return' => 'nullable|date',
+            'purpose' => 'nullable|string|max:255',
+            'vin' => 'required|string|max:50',
+            'status' => 'nullable|integer',
+            'model' => 'nullable|string|max:100',
+            'yard' => 'nullable|integer',
+            'start_date' => 'required|date',
+            'start_time' => 'required',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'end_time' => 'nullable',
+            'start_km' => 'nullable|integer|min:0',
+            'end_km' => 'nullable|integer|min:0',
+            'start_fuel' => 'nullable|numeric|min:0',
+            'start_fuel_unit' => 'nullable|in:L,Gallons,%',
+            'end_fuel' => 'nullable|numeric|min:0',
+            'end_fuel_unit' => 'nullable|in:L,Gallons,%',
+            'deposit_given' => 'nullable|numeric|min:0',
+            'rent_given' => 'nullable|numeric|min:0',
+            'gst_given' => 'nullable|numeric|min:0',
+            'km_given' => 'nullable|numeric|min:0',
+            'hour_given' => 'nullable|numeric|min:0',
+            'other_given' => 'nullable|numeric|min:0',
+            'total_given' => 'nullable|numeric|min:0',
+            'deposit_final' => 'nullable|numeric|min:0',
+            'rent_final' => 'nullable|numeric|min:0',
+            'gst_final' => 'nullable|numeric|min:0',
+            'km_final' => 'nullable|numeric|min:0',
+            'hour_final' => 'nullable|numeric|min:0',
+            'other_final' => 'nullable|numeric|min:0',
+            'total_final' => 'nullable|numeric|min:0',
+            'driving_license' => 'nullable|string|max:50',
+            'document_collected' => 'nullable|in:Yes,No',
+            'docs' => 'nullable|array',
+            'document_number' => 'nullable|string|max:100',
+            'cash_hand' => 'nullable|numeric|min:0',
+            'cash_account' => 'nullable|numeric|min:0',
+            'total_received' => 'nullable|numeric|min:0',
+            'account_name' => 'nullable|string|max:100',
+            'account_number' => 'nullable|string|max:50',
+            'ifsc_code' => 'nullable|string|max:20',
+            'refund_amount' => 'nullable|numeric|min:0',
+            'document_images.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf,doc,docx|max:10240',
+            'remove_images' => 'nullable|array', // Add validation for image removal
+        ]);
+
+        try {
+            $assignment = Assignment::findOrFail($id);
+
+            // Handle document images
+            $documentPaths = $assignment->document_images ?? [];
+
+            // Remove selected images
+            if ($request->has('remove_images')) {
+                $removeIndices = $request->input('remove_images');
+                foreach ($removeIndices as $index) {
+                    if (isset($documentPaths[$index])) {
+                        // Delete physical file
+                        Storage::disk('public')->delete($documentPaths[$index]);
+                        unset($documentPaths[$index]);
+                    }
+                }
+                // Re-index array
+                $documentPaths = array_values($documentPaths);
+            }
+
+            // Add new uploaded files
+            if ($request->hasFile('document_images')) {
+                foreach ($request->file('document_images') as $file) {
+                    $path = $file->store('assignments/documents', 'public');
+                    $documentPaths[] = $path;
+                }
+            }
+
+            // Prepare update data - explicitly include all fields
+            $updateData = [
+                'contact_id' => $validated['contact_id'] ?? null,
+                'contact' => $validated['contact'],
+                'address' => $validated['address'] ?? null,
+                'booking_details' => $validated['booking_details'] ?? null,
+                'reference_number' => $validated['reference_number'] ?? null,
+                'expected_return' => $validated['expected_return'] ?? null,
+                'purpose' => $validated['purpose'] ?? null,
+                'vin' => $validated['vin'],
+                'status' => $validated['status'] ?? null,
+                'model' => $validated['model'] ?? null,
+                'yard' => $validated['yard'] ?? null,
+                'start_date' => $validated['start_date'],
+                'start_time' => $validated['start_time'],
+                'end_date' => $validated['end_date'] ?? null,
+                'end_time' => $validated['end_time'] ?? null,
+                'start_km' => $validated['start_km'] ?? null,
+                'end_km' => $validated['end_km'] ?? null,
+                'start_fuel' => $validated['start_fuel'] ?? null,
+                'start_fuel_unit' => $validated['start_fuel_unit'] ?? null,
+                'end_fuel' => $validated['end_fuel'] ?? null,
+                'end_fuel_unit' => $validated['end_fuel_unit'] ?? null,
+                'deposit_given' => $validated['deposit_given'] ?? null,
+                'rent_given' => $validated['rent_given'] ?? null,
+                'gst_given' => $validated['gst_given'] ?? null,
+                'km_given' => $validated['km_given'] ?? null,
+                'hour_given' => $validated['hour_given'] ?? null,
+                'other_given' => $validated['other_given'] ?? null,
+                'total_given' => $validated['total_given'] ?? null,
+                'deposit_final' => $validated['deposit_final'] ?? null,
+                'rent_final' => $validated['rent_final'] ?? null,
+                'gst_final' => $validated['gst_final'] ?? null,
+                'km_final' => $validated['km_final'] ?? null,
+                'hour_final' => $validated['hour_final'] ?? null,
+                'other_final' => $validated['other_final'] ?? null,
+                'total_final' => $validated['total_final'] ?? null,
+                'driving_license' => $validated['driving_license'] ?? null,
+                'document_collected' => $validated['document_collected'] ?? null,
+                'documents_collected' => json_encode($request->input('docs', [])),
+                'document_number' => $validated['document_number'] ?? null,
+                'cash_hand' => $validated['cash_hand'] ?? null,
+                'cash_account' => $validated['cash_account'] ?? null,
+                'total_received' => $validated['total_received'] ?? null,
+                'account_name' => $validated['account_name'] ?? null,
+                'account_number' => $validated['account_number'] ?? null,
+                'ifsc_code' => $validated['ifsc_code'] ?? null,
+                'refund_amount' => $validated['refund_amount'] ?? null,
+                'document_images' => $documentPaths,
+            ];
+
+            // Update the assignment
+            $assignment->update($updateData);
+
+            return redirect()->route('list.assignment', $assignment->id)
+                ->with('success', 'Assignment updated successfully!');
+
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Assignment update failed: ' . $e->getMessage());
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to update assignment. Please try again.');
+        }
+    }
+
+
     public function MeterHistory()
     {
         return view('vehicle.meterhistory');

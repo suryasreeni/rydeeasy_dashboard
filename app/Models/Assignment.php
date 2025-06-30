@@ -85,12 +85,10 @@ class Assignment extends Model
         'refund_amount' => 'decimal:2',
     ];
 
-    // Relationships
-    public function contact()
+    public function contacts()
     {
         return $this->belongsTo(ContactForm::class, 'contact_id');
     }
-
 
     public function vehicle()
     {
