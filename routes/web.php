@@ -34,6 +34,8 @@ Route::group(['middleware' => 'guest'], function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::delete('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/due-assignments', [HomeController::class, 'fetchDueAssignments'])->name('assignments.due');
+
 });
 
 // vehicles
@@ -51,6 +53,8 @@ Route::get('/VehicleAssignment', [VehicleController::class, 'VehicleAssignment']
 Route::get('/AddAssignment', [VehicleController::class, 'AddAssignment'])->name('add.assignment');
 Route::post('/assignments/store', [VehicleController::class, 'storeAssignment'])->name('assignments.store');
 Route::put('/assignment/{id}', [VehicleController::class, 'updateAssignment'])->name('assignment.update');
+Route::put('/VehicleAssignment/{id}', [VehicleController::class, 'completionUpdate'])->name('completion.update');
+Route::delete('/assignmentdestroy/{id}', [VehicleController::class, 'destroyassignment'])->name('assignment.destroy');
 
 // routes/web.php
 Route::get('/get-contact-info/{id}', [ContactController::class, 'getContactInfo']);

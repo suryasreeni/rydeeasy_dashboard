@@ -533,21 +533,24 @@
                         <div class="form-group">
                             <label>Start Date & Time <span class="required">*</span></label>
                             <div class="datetime-group">
-                                <input type="date" name="start_date" class="form-control" required>
+                                <input type="date" id="start_date" name="start_date" class="form-control" required>
                                 <div class="datetime-separator">at</div>
-                                <input type="time" name="start_time" class="form-control" required>
+                                <input type="time" id="start_time" name="start_time" class="form-control" required>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display:none">
                             <label>End Date & Time <span class="required">*</span></label>
                             <div class="datetime-group">
-                                <input type="date" name="end_date" class="form-control">
+                                <input type="date" id="end_date" name="end_date" class="form-control">
                                 <div class="datetime-separator">at</div>
-                                <input type="time" name="end_time" class="form-control">
+                                <input type="time" id="end_time" name="end_time" class="form-control">
                             </div>
                         </div>
                     </div>
                 </div>
+
+
+
 
                 <!-- Vehicle Condition Section -->
                 <div class="section-group">
@@ -557,7 +560,7 @@
                             <label>Start Odometer Reading (KM)</label>
                             <input type="number" name="start_km" class="form-control" placeholder="Enter KM reading">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display:none">
                             <label>End Odometer Reading (KM)</label>
                             <input type="number" name="end_km" class="form-control" placeholder="Enter KM reading">
                         </div>
@@ -573,7 +576,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display:none">
                             <label>End Fuel Level</label>
                             <div class="measurement-group">
                                 <input type="number" name="end_fuel" class="form-control" placeholder="Amount"
@@ -858,7 +861,7 @@
                             <input type="text" id="ifsc_code" name="ifsc_code" class="form-control"
                                 placeholder="Bank IFSC code">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display:none">
                             <label for="refund_amount">Refund Amount</label>
                             <div class="input-with-currency">
 
@@ -996,14 +999,17 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('input[type="datetime-local"], input[type="date"]').forEach(input => {
-                const now = new Date();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('start_date').setAttribute('min', today);
+            document.getElementById('end_date').setAttribute('min', today);
 
-                if (input.type === 'date') {
-                    input.min = now.toISOString().split('T')[0]; // YYYY-MM-DD
-                } else if (input.type === 'datetime-local') {
-                    input.min = now.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm
-                }
+            // Optional: Ensure end date is not before start date
+            document.getElementById('start_date').addEventListener('change', function () {
+                const startDate = this.value;
+                document.getElementById('end_date').setAttribute('min', startDate);
             });
         });
     </script>
+</body>
+
+</html>

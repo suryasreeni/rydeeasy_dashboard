@@ -246,16 +246,7 @@
                                         value="{{ $assignment->start_time }}" required>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>End Date & Time</label>
-                                <div class="datetime-group">
-                                    <input type="datetime" name="end_date" class="form-control"
-                                        value="{{ $assignment->end_date }}">
-                                    <div class="datetime-separator">at</div>
-                                    <input type="time" name="end_time" class="form-control"
-                                        value="{{ $assignment->end_time }}">
-                                </div>
-                            </div>
+
                         </div>
                     </div>
 
@@ -268,11 +259,7 @@
                                 <input type="number" name="start_km" class="form-control"
                                     value="{{ $assignment->start_km }}" placeholder="Enter KM reading">
                             </div>
-                            <div class="form-group">
-                                <label>End Odometer Reading (KM)</label>
-                                <input type="number" name="end_km" class="form-control"
-                                    value="{{ $assignment->end_km }}" placeholder="Enter KM reading">
-                            </div>
+
                             <div class="form-group">
                                 <label>Start Fuel Level</label>
                                 <div class="measurement-group">
@@ -289,22 +276,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>End Fuel Level</label>
-                                <div class="measurement-group">
-                                    <input type="number" name="end_fuel" class="form-control"
-                                        value="{{ $assignment->end_fuel }}" placeholder="Amount" step="0.1">
-                                    <select name="end_fuel_unit" class="form-control" style="font-size:15px;">
-                                        <option value="L" {{ $assignment->end_fuel_unit == 'L' ? 'selected' : '' }}>
-                                            Liters</option>
-                                        <option value="Gallons"
-                                            {{ $assignment->end_fuel_unit == 'Gallons' ? 'selected' : '' }}>Gallons
-                                        </option>
-                                        <option value="%" {{ $assignment->end_fuel_unit == '%' ? 'selected' : '' }}>
-                                            Percentage</option>
-                                    </select>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
 
@@ -556,14 +528,7 @@
                                     class="form-control" value="{{ $assignment->ifsc_code }}"
                                     placeholder="Bank IFSC code">
                             </div>
-                            <div class="form-group">
-                                <label for="edit_refund_amount_{{ $assignment->id }}">Refund Amount</label>
-                                <div class="input-with-currency">
-                                    <input type="number" id="edit_refund_amount_{{ $assignment->id }}"
-                                        name="refund_amount" class="form-control currency-input"
-                                        value="{{ $assignment->refund_amount }}" placeholder="0.00" step="0.01">
-                                </div>
-                            </div>
+
                         </div>
                     </div>
 
@@ -606,6 +571,7 @@
         </div>
     </div>
 </div>
+
 @endforeach
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

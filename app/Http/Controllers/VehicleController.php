@@ -184,11 +184,41 @@ class VehicleController extends Controller
         ]);
 
         $vehicle = Vehicle::findOrFail($id);
-        $vehicle->status_id = $request->status_id;
+        $newStatusId = $request->input('status_id');
+
+        // Get the status name for the selected ID
+        $newStatus = VehicleStatus::find($newStatusId);
+
+        if (!$newStatus) {
+            return redirect()->back()->with('error', 'Invalid status selected.');
+        }
+
+        $statusName = strtolower($newStatus->status_name);
+
+        // 🚫 Prevent setting to "Inactive" if vehicle has active assignment
+        if ($statusName === 'inactive') {
+            $activeAssignment = Assignment::where('vin', $vehicle->vin)
+                ->whereNull('end_date')
+                ->first();
+
+            if ($activeAssignment) {
+                return redirect()->back()->with('error', 'This vehicle is currently under rental. You can only mark it as inactive after the assignment is finished.');
+            }
+        }
+
+        // 🚫 Prevent setting to "Active" directly from vehicle table
+        if ($statusName === 'active') {
+            return redirect()->back()->with('error', 'You can only activate a vehicle from the assignment.');
+        }
+
+        // ✅ Safe to update
+        $vehicle->status_id = $newStatusId;
         $vehicle->save();
 
         return redirect()->back()->with('success', 'Vehicle status updated successfully.');
     }
+
+
 
     public function destroy($id)
     {
@@ -197,14 +227,25 @@ class VehicleController extends Controller
 
         return redirect()->back()->with('success', 'Vehicle deleted successfully!');
     }
-    public function VehicleAssignment()
+    public function VehicleAssignment(Request $request)
     {
-        $assignments = Assignment::with(['contacts', 'vehicle', 'statusRelation'])->latest()->get();
-        $contacts = ContactForm::all(); // Fetch all contacts
+        $filter = $request->get('filter', 'all');
+
+        $assignments = Assignment::with(['contacts', 'vehicle', 'statusRelation']);
+
+        if ($filter === 'complete') {
+            $assignments->whereNotNull('end_date');
+        } elseif ($filter === 'incomplete') {
+            $assignments->whereNull('end_date');
+        }
+
+        $assignments = $assignments->latest()->get();
+
+        $contacts = ContactForm::all();
         $vehicles = Vehicle::all();
         $statuses = VehicleStatus::all();
 
-        return view('vehicle.vehicleassignment', compact('assignments', 'contacts', 'vehicles', 'statuses'));
+        return view('vehicle.vehicleassignment', compact('assignments', 'contacts', 'vehicles', 'statuses', 'filter'));
     }
     public function AddAssignment()
     {
@@ -228,7 +269,7 @@ class VehicleController extends Controller
             'expected_return' => 'nullable|date',
             'purpose' => 'nullable|string|max:255',
             'vin' => 'required|string|max:50',
-            'status' => 'nullable|integer',
+            'status' => 'nullable|integer|exists:statuses,id', // Make sure the status is valid
             'model' => 'nullable|string|max:100',
             'yard' => 'nullable|integer',
             'start_date' => 'required|date',
@@ -269,7 +310,7 @@ class VehicleController extends Controller
             'document_images.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf,doc,docx|max:10240',
         ]);
 
-        // Handle file uploads
+        // ✅ Handle file uploads
         $documentPaths = [];
         if ($request->hasFile('document_images')) {
             foreach ($request->file('document_images') as $file) {
@@ -278,17 +319,27 @@ class VehicleController extends Controller
             }
         }
 
-        // Prepare data for storage
+        // ✅ Prepare data
         $assignmentData = $validated;
         $assignmentData['documents_collected'] = $request->input('docs', []);
         $assignmentData['document_images'] = $documentPaths;
 
-        // Create assignment
+        // ✅ Save assignment
         $assignment = Assignment::create($assignmentData);
+
+        // ✅ Update related vehicle status_id
+        if ($request->filled('vin') && $request->filled('status')) {
+            $vehicle = Vehicle::where('vin', $request->vin)->first();
+            if ($vehicle) {
+                $vehicle->status_id = $request->status;
+                $vehicle->save();
+            }
+        }
 
         return redirect()->route('list.assignment', $assignment)
             ->with('success', 'Assignment created successfully!');
     }
+
     // Controller
     public function getContactInfo($id)
     {
@@ -315,19 +366,13 @@ class VehicleController extends Controller
             'expected_return' => 'nullable|date',
             'purpose' => 'nullable|string|max:255',
             'vin' => 'required|string|max:50',
-            'status' => 'nullable|integer',
             'model' => 'nullable|string|max:100',
             'yard' => 'nullable|integer',
             'start_date' => 'required|date',
             'start_time' => 'required',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'end_time' => 'nullable',
             'start_km' => 'nullable|integer|min:0',
-            'end_km' => 'nullable|integer|min:0',
             'start_fuel' => 'nullable|numeric|min:0',
             'start_fuel_unit' => 'nullable|in:L,Gallons,%',
-            'end_fuel' => 'nullable|numeric|min:0',
-            'end_fuel_unit' => 'nullable|in:L,Gallons,%',
             'deposit_given' => 'nullable|numeric|min:0',
             'rent_given' => 'nullable|numeric|min:0',
             'gst_given' => 'nullable|numeric|min:0',
@@ -352,15 +397,14 @@ class VehicleController extends Controller
             'account_name' => 'nullable|string|max:100',
             'account_number' => 'nullable|string|max:50',
             'ifsc_code' => 'nullable|string|max:20',
-            'refund_amount' => 'nullable|numeric|min:0',
             'document_images.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf,doc,docx|max:10240',
-            'remove_images' => 'nullable|array', // Add validation for image removal
+            'remove_images' => 'nullable|array',
         ]);
 
         try {
             $assignment = Assignment::findOrFail($id);
 
-            // Handle document images
+            // Handle existing document images
             $documentPaths = $assignment->document_images ?? [];
 
             // Remove selected images
@@ -368,16 +412,14 @@ class VehicleController extends Controller
                 $removeIndices = $request->input('remove_images');
                 foreach ($removeIndices as $index) {
                     if (isset($documentPaths[$index])) {
-                        // Delete physical file
                         Storage::disk('public')->delete($documentPaths[$index]);
                         unset($documentPaths[$index]);
                     }
                 }
-                // Re-index array
                 $documentPaths = array_values($documentPaths);
             }
 
-            // Add new uploaded files
+            // Handle new uploaded images
             if ($request->hasFile('document_images')) {
                 foreach ($request->file('document_images') as $file) {
                     $path = $file->store('assignments/documents', 'public');
@@ -385,7 +427,7 @@ class VehicleController extends Controller
                 }
             }
 
-            // Prepare update data - explicitly include all fields
+            // Build update data
             $updateData = [
                 'contact_id' => $validated['contact_id'] ?? null,
                 'contact' => $validated['contact'],
@@ -395,19 +437,13 @@ class VehicleController extends Controller
                 'expected_return' => $validated['expected_return'] ?? null,
                 'purpose' => $validated['purpose'] ?? null,
                 'vin' => $validated['vin'],
-                'status' => $validated['status'] ?? null,
                 'model' => $validated['model'] ?? null,
                 'yard' => $validated['yard'] ?? null,
                 'start_date' => $validated['start_date'],
                 'start_time' => $validated['start_time'],
-                'end_date' => $validated['end_date'] ?? null,
-                'end_time' => $validated['end_time'] ?? null,
                 'start_km' => $validated['start_km'] ?? null,
-                'end_km' => $validated['end_km'] ?? null,
                 'start_fuel' => $validated['start_fuel'] ?? null,
                 'start_fuel_unit' => $validated['start_fuel_unit'] ?? null,
-                'end_fuel' => $validated['end_fuel'] ?? null,
-                'end_fuel_unit' => $validated['end_fuel_unit'] ?? null,
                 'deposit_given' => $validated['deposit_given'] ?? null,
                 'rent_given' => $validated['rent_given'] ?? null,
                 'gst_given' => $validated['gst_given'] ?? null,
@@ -432,24 +468,87 @@ class VehicleController extends Controller
                 'account_name' => $validated['account_name'] ?? null,
                 'account_number' => $validated['account_number'] ?? null,
                 'ifsc_code' => $validated['ifsc_code'] ?? null,
-                'refund_amount' => $validated['refund_amount'] ?? null,
                 'document_images' => $documentPaths,
             ];
 
-            // Update the assignment
+            // ✅ Update the assignment
             $assignment->update($updateData);
+
+            // ✅ Update related vehicle's status_id based on vin
+            if ($request->filled('status') && $request->filled('vin')) {
+                $vehicle = Vehicle::where('vin', $request->vin)->first();
+                if ($vehicle) {
+                    $vehicle->status_id = $request->status;
+                    $vehicle->save();
+                }
+            }
 
             return redirect()->route('list.assignment', $assignment->id)
                 ->with('success', 'Assignment updated successfully!');
 
         } catch (\Exception $e) {
-            // Log the error for debugging
             \Log::error('Assignment update failed: ' . $e->getMessage());
 
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Failed to update assignment. Please try again.');
         }
+    }
+
+    public function completionUpdate(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'status' => 'nullable|integer|exists:statuses,id',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'end_time' => 'nullable',
+            'end_km' => 'nullable|integer|min:0',
+            'end_fuel' => 'nullable|numeric|min:0',
+            'end_fuel_unit' => 'nullable|in:L,Gallons,%',
+            'refund_amount' => 'nullable|numeric|min:0',
+            // ...include other existing validations here
+        ]);
+
+        try {
+            $assignment = Assignment::findOrFail($id);
+
+            // Update the assignment fields
+            $assignment->status = $validated['status'] ?? $assignment->status;
+            $assignment->end_date = $validated['end_date'] ?? $assignment->end_date;
+            $assignment->end_time = $validated['end_time'] ?? $assignment->end_time;
+            $assignment->end_km = $validated['end_km'] ?? $assignment->end_km;
+            $assignment->end_fuel = $validated['end_fuel'] ?? $assignment->end_fuel;
+            $assignment->end_fuel_unit = $validated['end_fuel_unit'] ?? $assignment->end_fuel_unit;
+            $assignment->refund_amount = $validated['refund_amount'] ?? $assignment->refund_amount;
+
+            $assignment->save();
+
+            // ✅ Also update related vehicle status_id
+            if (!empty($assignment->vin) && !empty($validated['status'])) {
+                $vehicle = Vehicle::where('vin', $assignment->vin)->first();
+
+                if ($vehicle) {
+                    $vehicle->status_id = $validated['status'];
+                    $vehicle->save();
+                }
+            }
+
+            return redirect()->route('list.assignment')
+                ->with('success', 'Assignment and vehicle status updated successfully!');
+
+        } catch (\Exception $e) {
+            \Log::error('Assignment update failed: ' . $e->getMessage());
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to update assignment. Please try again.');
+        }
+    }
+    public function destroyassignment($id)
+    {
+        $assignment = Assignment::findOrFail($id);
+        $assignment->delete();
+
+        return redirect()->back()->with('success', 'Assignment deleted successfully.');
     }
 
 

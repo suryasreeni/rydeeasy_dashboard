@@ -126,7 +126,7 @@
                                     <ul class="breadcrumbs flex items-center flex-wrap gap10">
 
 
-                                        <a class="tf-button style-1 w208" href="{{url('/AddAssignment')}}">
+                                        <a class="tf-button style-1 w208" href="{{route('add.assignment')}}">
                                             <i class="icon-plus"></i>New Assignment
                                         </a>
                                     </ul>
@@ -148,6 +148,21 @@
                                             </div>
                                         </form>
                                     </div>
+                                    <div class="d-flex gap-3 mb-3">
+                                        <a href="{{ route('list.assignment') }}"
+                                            class="btn {{ $filter === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
+                                            All Assignments
+                                        </a>
+                                        <a href="{{ route('list.assignment', ['filter' => 'complete']) }}"
+                                            class="btn {{ $filter === 'complete' ? 'btn-success' : 'btn-outline-success' }}">
+                                            Complete Assignments
+                                        </a>
+                                        <a href="{{ route('list.assignment', ['filter' => 'incomplete']) }}"
+                                            class="btn {{ $filter === 'incomplete' ? 'btn-danger' : 'btn-outline-danger' }}">
+                                            Incomplete Assignments
+                                        </a>
+                                    </div>
+
                                     <div class="wg-table table-assignment-list">
 
                                         {{-- Table Header --}}
@@ -156,10 +171,14 @@
                                             <li class="body-title">Customer</li>
                                             <li class="body-title">Contact</li>
                                             <li class="body-title">Start</li>
+                                            <li class="body-title">Expected Return</li>
+
                                             <li class="body-title">End</li>
                                             <li class="body-title">Model</li>
                                             <li class="body-title">Yard</li>
                                             <li class="body-title">Rent (₹)</li>
+                                            <li class="body-title">Return Status</li>
+
                                             <li class="body-title">Action</li>
                                         </ul>
 
@@ -167,7 +186,8 @@
                                         <ul class="table-body">
                                             @foreach ($assignments as $assignment)
                                             <li class="product-item d-flex align-items-center"
-                                                style="gap: 16px; padding: 12px 0;">
+                                                style="gap: 16px; padding: 12px 0; {{ !$assignment->end_date ? 'background-color: #fff3f3;' : '' }}">
+
 
                                                 {{-- VIN + Image --}}
                                                 <div class="body-text d-flex align-items-center gap-2">
@@ -194,16 +214,31 @@
 
                                                 {{-- Contact --}}
                                                 <div class="body-text">{{ $assignment->contact }}</div>
-
-                                                {{-- Start --}}
                                                 <div class="body-text">
-                                                    {{ date('d M Y, h:i A', strtotime($assignment->start_date . ' ' . $assignment->start_time)) }}
+                                                    {{ \Carbon\Carbon::parse($assignment->start_date)->format('Y-m-d') }}
+                                                    {{ \Carbon\Carbon::parse($assignment->start_time)->format('h:i A') }}
+                                                </div>
+                                                <div class="body-text">{{ $assignment->expected_return ?? 'N/A' }}</div>
+
+
+                                                <div class="body-text" style="color:green">
+                                                    @if ($assignment->end_date)
+                                                    <span style="color:green">
+                                                        {{ \Carbon\Carbon::parse($assignment->end_date)->format('Y-m-d') }}
+                                                        {{ \Carbon\Carbon::parse($assignment->end_time)->format('h:i A') }}
+                                                    </span>
+                                                    @else
+                                                    <span style="color:red">
+                                                        Incomplete
+                                                    </span>
+                                                    @endif
                                                 </div>
 
-                                                {{-- End --}}
-                                                <div class="body-text">
-                                                    {{ date('d M Y, h:i A', strtotime($assignment->end_date . ' ' . $assignment->end_time)) }}
-                                                </div>
+
+
+
+
+
 
                                                 {{-- Model --}}
                                                 <div class="body-text">{{ $assignment->model }}</div>
@@ -216,6 +251,40 @@
                                                 {{-- Rent --}}
                                                 <div class="body-text">₹{{ number_format($assignment->total_final, 2) }}
                                                 </div>
+                                                {{-- Return Status --}}
+
+                                                @php
+                                                $expected = $assignment->expected_return ?
+                                                Carbon\Carbon::parse($assignment->expected_return) : null;
+                                                $today = Carbon\Carbon::today();
+                                                $returnStatus = '';
+                                                $badgeStyle = '';
+
+                                                if ($expected) {
+                                                if ($expected->isSameDay($today)) {
+                                                $returnStatus = 'Today';
+                                                $badgeStyle = 'background:#facc15; color:#000;';
+                                                } elseif ($expected->isSameDay($today->copy()->addDay())) {
+                                                $returnStatus = 'Tomorrow';
+                                                $badgeStyle = 'background:#4ade80; color:#000;';
+                                                } elseif ($expected->lessThan($today)) {
+                                                $returnStatus = 'Overdue';
+                                                $badgeStyle = 'background:#ef4444; color:#fff;';
+                                                }
+                                                }
+                                                @endphp
+
+                                                <div class="body-text">
+                                                    @if ($returnStatus)
+                                                    <span
+                                                        style="padding: 4px 10px; border-radius: 14px; font-size: 12px; font-weight: 600; {{ $badgeStyle }}">
+                                                        {{ $returnStatus }}
+                                                    </span>
+                                                    @else
+                                                    <span style="color:#999;">N/A</span>
+                                                    @endif
+                                                </div>
+
 
                                                 {{-- Actions --}}
                                                 <div class="body-text d-flex gap-2">
@@ -224,8 +293,15 @@
                                                         data-bs-target="#editAssignmentModal{{ $assignment->id }}">
                                                         <i class="icon-edit" style="font-size:15px;"></i>
                                                     </a>
-
-                                                    <form action="" method="POST"
+                                                    <!-- Completion Status -->
+                                                    <a href="javascript:void(0)"
+                                                        class="btn btn-icon btn-sm btn-outline-warning"
+                                                        title="Change Status" data-bs-toggle="modal"
+                                                        data-bs-target="#changeAssignmentStatusModal{{ $assignment->id }}">
+                                                        <i class="icon-refresh-cw" style="font-size:15px;"></i>
+                                                    </a>
+                                                    <form action="{{ route('assignment.destroy', $assignment->id) }}"
+                                                        method="POST" style="display:inline-block;"
                                                         onsubmit="return confirm('Are you sure you want to delete this assignment?');">
                                                         @csrf
                                                         @method('DELETE')
@@ -241,7 +317,114 @@
                                             {{-- Modal --}}
                                             @include('vehicle.assignmentdetail')
                                             @include('vehicle.assignmentedit')
+                                            <!-- completion status modal -->
+                                            <div class="modal fade"
+                                                id="changeAssignmentStatusModal{{ $assignment->id }}" tabindex="-1"
+                                                aria-labelledby="changeAssignmentStatusModalLabel{{ $assignment->id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form action="{{ route('completion.update', $assignment->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Finish Assignment -
+                                                                    {{ $assignment->vin }}
+                                                                </h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
 
+                                                            <div class="modal-body">
+                                                                <!-- Assignment Status -->
+                                                                <div class="form-group">
+                                                                    <label
+                                                                        for="edit_status_{{ $assignment->id }}">Status</label>
+                                                                    <select id="edit_status_{{ $assignment->id }}"
+                                                                        name="status" class="form-control"
+                                                                        style="height:48px;font-size:15px;font-weight:400;">
+                                                                        <option value="">Select Status</option>
+                                                                        @foreach ($statuses as $status)
+                                                                        <option value="{{ $status->id }}"
+                                                                            {{ $assignment->status == $status->id ? 'selected' : '' }}>
+                                                                            {{ $status->status_name }}
+                                                                        </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+
+                                                                <!-- End Date & Time -->
+                                                                <div class="form-group">
+                                                                    <label>End Date & Time</label>
+                                                                    <div
+                                                                        class="datetime-group d-flex align-items-center gap-2">
+                                                                        <input type="date" name="end_date"
+                                                                            class="form-control"
+                                                                            value="{{ $assignment->end_date }}">
+                                                                        <span>at</span>
+                                                                        <input type="time" name="end_time"
+                                                                            class="form-control"
+                                                                            value="{{ $assignment->end_time }}">
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- End Odometer -->
+                                                                <div class="form-group mt-2">
+                                                                    <label>End Odometer Reading (KM)</label>
+                                                                    <input type="number" name="end_km"
+                                                                        class="form-control"
+                                                                        value="{{ $assignment->end_km }}"
+                                                                        placeholder="Enter KM reading">
+                                                                </div>
+
+                                                                <!-- End Fuel -->
+                                                                <div class="form-group mt-2">
+                                                                    <label>End Fuel Level</label>
+                                                                    <div class="d-flex gap-2">
+                                                                        <input type="number" name="end_fuel"
+                                                                            class="form-control"
+                                                                            value="{{ $assignment->end_fuel }}"
+                                                                            placeholder="Amount" step="0.1">
+                                                                        <select name="end_fuel_unit"
+                                                                            class="form-control"
+                                                                            style="font-size:15px;">
+                                                                            <option value="L"
+                                                                                {{ $assignment->end_fuel_unit == 'L' ? 'selected' : '' }}>
+                                                                                Liters</option>
+                                                                            <option value="Gallons"
+                                                                                {{ $assignment->end_fuel_unit == 'Gallons' ? 'selected' : '' }}>
+                                                                                Gallons</option>
+                                                                            <option value="%"
+                                                                                {{ $assignment->end_fuel_unit == '%' ? 'selected' : '' }}>
+                                                                                Percentage</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Refund -->
+                                                                <div class="form-group mt-2">
+                                                                    <label
+                                                                        for="edit_refund_amount_{{ $assignment->id }}">Refund
+                                                                        Amount</label>
+                                                                    <input type="number"
+                                                                        id="edit_refund_amount_{{ $assignment->id }}"
+                                                                        name="refund_amount" class="form-control"
+                                                                        value="{{ $assignment->refund_amount }}"
+                                                                        placeholder="0.00" step="0.01">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-success">Save &
+                                                                    Finish</button>
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Cancel</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                             @endforeach
                                         </ul>
                                     </div>
