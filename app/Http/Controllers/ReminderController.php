@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\ServiceTask;
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
 
 class ReminderController extends Controller
@@ -10,6 +11,14 @@ class ReminderController extends Controller
     {
 
         return view('reminder.servicereminder');
+    }
+    public function AddServiceReminder()
+    {
+
+        $allvehicle = Vehicle::all();
+        $servicetasks = ServiceTask::all();
+
+        return view('reminder.addservicereminder', compact('allvehicle', 'servicetasks'));
     }
     public function VehicleRenewal()
     {
