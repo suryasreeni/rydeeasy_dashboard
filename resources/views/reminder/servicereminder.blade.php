@@ -157,11 +157,7 @@
     <div id="wrapper">
         <div id="page">
             <div class="layout-wrap">
-                <div id="preload" class="preload-container">
-                    <div class="preloading">
-                        <span></span>
-                    </div>
-                </div>
+
                 @include('home.sidebar')
                 <div class="section-content-right">
                     @include('home.header')
@@ -180,7 +176,6 @@
                                 </div>
 
                                 <div class="wg-box">
-
                                     <div class="flex items-center justify-between gap10 flex-wrap">
                                         <div class="filter-container">
                                             <input type="text" placeholder="Search" class="search-input"
@@ -204,56 +199,138 @@
                                                 <li class="body-title column-action">Action</li>
                                             </ul>
 
-                                            <!-- Table Body -->
-                                            <ul class="product-item">
-                                                <!-- Vehicle -->
-                                                <div class="body-text column-name name-container">
-                                                    <span class="contact-name">dfdsf</span>
-                                                </div>
 
-                                                <!-- Service Task -->
-                                                <div class="body-text">dfsdf</div>
+                                            @foreach($reminders as $reminder)
+                                                @php
+                                                    $now = \Carbon\Carbon::now();
+                                                    $dueDate = $reminder->next_due_date ?
+                                                        \Carbon\Carbon::parse($reminder->next_due_date) : null;
+                                                    $nextDue = $dueDate ? $dueDate->format('d M Y') : '-';
 
-                                                <!-- Status -->
-                                                <div class="body-text">dfdf</div>
+                                                    $milesOverdue = '';
+                                                    if ($reminder->next_due_primary_meter && $reminder->current_reading) {
+                                                        $diff = $reminder->current_reading - $reminder->next_due_primary_meter;
+                                                        if ($diff > 0) {
+                                                            $milesOverdue = "<br><small class='text-danger'>{$diff} miles
+                                                                                                overdue</small>";
+                                                        }
+                                                    }
+                                                @endphp
 
-                                                <!-- Next Due (Date or Meter) -->
-                                                <div class="body-text">
-                                                    fsfsf
-                                                </div>
+                                                <ul class="product-item">
+                                                    <div
+                                                        class="body-text column-name name-container d-flex align-items-center gap-2">
+                                                        @if($reminder->vehicle && $reminder->vehicle->vehicle_image)
+                                                            <img src="{{ asset('storage/' . $reminder->vehicle->vehicle_image) }}"
+                                                                alt="Vehicle Image"
+                                                                style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
+                                                        @else
+                                                            <img src="{{ asset('images/placeholder-car.png') }}" alt="No Image"
+                                                                style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
+                                                        @endif
+                                                        <div>
+                                                            <div class="fw-bold">
+                                                                {{ $reminder->vehicle->vehicle_name ?? 'N/A' }}
+                                                            </div>
+                                                            <div class="text-muted small">
+                                                                {{ $reminder->vehicle->vin ?? 'VIN: N/A' }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <!-- Notify -->
-                                                <div class="body-text">
-                                                    <span> fdfd </span>
-                                                </div>
+                                                    <div class="body-text">
+                                                        {{ $reminder->serviceTask->service_task_name ?? 'N/A' }}<br>
+                                                        <small>
+                                                            @if ($reminder->time_interval)
+                                                                Every {{ $reminder->time_interval }}
+                                                                {{ Str::plural($reminder->time_interval_unit, $reminder->time_interval) }}
+                                                            @endif
+                                                            @if ($reminder->primary_meter_interval)
+                                                                {{ $reminder->time_interval ? 'or' : '' }}
+                                                                {{ number_format($reminder->primary_meter_interval) }} miles
+                                                            @endif
+                                                        </small>
+                                                    </div>
 
-                                                <!-- Actions -->
-                                                <div class="list-icon-function column-action d-flex gap-2">
-                                                    <a href="#" class="btn btn-sm btn-primary">
-                                                        <i class="icon-edit-3"></i>
-                                                    </a>
+                                                    <div class="body-text">
+                                                        @if ($dueDate && $dueDate->isPast())
+                                                            <span class="badge bg-danger">Overdue</span>
+                                                        @elseif (
+                                                                $dueDate && $dueDate->diffInDays($now) <= ($reminder->
+                                                                    time_threshold ?? 0)
+                                                            )
+                                                            <span class="badge bg-warning text-dark">Due Soon</span>
+                                                        @else
+                                                                <span class="badge bg-success">Upcoming</span>
+                                                            @endif
+                                                    </div>
 
-                                                    <form action="" method="POST"
-                                                        onsubmit="return confirm('Are you sure you want to delete this reminder?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button class="btn btn-sm btn-danger">
-                                                            <i class="icon-trash-2"></i>
+                                                    <div class="body-text">
+                                                        {!! $nextDue !!} {!! $milesOverdue !!}
+                                                    </div>
+
+                                                    <div class="body-text">
+                                                        @if (
+                                                                $reminder->time_threshold ||
+                                                                $reminder->primary_meter_due_soon_threshold
+                                                            )
+                                                            <span class="badge bg-info text-dark">
+                                                                @if ($reminder->time_threshold)
+                                                                    {{ $reminder->time_threshold }}
+                                                                    {{ Str::plural($reminder->time_threshold_unit, $reminder->time_threshold) }}
+                                                                    early
+                                                                @endif
+                                                                @if ($reminder->primary_meter_due_soon_threshold)
+                                                                    @if ($reminder->time_threshold)<br>@endif
+                                                                    {{ number_format($reminder->primary_meter_due_soon_threshold) }}
+                                                                    mi early
+                                                                @endif
+                                                            </span>
+                                                        @else
+                                                            <span class="text-muted">—</span>
+                                                        @endif
+                                                    </div>
+
+                                                    <div class="list-icon-function column-action d-flex gap-2">
+                                                        <button class="btn btn-lg btn-info text-white"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#viewReminderModal{{ $reminder->id }}">
+                                                            <i class="icon-eye"></i>
                                                         </button>
-                                                    </form>
-                                                </div>
-                                            </ul>
+                                                        <button class="btn btn-lg btn-primary" data-bs-toggle="modal"
+                                                            data-bs-target="#editReminderModal{{ $reminder->id }}">
+                                                            <i class="icon-edit-3"></i>
+                                                        </button>
+                                                        <form action="" method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to delete this reminder?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="btn btn-lg btn-danger">
+                                                                <i class="icon-trash-2"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </ul>
 
-                                        </div>
+                                                @include('reminder.servicereminder_detail', ['reminder' => $reminder])
 
-                                        <!-- Pagination & Footer -->
-                                        <div class="divider"></div>
-                                        <div class="flex items-center justify-between flex-wrap gap10">
-                                            <div class="text-tiny">Showing entries</div>
-                                            {{-- Optional pagination if using paginate() --}}
-                                            {{-- {{ $reminders->links() }} --}}
+                                                @include('reminder.servicereminder_edit', [
+                                                    'reminder' => $reminder,
+                                                    'allvehicle' => $allvehicle,
+                                                    'servicetasks' => $servicetasks
+                                                ])
+
+                                            @endforeach
+
                                         </div>
                                     </div>
+                                </div>
+                                <!-- Pagination & Footer -->
+                                <div class="divider"></div>
+                                <div class="flex items-center justify-between flex-wrap gap10">
+                                    <div class="text-tiny">Showing entries</div>
+                                    {{-- Optional pagination if using paginate() --}}
+                                    {{-- {{ $reminders->links() }} --}}
                                 </div>
                             </div>
                         </div>
@@ -261,67 +338,26 @@
                 </div>
             </div>
         </div>
-        <!-- Contact Detail Modal -->
-        <div class="modal fade" id="contactDetailModal" tabindex="-1" role="dialog"
-            aria-labelledby="contactDetailModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="contactDetailModalLabel">Contact Profile</h5>
-                        <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"
-                            style="padding: 5px;">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M4 4L16 16M4 16L16 4" stroke="black" stroke-width="2" stroke-linecap="round" />
-                            </svg>
-                        </button>
+    </div>
+    </di     v>
+    
 
+    @include('home.bottomlinks')
+    
+    <script>
+            func tio n filterTable() {
+        var inpu     t = document.getElementById("searchInput").value.toLowerCase();
+            var items = document.querySelectorAll(".product-item");
 
-
-                    </div>
-                    <div class="modal-body" id="contactDetailContent">
-                        <!-- Dynamic content will be loaded here -->
-                        <div class="text-center">Loading...</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @include('home.bottomlinks')
-        <script>
-            function filterTable() {
-                let input = document.getElementById("searchInput");
-                let filter = input.value.toUpperCase();
-                let table = document.querySelector(".wg-table");
-                let rows = table.getElementsByTagName("li");
-
-                for (let i = 1; i < rows.length; i++) {
-                    let txtValue = rows[i].textContent || rows[i].innerText;
-                    rows[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
-                }
+                items.forEach(item => {
+            if (item.innerText.toLowerCase().includes(input)) {
+                item.style.display = "";
+            } else {
+                item.style.display = "none";
             }
-        </script>
-        <script>
-            function viewContact(id) {
-                // Show modal first
-                $('#contactDetailModal').modal('show');
-
-                // Show loading text
-                $('#contactDetailContent').html('<div class="text-center">Loading...</div>');
-
-                // Fetch content via AJAX
-                fetch(`/contact-detail/${id}`)
-                    .then(response => response.text())
-                    .then(html => {
-                        $('#contactDetailContent').html(html);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching contact:', error);
-                        $('#contactDetailContent').html(
-                            '<div class="text-danger">Failed to load contact details.</div>');
-                    });
-            }
-        </script>
-
+        });
+    }
+    </script>
 </body>
 
 

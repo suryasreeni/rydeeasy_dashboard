@@ -81,6 +81,8 @@ Route::get('/Recall', [IssueController::class, 'Recall']);
 // Reminder
 Route::get('/ServiceReminder', [ReminderController::class, 'ServiceReminder']);
 Route::get('/AddServiceReminder', [ReminderController::class, 'AddServiceReminder'])->name('add.servicereminder');
+Route::post('/StoreServiceReminder', [ReminderController::class, 'StoreServiceReminder'])->name('store.servicereminder');
+
 
 Route::get('/VehicleRenewal', [ReminderController::class, 'VehicleRenewal']);
 Route::get('/ContactRenewal', [ReminderController::class, 'ContactRenewal']);

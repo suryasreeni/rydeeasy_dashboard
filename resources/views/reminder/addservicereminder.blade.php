@@ -10,127 +10,70 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <style>
-        .wg-table {
-            width: 100%;
-        }
+    .wg-table {
+        width: 100%;
+    }
 
-        .table-title,
-        .product-item {
-            display: flex;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
+    .table-title,
+    .product-item {
+        display: flex;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
 
-        .table-title {
-            background: #f4f4f4;
-            font-weight: bold;
-        }
+    .table-title {
+        background: #f4f4f4;
+        font-weight: bold;
+    }
 
-        .table-title li,
-        .product-item div {
-            flex: 1;
-            text-align: center;
-            padding: 5px;
-            box-sizing: border-box;
-        }
+    .table-title li,
+    .product-item div {
+        flex: 1;
+        text-align: center;
+        padding: 5px;
+        box-sizing: border-box;
+    }
 
-        .list-icon-function {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
+    .list-icon-function {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
 
-        .list-icon-function .item i {
-            cursor: pointer;
-            padding: 5px;
-        }
+    .list-icon-function .item i {
+        cursor: pointer;
+        padding: 5px;
+    }
 
-        /* Optional: Adjust widths if needed */
-        .column-sno {
-            flex: 0.5;
-        }
+    /* Optional: Adjust widths if needed */
+    .column-sno {
+        flex: 0.5;
+    }
 
-        .column-name {
-            flex: 1.5;
-        }
+    .column-name {
+        flex: 1.5;
+    }
 
-        .column-action {
-            flex: 1.2;
-        }
+    .column-action {
+        flex: 1.2;
+    }
 
-        .form-row {
-            display: flex;
-            gap: 20px;
-            /* Adjust spacing between fields */
-            align-items: center;
-            /* Aligns elements vertically */
-        }
+    .form-row {
+        display: flex;
+        gap: 20px;
+        /* Adjust spacing between fields */
+        align-items: center;
+        /* Aligns elements vertically */
+    }
 
-        .form-row fieldset {
-            border: none;
-            /* Removes fieldset border */
-            flex: 1;
-            /* Ensures both fields take equal space */
-            min-width: 200px;
-            /* Prevents fields from becoming too small */
-        }
-
-        .classification-container {
-            width: 100%;
-            /* max-width: 600px; */
-
-
-            padding: 20px;
-            border-radius: 10px;
-
-            font-family: Arial, sans-serif;
-        }
-
-        .classification-title {
-            font-size: 12px;
-
-
-            margin-bottom: 15px;
-        }
-
-        .classification-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 25px;
-            margin-bottom: 15px;
-        }
-
-        .classification-item input {
-            margin-top: 5px;
-        }
-
-        .classification-label {
-            font-size: 14px;
-            font-weight: bold;
-            color: black;
-        }
-
-        .classification-description {
-            font-size: 12px;
-            color: #555;
-            margin-top: 3px;
-        }
-
-        .submit-btn {
-            background: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-
-
-
-        }
-
-        .submit-btn:hover {
-            background: #0056b3;
-        }
+    .form-row fieldset {
+        border: none;
+        /* Removes fieldset border */
+        flex: 1;
+        /* Ensures both fields take equal space */
+        min-width: 200px;
+        /* Prevents fields from becoming too small */
+    }
     </style>
 </head>
 
@@ -163,16 +106,17 @@
 
                                 <!-- add-new-user -->
                                 @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul class="mb-0">
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                                 @endif
 
-                                <form class="form-add-new-user form-style-2" action="" method="POST"
+                                <form class="form-add-new-user form-style-2"
+                                    action="{{ route('store.servicereminder') }}" method="POST"
                                     enctype="multipart/form-data">
                                     @csrf
                                     <div class="wg-box">
@@ -184,9 +128,9 @@
                                                     <select name="vehicle_id" required>
                                                         <option value="">-- Select Vehicle --</option>
                                                         @foreach ($allvehicle as $vehicle)
-                                                            <option value="{{$vehicle->id}}">
-                                                                {{ $vehicle->vin }} ({{ $vehicle->vehicle_name }})
-                                                            </option>
+                                                        <option value="{{$vehicle->id}}">
+                                                            {{ $vehicle->vin }} ({{ $vehicle->vehicle_name }})
+                                                        </option>
                                                         @endforeach
                                                     </select>
                                                 </fieldset>
@@ -196,9 +140,9 @@
                                                     <select name="service_task_id" required>
                                                         <option value="">-- Select Service Task--</option>
                                                         @foreach ($servicetasks as $servicetask)
-                                                            <option value="{{$servicetask->id}}">
-                                                                {{ $servicetask->service_task_name }}
-                                                            </option>
+                                                        <option value="{{$servicetask->id}}">
+                                                            {{ $servicetask->service_task_name }}
+                                                        </option>
                                                         @endforeach
                                                     </select>
                                                 </fieldset>
@@ -271,39 +215,58 @@
 
                                             </div>
 
-                                            <div class="form-row row align-items-end">
+                                            <div class="form-row row gx-3 align-items-end">
+                                                <!-- Current Reading -->
+                                                <div class="col-md-3">
+                                                    <fieldset class="name mb-24">
+                                                        <div class="body-title mb-10">
+                                                            Current Reading
+                                                            <i class="bi bi-question-circle text-muted"
+                                                                data-bs-toggle="tooltip"
+                                                                title="Enter the current reading from the odometer manually"
+                                                                style="font-size: 16px;"></i>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="number" name="current_reading"
+                                                                id="current_reading" class="form-control" min="1">
+                                                            <span class="input-group-text">meter</span>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
 
-                                                <!-- Meter Interval -->
+                                                <!-- Primary Meter Interval -->
                                                 <div class="col-md-4">
                                                     <fieldset class="name mb-24">
                                                         <div class="body-title mb-10">
                                                             Primary Meter Interval
                                                             <i class="bi bi-question-circle text-muted"
                                                                 data-bs-toggle="tooltip"
-                                                                title="Use this option to set a service reminder based on usage (for example, Oil Change every 5,000 miles). Leave blank if you don't want to use this option. Units are determined by the vehicle's primary meter."
+                                                                title="Set the meter interval like 5000 km"
                                                                 style="font-size: 16px;"></i>
                                                         </div>
                                                         <div class="input-group">
                                                             <span class="input-group-text">Every</span>
                                                             <input type="number" name="primary_meter_interval"
-                                                                class="form-control" min="1">
+                                                                id="primary_meter_interval" class="form-control"
+                                                                min="1">
                                                             <span class="input-group-text">mi</span>
                                                         </div>
                                                     </fieldset>
                                                 </div>
 
-                                                <!-- Meter Threshold -->
+                                                <!-- Primary Meter Due Soon Threshold -->
                                                 <div class="col-md-4">
                                                     <fieldset class="name mb-24">
                                                         <div class="body-title mb-10">
                                                             Primary Meter Due Soon Threshold
                                                             <i class="bi bi-question-circle text-muted"
                                                                 data-bs-toggle="tooltip"
-                                                                title="The number of miles/km/hours in advance you consider this reminder to be due soon (for example, 500 miles is common for a typical fleet vehicle)"
+                                                                title="How soon before due should alert show (e.g., 500 km)"
                                                                 style="font-size: 16px;"></i>
                                                         </div>
                                                         <div class="input-group">
                                                             <input type="number" name="primary_meter_due_soon_threshold"
+                                                                id="primary_meter_due_soon_threshold"
                                                                 class="form-control" min="0">
                                                             <span class="input-group-text">mi</span>
                                                         </div>
@@ -339,7 +302,8 @@
                                                             <span class="input-group-text">At</span>
 
                                                             <input type="number" name="next_due_primary_meter"
-                                                                class="form-control" min="0">
+                                                                id="next_due_primary_meter" class="form-control"
+                                                                min="0">
                                                             <span class="input-group-text">mi</span>
                                                         </div>
                                                     </fieldset>
@@ -378,13 +342,76 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
-            });
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
         });
+    });
     </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const intervalInput = document.querySelector('input[name="time_interval"]');
+        const unitSelect = document.querySelector('select[name="time_interval_unit"]');
+        const dueDateInput = document.querySelector('input[name="next_due_date"]');
+
+        function calculateNextDueDate() {
+            const interval = parseInt(intervalInput.value);
+            const unit = unitSelect.value;
+            const today = new Date();
+
+            if (!isNaN(interval) && unit) {
+                let nextDue = new Date(today);
+
+                switch (unit) {
+                    case "day":
+                        nextDue.setDate(today.getDate() + interval);
+                        break;
+                    case "week":
+                        nextDue.setDate(today.getDate() + (interval * 7));
+                        break;
+                    case "month":
+                        nextDue.setMonth(today.getMonth() + interval);
+                        break;
+                    case "year":
+                        nextDue.setFullYear(today.getFullYear() + interval);
+                        break;
+                }
+
+                // Format the date as yyyy-mm-dd
+                const yyyy = nextDue.getFullYear();
+                const mm = String(nextDue.getMonth() + 1).padStart(2, '0');
+                const dd = String(nextDue.getDate()).padStart(2, '0');
+                dueDateInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+        }
+
+        intervalInput.addEventListener("input", calculateNextDueDate);
+        unitSelect.addEventListener("change", calculateNextDueDate);
+    });
+    </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const currentReadingInput = document.getElementById("current_reading");
+        const intervalInput = document.getElementById("primary_meter_interval");
+        const nextDueInput = document.getElementById("next_due_primary_meter");
+
+        function updateNextDueMeter() {
+            const current = parseInt(currentReadingInput.value);
+            const interval = parseInt(intervalInput.value);
+
+            if (!isNaN(current) && !isNaN(interval)) {
+                nextDueInput.value = current + interval;
+            } else {
+                nextDueInput.value = '';
+            }
+        }
+
+        currentReadingInput.addEventListener("input", updateNextDueMeter);
+        intervalInput.addEventListener("input", updateNextDueMeter);
+    });
+    </script>
+
 
 </body>
 
