@@ -4,7 +4,8 @@
             <!-- Close Button -->
 
 
-            <form class="form-add-new-user form-style-2" action="" method="POST" enctype="multipart/form-data">
+            <form class="form-add-new-user form-style-2" action="{{ route('update.servicereminder',$reminder->id) }}"
+                method="POST" enctype="multipart/form-data">
 
                 @csrf
                 @method('PUT')
@@ -117,8 +118,8 @@
                                             class="bi bi-question-circle text-muted" data-bs-toggle="tooltip"
                                             title="Enter the current reading from the odometer manually"></i></div>
                                     <div class="input-group">
-                                        <input type="number" name="current_reading" class="form-control" min="1"
-                                            value="{{ $reminder->current_reading }}">
+                                        <input type="number" name="current_reading" id="current_reading"
+                                            class="form-control" min="1" value="{{ $reminder->current_reading }}">
                                         <span class="input-group-text">meter</span>
                                     </div>
                                 </fieldset>
@@ -131,7 +132,8 @@
                                             title="Set the meter interval like 5000 km"></i></div>
                                     <div class="input-group">
                                         <span class="input-group-text">Every</span>
-                                        <input type="number" name="primary_meter_interval" class="form-control" min="1"
+                                        <input type="number" name="primary_meter_interval" id="primary_meter_interval"
+                                            class="form-control" min="1"
                                             value="{{ $reminder->primary_meter_interval }}">
                                         <span class="input-group-text">mi</span>
                                     </div>
@@ -169,7 +171,8 @@
                                     <div class="body-title mb-10">Next Due Primary Meter</div>
                                     <div class="input-group">
                                         <span class="input-group-text">At</span>
-                                        <input type="number" name="next_due_primary_meter" class="form-control" min="0"
+                                        <input type="number" name="next_due_primary_meter" id="next_due_primary_meter"
+                                            class="form-control" min="0"
                                             value="{{ $reminder->next_due_primary_meter }}">
                                         <span class="input-group-text">mi</span>
                                     </div>

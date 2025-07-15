@@ -150,6 +150,42 @@
             border-radius: 50%;
             object-fit: cover;
         }
+
+        .count-container {
+            display: flex;
+            gap: 20px;
+            max-width: 600px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            text-decoration: underline;
+        }
+
+        .card-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .overdue .card-number {
+            color: #d32f2f;
+        }
+
+        .due-soon .card-number {
+            color: #f57c00;
+        }
     </style>
 </head>
 
@@ -183,6 +219,23 @@
                                         </div>
 
                                         <div class="wg-table table-product-list">
+                                            <div class="count-container">
+                                                <div class="status-card overdue">
+                                                    <div class="card-title">Overdue Vehicles</div>
+                                                    <div class="card-number">{{ $overdueCount }}</div>
+                                                </div>
+
+                                                <div class="status-card due-soon">
+                                                    <div class="card-title">Due Soon Vehicles</div>
+                                                    <div class="card-number">{{ $dueSoonCount }}</div>
+                                                </div>
+
+                                                <div class="status-card upcoming">
+                                                    <div class="card-title">Upcoming</div>
+                                                    <div class="card-number">{{ $upcomingCount }}</div>
+                                                </div>
+                                            </div>
+
                                             <br><br>
 
                                             @if (session('success'))
@@ -301,7 +354,8 @@
                                                             data-bs-target="#editReminderModal{{ $reminder->id }}">
                                                             <i class="icon-edit-3"></i>
                                                         </button>
-                                                        <form action="" method="POST"
+                                                        <form action="{{ route('destroy.servicereminder', $reminder->id) }}"
+                                                            method="POST"
                                                             onsubmit="return confirm('Are you sure you want to delete this reminder?')">
                                                             @csrf
                                                             @method('DELETE')
@@ -325,6 +379,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+
                                 <!-- Pagination & Footer -->
                                 <div class="divider"></div>
                                 <div class="flex items-center justify-between flex-wrap gap10">
@@ -335,29 +391,22 @@
                             </div>
                         </div>
                     </div>
+
+
+
+
+
                 </div>
             </div>
         </div>
     </div>
-    </di     v>
-    
+    </div>
+
 
     @include('home.bottomlinks')
-    
-    <script>
-            func tio n filterTable() {
-        var inpu     t = document.getElementById("searchInput").value.toLowerCase();
-            var items = document.querySelectorAll(".product-item");
 
-                items.forEach(item => {
-            if (item.innerText.toLowerCase().includes(input)) {
-                item.style.display = "";
-            } else {
-                item.style.display = "none";
-            }
-        });
-    }
-    </script>
+
+
 </body>
 
 

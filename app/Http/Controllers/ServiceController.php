@@ -1,39 +1,29 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Vehicle;
+use App\Models\ServiceTask;
+use App\Models\Vendor;
+
 
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
-    public function ServiceHistory()
+    public function Service()
     {
 
-        return view('service.servicehistory');
+        $allvehicle = Vehicle::all();
+        return view('service.service', compact('allvehicle'));
     }
-    public function WorkOrder()
+    public function AddService()
     {
+        $allvehicle = Vehicle::all();
+        $servicetasks = ServiceTask::all();
+        $vendors = Vendor::all();
 
-        return view('service.workorder');
-    }
-    public function ServiceTask()
-    {
 
-        return view('service.servicetask');
-    }
-    public function ServiceProgram()
-    {
 
-        return view('service.serviceprogram');
-    }
-    public function ShopDirectory()
-    {
-
-        return view('service.servicedirectory');
-    }
-    public function ShopIntegration()
-    {
-
-        return view('service.serviceintegration');
+        return view('service.addservice', compact('allvehicle', 'servicetasks', 'vendors'));
     }
 }

@@ -2,20 +2,20 @@
 
 <head>
     <style>
-    .sub-menu-item.active a {
-        color: #007bff;
+        .sub-menu-item.active a {
+            color: #007bff;
 
 
 
 
 
-        display: inline-block;
-        /* Ensures proper spacing */
-    }
+            display: inline-block;
+            /* Ensures proper spacing */
+        }
 
-    .menu-item.has-children.active>a {
-        color: #007bff !important;
-    }
+        .menu-item.has-children.active>a {
+            color: #007bff !important;
+        }
     </style>
 </head>
 
@@ -162,44 +162,13 @@
 
                             </ul>
                         </li>
-                        <li class="menu-item has-children">
-                            <a href="javascript:void(0);" class="menu-item-button">
+                        <li class="menu-item">
+                            <a href="{{url('/Service')}}">
                                 <div class="icon"><i class="fas fa-cogs"></i> </div>
-                                <div class="text">Services</div>
+                                <div class="text">Services Entry</div>
                             </a>
-                            <ul class="sub-menu">
-                                <li class="sub-menu-item">
-                                    <a href="{{url('/ServiceHistory')}}">
-                                        <div class="text">Service History</div>
-                                    </a>
-                                </li>
-                                <li class="sub-menu-item">
-                                    <a href="{{url('/WorkOrder')}}">
-                                        <div class="text">Work Orders</div>
-                                    </a>
-                                </li>
-                                <li class="sub-menu-item">
-                                    <a href="{{url('/ServiceTask')}}">
-                                        <div class="text">Service Tasks</div>
-                                    </a>
-                                </li>
-                                <li class="sub-menu-item">
-                                    <a href="{{url('/ServiceProgram')}}">
-                                        <div class="text">Service Programs</div>
-                                    </a>
-                                </li>
-                                <li class="sub-menu-item">
-                                    <a href="{{url('/ShopDirectory')}}">
-                                        <div class="text">Shop Directory</div>
-                                    </a>
-                                </li>
-                                <li class="sub-menu-item">
-                                    <a href="{{url('/ShopIntegration')}}">
-                                        <div class="text">Shop Integration</div>
-                                    </a>
-                                </li>
 
-                            </ul>
+
                         </li>
 
 
@@ -307,23 +276,23 @@
     </div>
 </body>
 <script>
-function updateLogo() {
-    let body = document.body;
-    let logo = document.getElementById("logo_header");
+    function updateLogo() {
+        let body = document.body;
+        let logo = document.getElementById("logo_header");
 
-    // Light & Dark Mode Logo Paths
-    let lightLogo = "Assets/images/logo/rideeasy.png";
-    let darkLogo = "Assets/images/logo/rideeasy-dark.png";
+        // Light & Dark Mode Logo Paths
+        let lightLogo = "Assets/images/logo/rideeasy.png";
+        let darkLogo = "Assets/images/logo/rideeasy-dark.png";
 
-    // Check if dark mode is active
-    if (body.classList.contains("dark-mode")) {
-        logo.src = darkLogo; // Set Dark Mode Logo
-    } else {
-        logo.src = lightLogo; // Set Light Mode Logo
+        // Check if dark mode is active
+        if (body.classList.contains("dark-mode")) {
+            logo.src = darkLogo; // Set Dark Mode Logo
+        } else {
+            logo.src = lightLogo; // Set Light Mode Logo
+        }
     }
-}
 
-// Run function when page loads
-window.onload = updateLogo;
+    // Run function when page loads
+    window.onload = updateLogo;
 </script>
 <!-- /section-menu-left -->

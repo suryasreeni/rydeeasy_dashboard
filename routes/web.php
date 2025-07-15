@@ -79,20 +79,21 @@ Route::get('/Issue', [IssueController::class, 'Issue']);
 Route::get('/Fault', [IssueController::class, 'Fault']);
 Route::get('/Recall', [IssueController::class, 'Recall']);
 // Reminder
-Route::get('/ServiceReminder', [ReminderController::class, 'ServiceReminder']);
+Route::get('/ServiceReminder', [ReminderController::class, 'ServiceReminder'])->name('list.servicereminder');
 Route::get('/AddServiceReminder', [ReminderController::class, 'AddServiceReminder'])->name('add.servicereminder');
 Route::post('/StoreServiceReminder', [ReminderController::class, 'StoreServiceReminder'])->name('store.servicereminder');
+Route::put('/UpdateServiceReminder/{id}', [ReminderController::class, 'UpdateServiceReminder'])->name('update.servicereminder');
+Route::put('/DestroyServiceReminder/{id}', [ReminderController::class, 'DestroyServiceReminder'])->name('destroy.servicereminder');
+
+
 
 
 Route::get('/VehicleRenewal', [ReminderController::class, 'VehicleRenewal']);
 Route::get('/ContactRenewal', [ReminderController::class, 'ContactRenewal']);
 // service
-Route::get('/ServiceHistory', [ServiceController::class, 'ServiceHistory']);
-Route::get('/WorkOrder', [ServiceController::class, 'WorkOrder']);
-Route::get('/ServiceTask', [ServiceController::class, 'ServiceTask']);
-Route::get('/ServiceProgram', [ServiceController::class, 'ServiceProgram']);
-Route::get('/ShopDirectory', [ServiceController::class, 'ShopDirectory']);
-Route::get('/ShopIntegration', [ServiceController::class, 'ShopIntegration']);
+Route::get('/Service', [ServiceController::class, 'Service']);
+Route::get('/AddService', [ServiceController::class, 'AddService'])->name('service.add');
+
 // contact
 Route::get('/Contact', [ContactController::class, 'Contact'])->name('contact.contact');
 Route::get('/AddContact', [ContactController::class, 'AddContact'])->name('contact.addcontact');
