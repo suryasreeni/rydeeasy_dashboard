@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
     <title>vehicles list</title>
@@ -72,7 +73,7 @@
         }
 
         .body-text {
-            font-size: 12px;
+            font-size: 14px;
         }
 
         .nav-link {
@@ -287,66 +288,102 @@
                                                 </div>
                                                 <div class="wg-table table-product-list">
                                                     <ul class="table-title">
-                                                        <li class="body-title">Name</li>
-                                                        <li class="body-title">
-                                                            Description
-                                                        </li>
-                                                        <li class="body-title">Category</li>
-                                                        <li class="body-title">Manufacturer</li>
-                                                        <li class="body-title">
-                                                            Manufacturer Part Number
-                                                        </li>
-                                                        <li class="body-title">Measurement Unit</li>
-
-
-                                                        <li class="body-title">Aiale/Row/Bin</li>
-                                                        <li class="body-title">Unit Cost</li>
-
-
-
-
-
-
-
+                                                        <li class="body-title">Vehicle</li>
+                                                        <li class="body-title">Vendor</li>
+                                                        <li class="body-title">Serviced On</li>
+                                                        <li class="body-title">Odometer</li>
+                                                        <li class="body-title">Completed Task</li>
+                                                        <li class="body-title">Total</li>
+                                                        <li class="body-title">Action</li>
                                                     </ul>
                                                     <ul>
-                                                        <li class="product-item">
-                                                            <div class="body-text">abc shop</div>
-                                                            <div class="body-text">
-                                                                Type 1
-                                                            </div>
-                                                            <div class="body-text">Brand 1</div>
-                                                            <div class="body-text">Model 1</div>
-                                                            <div class="body-text">Serial Number 1</div>
-                                                            <div class="body-text">
-                                                                Group 1
-                                                            </div>
-                                                            <div class="body-text">
-                                                                Current Assignee 1
-                                                            </div>
-                                                            <div class="body-text">Labels</div>
-                                                        </li>
+                                                        @foreach ($service_entries as $service_entry)
+                                                            <li class="product-item d-flex flex-wrap">
+                                                                <div class="body-text">
+                                                                    @if(
+                                                                            $service_entry->vehicle &&
+                                                                            $service_entry->vehicle->vehicle_image
+                                                                        )
+                                                                        <img src="{{ asset('storage/' . $service_entry->vehicle->vehicle_image) }}"
+                                                                            alt="Vehicle Image"
+                                                                            style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
+                                                                    @else
+                                                                        <img src="{{ asset('images/placeholder-car.png') }}"
+                                                                            alt="No Image"
+                                                                            style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
+                                                                    @endif
+                                                                    <div>{{ $service_entry->service_vehicle }}</div>
+                                                                </div>
+
+                                                                <div class="body-text">{{ $service_entry->vendor }}</div>
+                                                                <div class="body-text">
+                                                                    {{ \Carbon\Carbon::parse($service_entry->serviced_on)->format('d M Y') }}
+                                                                </div>
+                                                                <div class="body-text">
+                                                                    {{ $service_entry->service_odometer }} km
+                                                                </div>
+
+                                                                <div class="body-text">
+                                                                    @if(is_array($service_entry->completed_task))
+                                                                        {{ implode(', ', $service_entry->completed_task) }}
+                                                                    @else
+                                                                        {{ $service_entry->completed_task }}
+                                                                    @endif
+                                                                </div>
+
+                                                                <div class="body-text">₹
+                                                                    {{ number_format($service_entry->total, 2) }}
+                                                                </div>
+
+                                                                <div class="body-text d-flex justify-content-center gap-2">
+                                                                    <!-- Edit -->
+
+                                                                    <button type="button"
+                                                                        class="btn btn-icon btn-sm btn-outline-primary"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#serviceDetailModal{{ $service_entry->id }}"
+                                                                        title="Edit Service">
+                                                                        <i class="icon-eye" style="font-size:15px;"></i>
+                                                                    </button>
+                                                                    <!-- View Details -->
+                                                                    <button type="button"
+                                                                        class="btn btn-icon btn-sm btn-outline-info"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#serviceEditModal{{ $service_entry->id }}"
+                                                                        title="View Details">
+                                                                        <i class="icon-edit" style="font-size:15px;"></i>
+                                                                    </button>
+
+                                                                    <!-- Delete -->
+                                                                    <form
+                                                                        action="{{ route('service.delete', $service_entry->id) }}"
+                                                                        method="POST"
+                                                                        onsubmit="return confirm('Are you sure you want to delete this record?');">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit"
+                                                                            class="btn btn-icon btn-sm btn-outline-danger"
+                                                                            title="Delete">
+                                                                            <i class="icon-trash-2"
+                                                                                style="font-size:15px;"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </li>
+
+                                                            <!-- view modal -->
+                                                        @endforeach
                                                     </ul>
                                                 </div>
+
                                                 <div class="divider"></div>
                                             </div>
                                         </div>
 
-                                        <!-- Other Tab Content (Empty for Now) -->
-                                        <div class="tab-pane fade" id="charging" role="tabpanel"
-                                            aria-labelledby="charging-tab">Charging Content
-                                        </div>
-                                        <div class="tab-pane fade" id="fuel" role="tabpanel" aria-labelledby="fuel-tab">
-                                            Fuel Content</div>
-                                        <div class="tab-pane fade" id="service" role="tabpanel"
-                                            aria-labelledby="service-tab">Service Content</div>
-                                        <div class="tab-pane fade" id="tools" role="tabpanel"
-                                            aria-labelledby="tools-tab">Tools Content</div>
-                                        <div class="tab-pane fade" id="vehicle" role="tabpanel"
-                                            aria-labelledby="vehicle-tab">Vehicle Content</div>
-                                        <div class="tab-pane fade" id="archived" role="tabpanel"
-                                            aria-labelledby="archived-tab">Archived Content
-                                        </div>
+                                        @include('service.viewservice')
+                                        @include('service.editservice')
+
+
                                     </div>
                                 </div>
                                 <!-- contents end -->

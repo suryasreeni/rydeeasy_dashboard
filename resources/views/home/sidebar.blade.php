@@ -49,12 +49,12 @@
                             class="menu-item has-children {{ request()->is('VehicleList') || request()->is('VehicleAssignment') || request()->is('MeterHistory') || request()->is('ExpenseHistory') || request()->is('ReplacementAnalysis') ? 'active' : '' }}">
                             <a href="javascript:void(0);" class="menu-item-button">
                                 <div class="icon"><i class="fas fa-car"></i></div>
-                                <div class="text">Vehicles</div>
+                                <div class="text">Vehicle Management</div>
                             </a>
                             <ul class="sub-menu">
                                 <li class="sub-menu-item {{ request()->is('VehicleList') ? 'active' : '' }}">
                                     <a href="{{url('/VehicleList')}}">
-                                        <div class="text">Vehicle List</div>
+                                        <div class="text">Vehicles</div>
                                     </a>
                                 </li>
                                 <li class="sub-menu-item {{ request()->is('VehicleAssignment') ? 'active' : '' }}">
@@ -62,21 +62,7 @@
                                         <div class="text">Vehicle Assignments</div>
                                     </a>
                                 </li>
-                                <li class="sub-menu-item {{ request()->is('MeterHistory') ? 'active' : '' }}">
-                                    <a href="{{url('/MeterHistory')}}">
-                                        <div class="text">Meter History</div>
-                                    </a>
-                                </li>
-                                <li class="sub-menu-item {{ request()->is('ExpenseHistory') ? 'active' : '' }}">
-                                    <a href="{{url('/ExpenseHistory')}}">
-                                        <div class="text">Expense History</div>
-                                    </a>
-                                </li>
-                                <li class="sub-menu-item {{ request()->is('ReplacementAnalysis') ? 'active' : '' }}">
-                                    <a href="{{url('/ReplacementAnalysis')}}">
-                                        <div class="text">Replacement Analysis</div>
-                                    </a>
-                                </li>
+
                             </ul>
                         </li>
                         <li class="menu-item">

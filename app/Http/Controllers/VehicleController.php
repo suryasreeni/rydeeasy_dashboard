@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 use App\Models\ContactForm;
+use App\Models\Fuel_Type;
 use App\Models\Type;
+use App\Models\VehicleBrand;
+use App\Models\VehicleModel;
 use App\Models\Vendor;
 use App\Models\Vehicle;
 use App\Models\VehicleStatus;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+
 
 use Carbon\Carbon;
 
@@ -44,15 +49,25 @@ class VehicleController extends Controller
 
 
 
-    public function AddVehicle()
+    public function AddVehicle(Request $request)
     {
         $vendors = Vendor::all();
         $contacts = ContactForm::all();
         $types = Type::all();
         $statuses = VehicleStatus::all();
-
-        return view('vehicle.addvehicle', compact('vendors', 'contacts', 'types', 'statuses'));
+        $brands = VehicleBrand::all();
+        $fueltypes = Fuel_Type::all();
+        return view('vehicle.addvehicle', compact('vendors', 'contacts', 'types', 'statuses', 'brands', 'fueltypes'));
     }
+
+    public function fetchModels(Request $request)
+    {
+        $brandId = $request->input('brand_id');
+        $models = VehicleModel::where('brand_id', $brandId)->pluck('model_name', 'id');
+
+        return response()->json($models);
+    }
+
     public function vehiclestore(Request $request)
     {
         $request->validate([

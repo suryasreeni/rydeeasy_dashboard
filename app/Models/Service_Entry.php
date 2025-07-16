@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 // app/Models/Service.php
 class Service_Entry extends Model
 {
+
+    protected $table = 'service_entries';
+
     protected $fillable = [
         'service_vehicle',
         'serviced_on',
@@ -27,4 +30,10 @@ class Service_Entry extends Model
         'completed_task' => 'array',
         'resolved_issues' => 'array',
     ];
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class, 'service_vehicle', 'vin');
+    }
+
 }

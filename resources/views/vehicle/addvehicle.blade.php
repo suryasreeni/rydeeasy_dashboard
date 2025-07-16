@@ -8,313 +8,313 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vehicles List</title>
     <style>
-        /* Sidebar (Bootstrap Pills) */
-        .sidebar {
-            width: 500px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            height: fit-content;
-            margin-bottom: 150px;
-            display: flex;
-            flex-direction: column;
+    /* Sidebar (Bootstrap Pills) */
+    .sidebar {
+        width: 500px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        height: fit-content;
+        margin-bottom: 150px;
+        display: flex;
+        flex-direction: column;
 
 
-        }
+    }
 
-        /* Sidebar Buttons (Nav-Pills) */
-        .sidebar .nav-link {
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            font-size: 14px;
-            border-radius: 5px;
-            background: transparent;
-            border: none;
-            text-align: left;
-            width: 100%;
-            color: black;
-            transition: background 0.3s ease-in-out;
-            font-weight: 400;
-        }
+    /* Sidebar Buttons (Nav-Pills) */
+    .sidebar .nav-link {
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 5px;
+        background: transparent;
+        border: none;
+        text-align: left;
+        width: 100%;
+        color: black;
+        transition: background 0.3s ease-in-out;
+        font-weight: 400;
+    }
 
-        /* Hover Effect */
-        .sidebar .nav-link:hover {
-            background: #f0f0f0;
-        }
+    /* Hover Effect */
+    .sidebar .nav-link:hover {
+        background: #f0f0f0;
+    }
 
-        /* Active Tab */
-        .sidebar .nav-link.active {
-            background: rgb(235, 237, 239);
-            color: black;
-        }
+    /* Active Tab */
+    .sidebar .nav-link.active {
+        background: rgb(235, 237, 239);
+        color: black;
+    }
 
-        /* form */
-        .form-container {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            flex-grow: 1;
-            /* Takes up full width next to the sidebar */
-            margin-left: 20px;
-            /* Space from sidebar */
-            min-height: auto;
-            margin-bottom: 30px;
-        }
+    /* form */
+    .form-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        flex-grow: 1;
+        /* Takes up full width next to the sidebar */
+        margin-left: 20px;
+        /* Space from sidebar */
+        min-height: auto;
+        margin-bottom: 30px;
+    }
 
-        .form-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
+    .form-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
 
-        .input-group {
-            margin-bottom: 15px;
-        }
+    .input-group {
+        margin-bottom: 15px;
+    }
 
-        .input-group label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 5px;
-            font-size: 12px;
-        }
+    .input-group label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 5px;
+        font-size: 12px;
+    }
 
-        .input-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+    .input-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
 
-        .submit-btn {
-            background: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            float: right;
+    .submit-btn {
+        background: #007bff;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        float: right;
 
-        }
+    }
 
-        .submit-btn:hover {
-            background: #0056b3;
-        }
+    .submit-btn:hover {
+        background: #0056b3;
+    }
 
-        /* maintanance */
-        .service-program {
-            max-width: 100%;
-            font-family: Arial, sans-serif;
-        }
+    /* maintanance */
+    .service-program {
+        max-width: 100%;
+        font-family: Arial, sans-serif;
+    }
 
-        .description {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
-        }
+    .description {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 15px;
+    }
 
-        .option {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-            transition: all 0.3s;
-
-
-
-        }
-
-        .option:hover {
-            border-color: #007bff;
-        }
-
-        .radio-container {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 8px;
-            cursor: pointer;
-        }
-
-        .radio-container input {
-            display: none;
-        }
-
-        .custom-radio {
-            width: 18px;
-            height: 18px;
-            border: 2px solid #007bff;
-            border-radius: 50%;
-            display: inline-block;
-            position: relative;
-            margin-right: 10px;
-        }
-
-        .radio-container input:checked+.custom-radio::after {
-            content: "";
-            width: 10px;
-            height: 10px;
-            background: #007bff;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .option-label {
-            font-size: 12px;
-            font-weight: 500;
-            flex-grow: 1;
-        }
-
-        .option-description {
-            font-size: 12px;
-            color: gray;
-        }
-
-        .hidden-dropdown {
-            width: 100%;
-            margin-top: 10px;
-            padding: 8px;
-            font-size: 14px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            display: none;
-            /* Initially hidden */
-        }
-
-        .loan-container {
-            display: flex;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            overflow: hidden;
-            width: 100%;
-        }
-
-        .loan-option {
-            flex: 1;
-            padding: 15px;
-            cursor: pointer;
-            border-right: 1px solid #ccc;
-            text-align: left;
-        }
-
-        .loan-option:last-child {
-            border-right: none;
-        }
-
-        .loan-option input {
-            margin-right: 10px;
-        }
-
-        .loan-option.active {
-            background-color: #eaf4ff;
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .checkbox-container input {
-            margin-top: 4px;
-        }
-
-        .checkbox-container label {
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        .checkbox-container a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .checkbox-container a:hover {
-            text-decoration: underline;
-        }
-
-        .tooltip-icon {
-            cursor: pointer;
-            margin-left: 5px;
-            font-size: 14px;
-            color: #555;
-            border: 1px solid #ccc;
-            border-radius: 50%;
-            padding: 2px 4px;
-            display: inline-block;
-            font-weight: 400;
-        }
-
-        .tooltip {
-            position: absolute;
-            background: #333;
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            bottom: 120%;
-            left: 0;
-            max-width: 300px;
-            /* Adjust as needed */
-            white-space: normal;
-            /* Allows text to wrap */
-            word-wrap: break-word;
-            /* Ensures text wraps */
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .input-group:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .input-group span {
-            font-size: 14px;
-            color: #555;
-        }
-
-        .unit {
-            position: absolute;
-            right: 10px;
-            top: 70%;
-            transform: translateY(-50%);
-            color: #555;
+    .option {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        transition: all 0.3s;
 
 
-            pointer-events: none;
-            /* Prevent clicking */
-        }
 
-        .radio-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            /* Creates spacing between each radio button-label pair */
-            margin-top: 20px;
-        }
+    }
 
-        .radio-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            /* Adds space between radio button and label */
-        }
+    .option:hover {
+        border-color: #007bff;
+    }
 
-        .radio-group label {
-            font-size: 12px;
-        }
+    .radio-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .radio-container input {
+        display: none;
+    }
+
+    .custom-radio {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #007bff;
+        border-radius: 50%;
+        display: inline-block;
+        position: relative;
+        margin-right: 10px;
+    }
+
+    .radio-container input:checked+.custom-radio::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background: #007bff;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .option-label {
+        font-size: 12px;
+        font-weight: 500;
+        flex-grow: 1;
+    }
+
+    .option-description {
+        font-size: 12px;
+        color: gray;
+    }
+
+    .hidden-dropdown {
+        width: 100%;
+        margin-top: 10px;
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        display: none;
+        /* Initially hidden */
+    }
+
+    .loan-container {
+        display: flex;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .loan-option {
+        flex: 1;
+        padding: 15px;
+        cursor: pointer;
+        border-right: 1px solid #ccc;
+        text-align: left;
+    }
+
+    .loan-option:last-child {
+        border-right: none;
+    }
+
+    .loan-option input {
+        margin-right: 10px;
+    }
+
+    .loan-option.active {
+        background-color: #eaf4ff;
+    }
+
+    .checkbox-container {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .checkbox-container input {
+        margin-top: 4px;
+    }
+
+    .checkbox-container label {
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .checkbox-container a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .checkbox-container a:hover {
+        text-decoration: underline;
+    }
+
+    .tooltip-icon {
+        cursor: pointer;
+        margin-left: 5px;
+        font-size: 14px;
+        color: #555;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        padding: 2px 4px;
+        display: inline-block;
+        font-weight: 400;
+    }
+
+    .tooltip {
+        position: absolute;
+        background: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        bottom: 120%;
+        left: 0;
+        max-width: 300px;
+        /* Adjust as needed */
+        white-space: normal;
+        /* Allows text to wrap */
+        word-wrap: break-word;
+        /* Ensures text wraps */
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .input-group:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .input-group span {
+        font-size: 14px;
+        color: #555;
+    }
+
+    .unit {
+        position: absolute;
+        right: 10px;
+        top: 70%;
+        transform: translateY(-50%);
+        color: #555;
+
+
+        pointer-events: none;
+        /* Prevent clicking */
+    }
+
+    .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        /* Creates spacing between each radio button-label pair */
+        margin-top: 20px;
+    }
+
+    .radio-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        /* Adds space between radio button and label */
+    }
+
+    .radio-group label {
+        font-size: 12px;
+    }
     </style>
 
 
@@ -345,102 +345,100 @@
                                         </a>
                                     </ul>
                                 </div>
-                                <!-- <hr style="height:0.5px;border-width:0;color:gray;background-color:gray"> -->
 
 
                                 <div class="d-flex align-items-start">
-                                    <!-- Sidebar -->
-                                    <!-- <div class="sidebar nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
-                                        aria-orientation="vertical">
-                                        <button class="nav-link active" id="v-pills-details-tab" data-bs-toggle="pill"
-                                            data-bs-target="#v-pills-details" type="button" role="tab"
-                                            aria-controls="v-pills-details" aria-selected="true">Details</button>
-
-
-
-
-                                        <button class="nav-link" id="v-pills-lifecycle-tab" data-bs-toggle="pill"
-                                            data-bs-target="#v-pills-lifecycle" type="button" role="tab"
-                                            aria-controls="v-pills-lifecycle" aria-selected="false">Lifecycle</button>
-
-                                        <button class="nav-link" id="v-pills-financial-tab" data-bs-toggle="pill"
-                                            data-bs-target="#v-pills-financial" type="button" role="tab"
-                                            aria-controls="v-pills-financial" aria-selected="false">Financial</button>
-
-
-
-                                    </div> -->
-
-                                    <!-- Tab Content -->
-                                    <!-- <div class="tab-content flex-grow-1" id="v-pills-tabContent" style="width: 100%;"> -->
-
-                                    <!-- Details Tab -->
 
                                     <form action="{{ route('vehicle.store') }}" method="POST"
                                         enctype="multipart/form-data">
                                         @csrf
-                                        <div class="form-container">
-                                            <h5 class="form-title">Add with a VIN</h5>
-                                            <fieldset class="input-group" style="width:50%">
-                                                <label for="vin">VIN/SN</label>
-                                                <input type="text" id="vin" name="vin">
-                                                <p style="font-size:10px;">Vehicle Identification Number or
-                                                    Serial Number</p>
-                                            </fieldset>
-                                        </div>
+
 
                                         <div class="form-container">
-                                            <h5 class="form-title">Identification</h5>
+                                            <h5 class="form-title">Basic Details</h5>
                                             <div style="display: flex; gap: 20px; align-items: center;">
+                                                <!-- number plate -->
+                                                <fieldset class="input-group" style="flex: 1;">
+                                                    <label for="vin">Number Plate</label>
+                                                    <input type="text" id="vin" name="vin">
+
+                                                </fieldset>
+                                                <!-- vehicle name -->
                                                 <fieldset class="input-group" style="flex: 1;">
                                                     <label for="vehicle_name">Vehicle Name</label>
                                                     <input type="text" id="vehicle_name" name="vehicle_name">
                                                 </fieldset>
+                                                <!-- vehicle type -->
                                                 <fieldset class="input-group" style="flex: 1;">
-                                                    <label for="vehicle_type">Type</label>
+                                                    <label for="vehicle_type">Vehicle Type</label>
                                                     <select id="vehicle_type" name="vehicle_type">
                                                         <option value="" disabled selected>Please select
                                                         </option>
                                                         @foreach($types as $type)
-                                                            <option value="{{ $type->type_name }}">
-                                                                {{ $type->type_name }}
-                                                            </option>
+                                                        <option value="{{ $type->type_name }}">
+                                                            {{ $type->type_name }}
+                                                        </option>
                                                         @endforeach
                                                     </select>
                                                 </fieldset>
-
-                                            </div>
-                                            <div style="display: flex; gap: 20px; align-items: center;">
+                                                <!-- fuel type -->
                                                 <fieldset class="input-group" style="flex: 1;">
-                                                    <label for="model">Model Name</label>
-                                                    <input type="text" id="model" name="model">
-                                                </fieldset>
+                                                    <label for="year">Fuel Type</label>
+                                                    <select name="fueltype">
+                                                        <option value="">-- Select Fuel Type --</option>
 
-                                                <fieldset class="input-group" style="flex: 1;">
-                                                    <label for="year">Year</label>
-                                                    <select id="year" name="year">
-                                                        <option value="" disabled selected>Please select
+                                                        @foreach ($fueltypes as $fueltype)
+                                                        <option value="{{ $fueltype->fuel_type }}">
+                                                            {{ $fueltype->fuel_type }}
                                                         </option>
-                                                        @for($year = date('Y'); $year >= 2000; $year--)
-                                                            <option value="{{ $year }}">{{ $year }}</option>
-                                                        @endfor
+
+
+                                                        @endforeach
+
                                                     </select>
                                                 </fieldset>
 
                                             </div>
                                             <div style="display: flex; gap: 20px; align-items: center;">
+
+                                                <!-- brand -->
+                                                <fieldset class="input-group" style="flex: 1;">
+                                                    <label for="vehicle_name">Vehicle Brand</label>
+                                                    <select id="brand_id" name="brand_id">
+                                                        <option value="">-- Select Brand --</option>
+                                                        @foreach($brands as $brand)
+                                                        <option value="{{ $brand->id }}">{{ $brand->brand_name }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </fieldset>
+                                                <!-- model -->
+                                                <fieldset class="input-group" style="flex: 1;">
+                                                    <label for="vehicle_type">Vehicle Model</label>
+                                                    <select id="model_id" name="model_id">
+                                                        <option value="">-- Select Model --</option>
+                                                    </select>
+                                                </fieldset>
+                                                <!-- year -->
+                                                <fieldset class="input-group" style="flex: 1;">
+                                                    <label for="year">Year</label>
+                                                    <input type="text" name="year">
+                                                </fieldset>
+
+                                                <!-- status -->
                                                 <fieldset class="input-group" style="flex: 1;">
                                                     <label for="status_id">Status</label>
                                                     <select name="status_id" id="status_id"
                                                         onchange="updateStatusDot(this)">
-                                                        <option value="" disabled selected>Please select</option>
                                                         @foreach($statuses as $status)
-                                                            <option value="{{ $status->id }}"
-                                                                data-color="{{ $status->status_color }}">
-                                                                {{ $status->status_name }}
-                                                            </option>
+                                                        <option value="{{ $status->id }}"
+                                                            data-color="{{ $status->status_color }}"
+                                                            {{ $status->status_name === 'Inactive' ? 'selected hidden' : '' }}>
+                                                            {{ $status->status_name }}
+                                                        </option>
                                                         @endforeach
                                                     </select>
+
 
 
                                                     <!-- Note: default inactive status -->
@@ -449,21 +447,6 @@
                                                         <strong>Note:</strong> Set all new vehicles as
                                                         <strong>Inactive</strong> by default.
                                                     </small>
-                                                </fieldset>
-
-
-
-
-
-                                                <fieldset class="input-group" style="flex: 1;">
-                                                    <label for="ownership">Ownership</label>
-                                                    <select name="ownership" id="ownership">
-                                                        <option value="" disabled selected>Please select
-                                                        </option>
-                                                        <option value="Owned">Owned</option>
-                                                        <option value="Leased">Leased</option>
-                                                        <option value="Rented">Rented</option>
-                                                    </select>
                                                 </fieldset>
                                             </div>
                                             <div style="display: flex; gap: 20px; align-items: center;">
@@ -478,13 +461,16 @@
                                                         </option>
                                                         <option value="Pickup & Delivery">Pickup & Delivery
                                                         </option>
-                                                        <option value="Service Vehicle">Service Vehicle</option>
-                                                        <option value="Replacement Vehicle">Replacement Vehicle
-                                                        </option>
-                                                        <option value="Demo/Test Drive">Demo/Test Drive</option>
-                                                        <option value="Customer Travel">Customer Travel</option>
-                                                        <option value="Standby">Standby</option>
+
                                                     </select>
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex: 1;">
+                                                    <label for="engine_no">Engine Number</label>
+                                                    <input type="text" name="engine_no" id="engine_no">
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex: 1;">
+                                                    <label for="chassis_no">Chassis Number</label>
+                                                    <input type="text" name="chassis_no" id="chassis_no">
                                                 </fieldset>
                                                 <fieldset class="input-group" style="flex: 1;">
                                                     <label for="vehicle_image">Vehicle Image</label>
@@ -498,14 +484,20 @@
                                         <!-- Lifecycle Tab -->
 
                                         <div class="form-container">
-                                            <h5 class="form-title">In-Service</h5>
+                                            <h5 class="form-title">Advance Details</h5>
                                             <div style="display: flex; gap: 20px; align-items: center;">
 
                                                 <fieldset class="input-group" style="flex:1">
-                                                    <label for="in_service_date">In-Service Date</label>
-                                                    <input type="date" id="in_service_date" name="in_service_date">
-                                                    <p style="font-size:10px;">Date vehicle entered active fleet
-                                                        service</p>
+                                                    <label for="owner">Owner</label>
+                                                    <select name="owner" id="owner">
+                                                        <option value="">-- Select Contact --</option>
+
+                                                        @foreach($contacts as $contact)
+                                                        <option value="{{ $contact->name }}">
+                                                            {{ $contact->name }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
                                                 </fieldset>
                                                 <fieldset class="input-group" style="flex:1">
                                                     <label for="in_service_odometer">In-Service Odometer</label>
@@ -560,8 +552,8 @@
                                                         <option value="" disabled selected style="font-size:12px;">
                                                             Please select</option>
                                                         @foreach ($vendors as $vendor)
-                                                            <option value="{{ $vendor->id }}">{{ $vendor->name }}
-                                                            </option>
+                                                        <option value="{{ $vendor->id }}">{{ $vendor->name }}
+                                                        </option>
                                                         @endforeach
                                                     </select>
                                                 </fieldset>
@@ -624,9 +616,9 @@
                                                                     style="font-size:12px;">Please select
                                                                 </option>
                                                                 @foreach ($contacts as $contact)
-                                                                    <option value="{{ $contact->id }}">
-                                                                        {{ $contact->name }}
-                                                                    </option>
+                                                                <option value="{{ $contact->id }}">
+                                                                    {{ $contact->name }}
+                                                                </option>
                                                                 @endforeach
                                                             </select>
                                                         </fieldset>
@@ -744,50 +736,77 @@
     @include('home.bottomlinks')
 
     <script>
-        function updateStatusDot(sel) {
-            const selectedOption = sel.selectedOptions[0];
-            const color = selectedOption ? selectedOption.getAttribute('data-color') : '#ddd';
-            document.getElementById('status-dot').style.backgroundColor = color || '#ddd';
-        }
+    function updateStatusDot(sel) {
+        const selectedOption = sel.selectedOptions[0];
+        const color = selectedOption ? selectedOption.getAttribute('data-color') : '#ddd';
+        document.getElementById('status-dot').style.backgroundColor = color || '#ddd';
+    }
     </script>
     <script>
-        function toggleDropdown(show) {
-            let dropdown = document.getElementById("serviceDropdown");
-            if (show) {
-                dropdown.style.display = "block";
-            } else {
-                dropdown.style.display = "none";
-            }
+    function toggleDropdown(show) {
+        let dropdown = document.getElementById("serviceDropdown");
+        if (show) {
+            dropdown.style.display = "block";
+        } else {
+            dropdown.style.display = "none";
         }
+    }
     </script>
     <!-- loan -->
     <script>
-        document.querySelectorAll('.loan-option').forEach(option => {
-            option.addEventListener('click', function () {
-                document.querySelectorAll('.loan-option').forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-                this.querySelector('input').checked = true;
-            });
+    document.querySelectorAll('.loan-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.loan-option').forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            this.querySelector('input').checked = true;
         });
+    });
     </script>
     <script>
-        function toggleLoanForm() {
-            var loanForm = document.getElementById("loan-form");
-            var selectedValue = document.querySelector('input[name="purchase_type"]:checked').value;
+    function toggleLoanForm() {
+        var loanForm = document.getElementById("loan-form");
+        var selectedValue = document.querySelector('input[name="purchase_type"]:checked').value;
 
 
-            if (selectedValue === "loan") {
-                loanForm.style.display = "block";
-            } else {
-                loanForm.style.display = "none";
-            }
+        if (selectedValue === "loan") {
+            loanForm.style.display = "block";
+        } else {
+            loanForm.style.display = "none";
         }
+    }
 
-        // Ensure form visibility on page load if "Loan" is preselected
-        document.addEventListener("DOMContentLoaded", function () {
-            toggleLoanForm();
-        });
+    // Ensure form visibility on page load if "Loan" is preselected
+    document.addEventListener("DOMContentLoaded", function() {
+        toggleLoanForm();
+    });
     </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const brandSelect = document.getElementById('brand_id');
+        const modelSelect = document.getElementById('model_id');
+
+        brandSelect.addEventListener('change', function() {
+            const brandId = this.value;
+
+            modelSelect.innerHTML = '<option value="">-- Select Model --</option>';
+
+            if (brandId) {
+                fetch(`/vehicle/models/fetch?brand_id=${brandId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        for (const id in data) {
+                            const option = document.createElement('option');
+                            option.value = id;
+                            option.text = data[id];
+                            modelSelect.appendChild(option);
+                        }
+                    });
+            }
+        });
+    });
+    </script>
+
 </body>
 
 </html>

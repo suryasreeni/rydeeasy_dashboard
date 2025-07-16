@@ -273,14 +273,18 @@
                                                 <ul class="product-item">
                                                     <div
                                                         class="body-text column-name name-container d-flex align-items-center gap-2">
-                                                        @if($reminder->vehicle && $reminder->vehicle->vehicle_image)
-                                                            <img src="{{ asset('storage/' . $reminder->vehicle->vehicle_image) }}"
+                                                        @if(
+                                                                $service_entry->vehicle &&
+                                                                $service_entry->vehicle->vehicle_image
+                                                            )
+                                                            <img src="{{ Storage::url($service_entry->vehicle->vehicle_image) }}"
                                                                 alt="Vehicle Image"
                                                                 style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
                                                         @else
                                                             <img src="{{ asset('images/placeholder-car.png') }}" alt="No Image"
                                                                 style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
                                                         @endif
+
                                                         <div>
                                                             <div class="fw-bold">
                                                                 {{ $reminder->vehicle->vehicle_name ?? 'N/A' }}

@@ -91,8 +91,14 @@ Route::put('/DestroyServiceReminder/{id}', [ReminderController::class, 'DestroyS
 Route::get('/VehicleRenewal', [ReminderController::class, 'VehicleRenewal']);
 Route::get('/ContactRenewal', [ReminderController::class, 'ContactRenewal']);
 // service
-Route::get('/Service', [ServiceController::class, 'Service']);
+Route::get('/Service', [ServiceController::class, 'Service'])->name('service.list');
 Route::get('/AddService', [ServiceController::class, 'AddService'])->name('service.add');
+Route::post('/StoreService', [ServiceController::class, 'StoreService'])->name('service.store');
+Route::put('/UpdateService/{id}', [ServiceController::class, 'UpdateService'])->name('service.update');
+Route::post('/DeleteService/{id}', [ServiceController::class, 'DeleteService'])->name('service.delete');
+
+
+
 
 // contact
 Route::get('/Contact', [ContactController::class, 'Contact'])->name('contact.contact');
@@ -142,9 +148,9 @@ Route::get(uri: '/Setting', action: [SettingController::class, 'Setting'])->name
 Route::post('/vehicle-status', [SettingController::class, 'storestatus'])->name('vehicle-status.store');
 Route::put('/statuses/{id}', [SettingController::class, 'updatestatus'])->name('statuses.update');
 Route::delete('/statuses/{id}', [SettingController::class, 'destroystatus'])->name('statuses.destroy');
-Route::post(uri: '/storetype', action: [SettingController::class, 'storetype'])->name('type.store');
+Route::post(uri: 'Setting/storetype', action: [SettingController::class, 'storetype'])->name('type.store');
 Route::put(uri: '/updatetype/{id}', action: [SettingController::class, 'updatetype'])->name('type.update');
-Route::delete('/destroytype/{id}', [SettingController::class, 'destroytype'])->name('type.destroy');
+Route::delete('Setting/destroytype/{id}', [SettingController::class, 'destroytype'])->name('type.destroy');
 
 Route::post(uri: '/Setting/storeservicetask', action: [SettingController::class, 'storeservicetask'])->name('servicetask.store');
 Route::put('/Setting/service-tasks/{id}', [SettingController::class, 'servicetaskupdate'])->name('service-tasks.update');
@@ -153,3 +159,14 @@ Route::delete('/destroyservicetask/{id}', [SettingController::class, 'servicetas
 Route::post(uri: '/Setting/storerenewaltype', action: [SettingController::class, 'storerenewaltype'])->name('renewaltype.store');
 Route::put('/Setting/updaterenewaltype/{id}', [SettingController::class, 'updaterenewaltype'])->name('renewaltype.update');
 Route::delete('Setting/destroyrenewaltype/{id}', [SettingController::class, 'renewaltypedestroy'])->name('renewaltype.destroy');
+
+Route::get(uri: '/Setting/storebrand', action: [SettingController::class, 'storebrand'])->name('brand.store');
+Route::delete('Setting/destroybrand/{id}', [SettingController::class, 'Destroybrand'])->name('brand.destroy');
+
+Route::post(uri: '/Setting/storemodel', action: [SettingController::class, 'storemodel'])->name('model.store');
+Route::get('/vehicle/models/fetch', [VehicleController::class, 'fetchModels'])->name('vehicle.models.fetch');
+Route::delete('Setting/destroymodel/{id}', [SettingController::class, 'Destroymodel'])->name('model.destroy');
+
+
+Route::get(uri: '/Setting/storefueltype', action: [SettingController::class, 'storefueltype'])->name('fueltype.store');
+Route::delete('Setting/destroyfueltype/{id}', [SettingController::class, 'Destroyfueltype'])->name('fueltype.destroy');

@@ -194,8 +194,8 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <form class="form-add-new-user form-style-2" action="" method="POST"
-                                    enctype="multipart/form-data">
+                                <form class="form-add-new-user form-style-2" action="{{ route('service.store') }}"
+                                    method="POST" enctype="multipart/form-data">
                                     @csrf
 
                                     <!-- basic information -->
@@ -263,7 +263,7 @@
                                                 </fieldset>
                                                 <fieldset class="name">
                                                     <div class="body-title mb-10">Vendor</div>
-                                                    <select name="completed_task">
+                                                    <select name="vendor">
                                                         <option value="" disabled selected>Please Select Vendor</option>
                                                         @foreach ($vendors as $vendor)
                                                             <option value="{{ $vendor->name }}">

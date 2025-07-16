@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fuel_Type;
 use Illuminate\Http\Request;
 use App\Models\VehicleStatus;
 use App\Models\ServiceTask;
 use App\Models\RenewalType;
+use App\Models\VehicleBrand;
+use App\Models\VehicleModel;
+
+
+
 use App\Models\Vehicle;
 
 
@@ -19,9 +25,12 @@ class SettingController extends Controller
         $statuses = VehicleStatus::all(); // Fetch all statuses from the DB
         $types = Type::all();
         $servicetasks = ServiceTask::all();
+        $vehicle_brand = VehicleBrand::all();
+        $vehicle_model = VehicleModel::with('brand')->get();
         $renewaltypes = RenewalType::all();
+        $fueltypes = Fuel_Type::all();
 
-        return view('setting.setting', compact('statuses', 'types', 'servicetasks', 'renewaltypes'));
+        return view('setting.setting', compact('statuses', 'types', 'servicetasks', 'renewaltypes', 'vehicle_brand', 'vehicle_model', 'fueltypes'));
     }
     public function storestatus(Request $request)
     {
@@ -171,4 +180,66 @@ class SettingController extends Controller
         return redirect(route('setting.setting') . '#vehicle_renewal_type')->with('success', 'Renewal Type deleted successfully!');
     }
 
+    public function Storebrand(Request $request)
+    {
+        $request->validate([
+            'brand_name' => 'required|string|max:255|unique:vehicle_brands,brand_name',
+        ]);
+
+        VehicleBrand::create([
+            'brand_name' => $request->brand_name,
+        ]);
+
+        return redirect()->to(route('setting.setting') . '#vehicle_brand')
+            ->with('success', 'Vehicle brand added successfully.');
+    }
+
+    public function Destroybrand($id)
+    {
+        VehicleBrand::destroy($id);
+        return redirect(route('setting.setting') . '#vehicle_brand')->with('success', 'Brand deleted successfully!');
+    }
+
+    public function storemodel(Request $request)
+    {
+        $request->validate([
+            'brand_id' => 'required|exists:vehicle_brands,id',
+            'model_name' => 'required|string|max:255|unique:vehicle_models,model_name',
+        ]);
+
+        VehicleModel::create([
+            'brand_id' => $request->brand_id,
+            'model_name' => $request->model_name,
+        ]);
+
+        return redirect(route('setting.setting') . '#vehicle_model')->with('success', 'Model deleted successfully!');
+    }
+
+    public function Destroymodel($id)
+    {
+        VehicleModel::destroy($id);
+        return redirect(route('setting.setting') . '#vehicle_model')->with('success', 'Model deleted successfully!');
+    }
+
+
+    public function storefueltype(Request $request)
+    {
+        $request->validate([
+            'fuel_type' => 'required|string|max:255',
+        ]);
+
+        Fuel_Type::create([
+            'fuel_type' => $request->fuel_type,
+        ]);
+
+        return redirect()->to(route('setting.setting') . '#fuel_type')
+            ->with('success', 'Fuel Type added successfully.');
+    }
+
+
+    public function Destroyfueltype($id)
+    {
+        Fuel_Type::destroy($id);
+        return redirect(route('setting.setting') . '#fuel')->with('success', 'Fuel Type deleted successfully!');
+    }
 }
