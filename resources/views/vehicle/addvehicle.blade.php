@@ -360,7 +360,9 @@
                                                 <!-- number plate -->
                                                 <fieldset class="input-group" style="flex: 1;">
                                                     <label for="vin">Number Plate</label>
-                                                    <input type="text" id="vin" name="vin">
+                                                    <input type="text" id="vin" name="vin" onblur="checkVin()">
+                                                    <small id="vin-error" class="text-danger"
+                                                        style="display: none;">This number plate already exists!</small>
 
                                                 </fieldset>
                                                 <!-- vehicle name -->
@@ -402,23 +404,7 @@
                                             <div style="display: flex; gap: 20px; align-items: center;">
 
                                                 <!-- brand -->
-                                                <fieldset class="input-group" style="flex: 1;">
-                                                    <label for="vehicle_name">Vehicle Brand</label>
-                                                    <select id="brand_id" name="brand_id">
-                                                        <option value="">-- Select Brand --</option>
-                                                        @foreach($brands as $brand)
-                                                        <option value="{{ $brand->id }}">{{ $brand->brand_name }}
-                                                        </option>
-                                                        @endforeach
-                                                    </select>
-                                                </fieldset>
-                                                <!-- model -->
-                                                <fieldset class="input-group" style="flex: 1;">
-                                                    <label for="vehicle_type">Vehicle Model</label>
-                                                    <select id="model_id" name="model_id">
-                                                        <option value="">-- Select Model --</option>
-                                                    </select>
-                                                </fieldset>
+
                                                 <!-- year -->
                                                 <fieldset class="input-group" style="flex: 1;">
                                                     <label for="year">Year</label>
@@ -448,9 +434,6 @@
                                                         <strong>Inactive</strong> by default.
                                                     </small>
                                                 </fieldset>
-                                            </div>
-                                            <div style="display: flex; gap: 20px; align-items: center;">
-
                                                 <fieldset class="input-group" style="flex: 1;">
                                                     <label for="group">Group</label>
                                                     <select name="group" id="group">
@@ -464,6 +447,10 @@
 
                                                     </select>
                                                 </fieldset>
+                                            </div>
+                                            <div style="display: flex; gap: 20px; align-items: center;">
+
+
                                                 <fieldset class="input-group" style="flex: 1;">
                                                     <label for="engine_no">Engine Number</label>
                                                     <input type="text" name="engine_no" id="engine_no">
@@ -472,10 +459,7 @@
                                                     <label for="chassis_no">Chassis Number</label>
                                                     <input type="text" name="chassis_no" id="chassis_no">
                                                 </fieldset>
-                                                <fieldset class="input-group" style="flex: 1;">
-                                                    <label for="vehicle_image">Vehicle Image</label>
-                                                    <input type="file" id="vehicle_image" name="vehicle_image">
-                                                </fieldset>
+
                                             </div>
                                         </div>
 
@@ -500,39 +484,231 @@
                                                     </select>
                                                 </fieldset>
                                                 <fieldset class="input-group" style="flex:1">
-                                                    <label for="in_service_odometer">In-Service Odometer</label>
-                                                    <input type="text" id="in_service_odometer"
-                                                        name="in_service_odometer">
-                                                    <p style="font-size:10px;">Odometer reading on in-service
-                                                        date
-                                                    </p>
+                                                    <label for="location">Location</label>
+                                                    <select name="location">
+                                                        <option value="">-- Select location --</option>
+
+                                                        @foreach($locations as $location)
+                                                        <option value="{{$location->location_name}}">
+                                                            {{$location->location_name}}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex: 1;">
+                                                    <label for="brand_id">Vehicle Brand</label>
+                                                    <select id="brand_id" name="brand_id">
+                                                        <option value="">-- Select Brand --</option>
+                                                        @foreach($brands as $brand)
+                                                        <option value="{{ $brand->id }}">{{ $brand->brand_name }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </fieldset>
+                                                <!-- model -->
+                                                <fieldset class="input-group" style="flex: 1;">
+                                                    <label for="model_id">Vehicle Model</label>
+                                                    <select id="model_id" name="model_id">
+                                                        <option value="">-- Select Model --</option>
+                                                    </select>
+                                                </fieldset>
+                                            </div>
+                                            <div style="display: flex; gap: 20px; align-items: center;">
+
+                                                <fieldset class="input-group" style="flex: 1;">
+                                                    <label for="vehicle_tyre_size">Vehicle Tyre Size</label>
+                                                    <input type="text" id="vehicle_tyre_size" name="vehicle_tyre_size">
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex: 1;">
+                                                    <label for="vehicle_tons">Vehicle Tons</label>
+                                                    <input type="text" id="vehicle_tons" name="vehicle_tons">
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex: 1;">
+                                                    <label for="odometer_reading">Odometer Reading</label>
+                                                    <input type="text" id="odometer_reading" name="odometer_reading">
                                                 </fieldset>
                                             </div>
                                         </div>
 
                                         <div class="form-container">
-                                            <h5 class="form-title">Out-of-Service</h5>
+                                            <h5 class="form-title">Reminder Date</h5>
 
                                             <div style="display: flex; gap: 20px; align-items: center;">
 
                                                 <fieldset class="input-group" style="flex:1">
-                                                    <label for="out_of_service_date">Out-of-Service Date</label>
-                                                    <input type="date" id="out_of_service_date"
-                                                        name="out_of_service_date">
-                                                    <p style="font-size:10px;">Date vehicle was retired from
-                                                        fleet
-                                                        service
+                                                    <label for="insurance_no">Insurance No</label>
+                                                    <input type="text" id="insurance_no" name="insurance_no">
 
-                                                    </p>
                                                 </fieldset>
                                                 <fieldset class="input-group" style="flex:1">
-                                                    <label for="out_of_service_odometer">Out-of-Service Odometer</label>
-                                                    <input type="text" id="out_of_service_odometer"
-                                                        name="out_of_service_odometer">
-                                                    <p style="font-size:10px;">
-                                                        Final odometer reading on out-of-service date
-                                                    </p>
+                                                    <label for="insurance_start_date">Insurance Start Date</label>
+                                                    <input type="date" id="insurance_start_date"
+                                                        name="insurance_start_date">
+
                                                 </fieldset>
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="insurance_end_date">Insurance End Date</label>
+                                                    <input type="date" id="insurance_end_date"
+                                                        name="insurance_end_date">
+
+                                                </fieldset>
+                                            </div>
+                                            <div style="display: flex; gap: 20px; align-items: center;">
+
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="roadtex_no">RoadTex No</label>
+                                                    <input type="text" id="roadtex_no" name="roadtex_no">
+
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="roadtex_last_date">RoadTex Last Date</label>
+                                                    <input type="date" id="roadtex_last_date" name="roadtex_last_date">
+
+                                                </fieldset>
+
+                                            </div>
+                                            <div style="display: flex; gap: 20px; align-items: center;">
+
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="permit_no">Permit No</label>
+                                                    <input type="text" id="permit_no" name="permit_no">
+
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="permit_last_date">Permit Last Date</label>
+                                                    <input type="date" id="permit_last_date" name="permit_last_date">
+
+                                                </fieldset>
+
+                                            </div>
+
+                                            <div style="display: flex; gap: 20px; align-items: center;">
+
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="puc_no">PUC No</label>
+                                                    <input type="text" id="puc_no" name="puc_no">
+
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="puc_last_date">PUC Last Date</label>
+                                                    <input type="date" id="puc_last_date" name="puc_last_date">
+
+                                                </fieldset>
+
+                                            </div>
+                                            <div style="display: flex; gap: 20px; align-items: center;">
+
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="registration_no">Registration No</label>
+                                                    <input type="text" id="registration_no" name="registration_no">
+
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="registration_valid_from">Registration Valid From</label>
+                                                    <input type="date" id="registration_valid_from"
+                                                        name="registration_valid_from">
+
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="registration_valid_to">Registration Valid To</label>
+                                                    <input type="date" id="registration_valid_to"
+                                                        name="registration_valid_to">
+
+                                                </fieldset>
+
+                                            </div>
+
+                                            <div style="display: flex; gap: 20px; align-items: center;">
+
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="state_permit_start_date">State Permit Start Date</label>
+                                                    <input type="date" id="state_permit_start_date"
+                                                        name="state_permit_start_date">
+
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="state_permit_end_date">State Permit End Date</label>
+                                                    <input type="date" id="state_permit_end_date"
+                                                        name="state_permit_end_date">
+
+                                                </fieldset>
+
+                                            </div>
+                                            <div style="display: flex; gap: 20px; align-items: center;">
+
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="national_permit_start_date">National Permit Start
+                                                        Date</label>
+                                                    <input type="date" id="national_permit_start_date"
+                                                        name="national_permit_start_date">
+
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="national_permit_end_date">National Permit End
+                                                        Date</label>
+                                                    <input type="date" id="national_permit_end_date"
+                                                        name="national_permit_end_date">
+
+                                                </fieldset>
+
+                                            </div>
+                                            <div style="display: flex; gap: 20px; align-items: center;">
+
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="fitness_certificate_start_date">Fitnes Certificate Start
+                                                        Date</label>
+                                                    <input type="date" id="fitness_certificate_start_date"
+                                                        name="fitness_certificate_start_date">
+
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="fitness_certificate_end_date">Fitness Certificate End
+                                                        Date</label>
+                                                    <input type="date" id="fitness_certificate_end_date"
+                                                        name="fitness_certificate_end_date">
+
+                                                </fieldset>
+
+                                            </div>
+                                            <div style="display: flex; gap: 20px; align-items: center;">
+
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="explosive_certificate_start_date">Explosive Certificate
+                                                        Start
+                                                        Date</label>
+                                                    <input type="date" id="explosive_certificate_start_date"
+                                                        name="explosive_certificate_start_date">
+
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="explosive_certificate_end_date">Explosive Certificate
+                                                        End
+                                                        Date</label>
+                                                    <input type="date" id="explosive_certificate_end_date"
+                                                        name="explosive_certificate_end_date">
+
+                                                </fieldset>
+
+                                            </div>
+                                            <div style="display: flex; gap: 20px; align-items: center;">
+
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="enviornment_tax_start_date">Enviornmental Tax
+                                                        Start
+                                                        Date</label>
+                                                    <input type="date" id="enviornment_tax_start_date"
+                                                        name="enviornment_tax_start_date">
+
+                                                </fieldset>
+                                                <fieldset class="input-group" style="flex:1">
+                                                    <label for="enviornment_tax_end_date">Enviornmental Tax
+                                                        End
+                                                        Date</label>
+                                                    <input type="date" id="enviornment_tax_end_date"
+                                                        name="enviornment_tax_end_date">
+
+                                                </fieldset>
+
                                             </div>
                                         </div>
 
@@ -542,164 +718,15 @@
 
 
                                         <div class="form-container">
-                                            <h5 class="form-title">Purchase Details</h5>
+                                            <h5 class="form-title">Image Uploading</h5>
                                             <div style="display: flex; gap: 20px; align-items: center;">
-
-                                                <fieldset class="input-group" style="flex:1">
-                                                    <label for="purchase-vendor" style="font-size:12px;">Purchase
-                                                        Vendor</label>
-                                                    <select id="purchase-vendor" name="purchase_vendor">
-                                                        <option value="" disabled selected style="font-size:12px;">
-                                                            Please select</option>
-                                                        @foreach ($vendors as $vendor)
-                                                        <option value="{{ $vendor->id }}">{{ $vendor->name }}
-                                                        </option>
-                                                        @endforeach
-                                                    </select>
-                                                </fieldset>
-
                                                 <fieldset class="input-group" style="flex: 1;">
-                                                    <label for="purchase-date">Purchase Date</label>
-                                                    <input type="date" id="purchase-date" name="purchase_date">
-                                                </fieldset>
-                                            </div>
-                                            <div style="display: flex; gap: 20px; align-items: center;">
-
-                                                <fieldset class="input-group" style="flex: 1;">
-                                                    <label for="purchase-price">Purchase Price</label>
-                                                    <input type="text" id="purchase-price" name="purchase_price">
+                                                    <label for="vehicle_image">Vehicle Image</label>
+                                                    <input type="file" id="vehicle_image" name="vehicle_image">
                                                 </fieldset>
 
-                                                <fieldset class="input-group" style="flex: 1;">
-                                                    <label for="odometer">Odometer(mi)</label>
-                                                    <input type="text" id="odometer" name="odometer">
-                                                </fieldset>
-                                            </div>
-
-                                        </div>
-                                        <div class="form-container">
-                                            <h5>Loan/Lease</h5><br>
-
-                                            <div class="loan-container">
-                                                <label class="loan-option active">
-                                                    <input type="radio" name="purchase_type" value="loan" checked
-                                                        onclick="toggleLoanForm()">
-                                                    <strong style="font-size: 14px;">Loan</strong><br><br>
-                                                    <span>This vehicle is associated with a loan</span>
-                                                </label>
-                                                <label class="loan-option">
-                                                    <input type="radio" name="purchase_type" value="lease"
-                                                        onclick="toggleLoanForm()">
-                                                    <strong style="font-size: 14px;">Lease</strong><br><br>
-                                                    <span>This vehicle is being leased</span>
-                                                </label>
-                                                <label class="loan-option">
-                                                    <input type="radio" name="purchase_type" value="none"
-                                                        onclick="toggleLoanForm()">
-                                                    <strong style="font-size: 14px;">None</strong><br><br>
-                                                    <span>This vehicle is not being financed</span>
-                                                </label>
-                                            </div>
-
-                                            <!-- Loan Details Form (Initially Hidden) -->
-                                            <div id="loan-form">
-
-                                                <div style="margin-top: 20px;">
-                                                    <h5 class="form-title">Loan Details</h5>
-                                                    <div style="display: flex; gap: 20px; align-items: center;">
-
-                                                        <fieldset class="input-group" style="flex:1">
-                                                            <label for="lender" style="font-size:12px;">Lender
-                                                                Name</label>
-                                                            <select id="lender" name="lender">
-                                                                <option value="" disabled selected
-                                                                    style="font-size:12px;">Please select
-                                                                </option>
-                                                                @foreach ($contacts as $contact)
-                                                                <option value="{{ $contact->id }}">
-                                                                    {{ $contact->name }}
-                                                                </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </fieldset>
 
 
-                                                        <fieldset class="input-group" style="flex: 1;">
-                                                            <label for="date_of_loan"> Date of Loan</label>
-                                                            <input type="date" id="date_of_loan" name="date_of_loan">
-
-                                                        </fieldset>
-                                                    </div>
-
-                                                    <div style="display: flex; gap: 20px; align-items: center;">
-
-                                                        <fieldset class="input-group" style="flex: 1;">
-                                                            <label for="amount_of_loan">Amount of
-                                                                Loan</label>
-                                                            <input type="text" id="amount_of_loan"
-                                                                name="amount_of_loan">
-                                                        </fieldset>
-
-                                                        <fieldset class="input-group" style="flex: 1;">
-                                                            <label for="annual_percentage_rate">Annual Percentage Rate
-                                                                (APR)(%)</label>
-                                                            <input type="text" id="annual_percentage_rate"
-                                                                name="annual_percentage_rate">
-                                                        </fieldset>
-                                                    </div>
-
-                                                    <div style="display: flex; gap: 20px; align-items: center;">
-
-                                                        <fieldset class="input-group" style="flex: 1;">
-                                                            <label for="down_payment">Down Payment</label>
-                                                            <input type="text" id="down_payment" name="down_payment">
-
-                                                        </fieldset>
-
-                                                        <fieldset class="input-group" style="flex: 1;">
-                                                            <label for="first_payment_date">First Payment
-                                                                Date</label>
-                                                            <input type="date" id="first_payment_date"
-                                                                name="first_payment_date">
-                                                        </fieldset>
-                                                    </div>
-
-                                                    <div style="display: flex; gap: 20px; align-items: center;">
-
-                                                        <fieldset class="input-group" style="flex: 1;">
-                                                            <label for="montly_payment">Monthly
-                                                                Payment</label>
-                                                            <input type="text" id="monthly_payment"
-                                                                name="monthly_payment">
-
-                                                        </fieldset>
-
-                                                        <fieldset class="input-group" style="flex: 1;">
-                                                            <label for="number_of_payment">Number of
-                                                                Payments</label>
-                                                            <input type="text" id="number_of_payment"
-                                                                name="number_of_payment">
-
-                                                        </fieldset>
-                                                    </div>
-                                                    <div style="display: flex; gap: 20px; align-items: center;">
-
-                                                        <fieldset class="input-group" style="flex: 1;">
-                                                            <label for="loan_end_date">Loan End
-                                                                Date</label>
-                                                            <input type="date" id="loan_end_date" name="loan_end_date">
-                                                        </fieldset>
-
-                                                        <fieldset class="input-group" style="flex: 1;">
-                                                            <label for="account_number">Account Number</label>
-                                                            <input type="text" id="account_number"
-                                                                name="account_number">
-
-                                                        </fieldset>
-                                                    </div>
-
-
-                                                </div>
                                             </div>
                                         </div>
                                         <div>
@@ -753,33 +780,8 @@
     }
     </script>
     <!-- loan -->
-    <script>
-    document.querySelectorAll('.loan-option').forEach(option => {
-        option.addEventListener('click', function() {
-            document.querySelectorAll('.loan-option').forEach(opt => opt.classList.remove('active'));
-            this.classList.add('active');
-            this.querySelector('input').checked = true;
-        });
-    });
-    </script>
-    <script>
-    function toggleLoanForm() {
-        var loanForm = document.getElementById("loan-form");
-        var selectedValue = document.querySelector('input[name="purchase_type"]:checked').value;
 
 
-        if (selectedValue === "loan") {
-            loanForm.style.display = "block";
-        } else {
-            loanForm.style.display = "none";
-        }
-    }
-
-    // Ensure form visibility on page load if "Loan" is preselected
-    document.addEventListener("DOMContentLoaded", function() {
-        toggleLoanForm();
-    });
-    </script>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -805,6 +807,24 @@
             }
         });
     });
+    </script>
+    <script>
+    function checkVin() {
+        const vin = document.getElementById('vin').value.trim();
+        if (!vin) return;
+
+        fetch(`/check-vin?vin=${encodeURIComponent(vin)}`)
+            .then(res => res.json())
+            .then(data => {
+                const errorMsg = document.getElementById('vin-error');
+                if (data.exists) {
+                    errorMsg.style.display = 'block';
+                } else {
+                    errorMsg.style.display = 'none';
+                }
+            })
+            .catch(err => console.error('VIN check error:', err));
+    }
     </script>
 
 </body>

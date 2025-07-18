@@ -170,3 +170,9 @@ Route::delete('Setting/destroymodel/{id}', [SettingController::class, 'Destroymo
 
 Route::get(uri: '/Setting/storefueltype', action: [SettingController::class, 'storefueltype'])->name('fueltype.store');
 Route::delete('Setting/destroyfueltype/{id}', [SettingController::class, 'Destroyfueltype'])->name('fueltype.destroy');
+
+Route::post(uri: '/Setting/storelocation', action: [SettingController::class, 'storelocation'])->name('location.store');
+Route::get('/check-vin', function (\Illuminate\Http\Request $request) {
+    $exists = \App\Models\Vehicle::where('vin', $request->vin)->exists();
+    return response()->json(['exists' => $exists]);
+});

@@ -413,12 +413,11 @@
             </div>
         </div>
     </div>
-    <!-- Contact Detail Modal -->
     @include('vehicle.edit')
-    <!-- Contact Detail Modal -->
+    <!-- Vehicle Detail Modal -->
     <div class="modal fade" id="vehicleDetailModal" tabindex="-1" role="dialog"
         aria-labelledby="vehicleDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="vehicleDetailModalLabel">Vehicle Profile</h5>

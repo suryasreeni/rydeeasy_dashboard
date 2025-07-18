@@ -9,6 +9,8 @@ use App\Models\ServiceTask;
 use App\Models\RenewalType;
 use App\Models\VehicleBrand;
 use App\Models\VehicleModel;
+use App\Models\Location;
+
 
 
 
@@ -242,4 +244,19 @@ class SettingController extends Controller
         Fuel_Type::destroy($id);
         return redirect(route('setting.setting') . '#fuel')->with('success', 'Fuel Type deleted successfully!');
     }
+
+    public function storelocation(Request $request)
+    {
+        $request->validate([
+            'location_name' => 'required|string|max:255',
+        ]);
+
+        Location::create([
+            'location_name' => $request->location_name,
+        ]);
+
+        return redirect()->to(route('setting.setting') . '#location')
+            ->with('success', 'Fuel Location successfully.');
+    }
+
 }

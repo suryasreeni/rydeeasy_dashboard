@@ -6,6 +6,8 @@ use App\Models\Fuel_Type;
 use App\Models\Type;
 use App\Models\VehicleBrand;
 use App\Models\VehicleModel;
+use App\Models\Location;
+
 use App\Models\Vendor;
 use App\Models\Vehicle;
 use App\Models\VehicleStatus;
@@ -57,7 +59,9 @@ class VehicleController extends Controller
         $statuses = VehicleStatus::all();
         $brands = VehicleBrand::all();
         $fueltypes = Fuel_Type::all();
-        return view('vehicle.addvehicle', compact('vendors', 'contacts', 'types', 'statuses', 'brands', 'fueltypes'));
+        $locations = Location::all();
+
+        return view('vehicle.addvehicle', compact('vendors', 'contacts', 'types', 'statuses', 'brands', 'fueltypes', 'locations'));
     }
 
     public function fetchModels(Request $request)
@@ -74,34 +78,48 @@ class VehicleController extends Controller
             'vin' => 'required|unique:vehicles,vin',
             'vehicle_name' => 'required|string',
             'vehicle_type' => 'required|string',
-            'model' => 'required|string',
+            'fueltype' => 'required|string',
             'year' => 'required|numeric',
             'status_id' => 'required|exists:statuses,id',
-            'ownership' => 'required|string',
             'group' => 'required|string',
             'vehicle_image' => 'nullable|image|max:2048',
 
-            // Optional fields validation
-            'in_service_date' => 'nullable|date',
-            'in_service_odometer' => 'nullable|numeric',
-            'out_of_service_date' => 'nullable|date',
-            'out_of_service_odometer' => 'nullable|numeric',
-            'purchase_vendor' => 'nullable|string',
-            'purchase_date' => 'nullable|date',
-            'odometer' => 'nullable|numeric',
-            'purchase_price' => 'nullable|numeric',
-            'purchase_type' => 'nullable|string',
-            'lender' => 'nullable|string',
-            'date_of_loan' => 'nullable|date',
-            'amount_of_loan' => 'nullable|numeric',
-            'annual_percentage_rate' => 'nullable|numeric',
-            'down_payment' => 'nullable|numeric',
-            'first_payment_date' => 'nullable|date',
-            'monthly_payment' => 'nullable|numeric',
-            'number_of_payment' => 'nullable|numeric',
-            'loan_end_date' => 'nullable|date',
-            'account_number' => 'nullable|string',
+            'engine_no' => 'nullable|string',
+            'chassis_no' => 'nullable|string',
+            'vehicle_tyre_size' => 'nullable|string',
+            'vehicle_tons' => 'nullable|string',
+            'odometer_reading' => 'nullable|numeric',
+
+            'owner' => 'nullable|string',
+            'location' => 'nullable|string',
+            'brand_id' => 'nullable|exists:vehicle_brands,id',
+            'model_id' => 'nullable|exists:vehicle_models,id',
+
+            // Reminder & Document Fields
+            'insurance_no' => 'nullable|string',
+            'insurance_start_date' => 'nullable|date',
+            'insurance_end_date' => 'nullable|date',
+            'roadtex_no' => 'nullable|string',
+            'roadtex_last_date' => 'nullable|date',
+            'permit_no' => 'nullable|string',
+            'permit_last_date' => 'nullable|date',
+            'puc_no' => 'nullable|string',
+            'puc_last_date' => 'nullable|date',
+            'registration_no' => 'nullable|string',
+            'registration_valid_from' => 'nullable|date',
+            'registration_valid_to' => 'nullable|date',
+            'state_permit_start_date' => 'nullable|date',
+            'state_permit_end_date' => 'nullable|date',
+            'national_permit_start_date' => 'nullable|date',
+            'national_permit_end_date' => 'nullable|date',
+            'fitness_certificate_start_date' => 'nullable|date',
+            'fitness_certificate_end_date' => 'nullable|date',
+            'explosive_certificate_start_date' => 'nullable|date',
+            'explosive_certificate_end_date' => 'nullable|date',
+            'enviornment_tax_start_date' => 'nullable|date',
+            'enviornment_tax_end_date' => 'nullable|date',
         ]);
+
 
         $vehicleImage = null;
         if ($request->hasFile('vehicle_image')) {
@@ -112,31 +130,46 @@ class VehicleController extends Controller
             'vin' => $request->vin,
             'vehicle_name' => $request->vehicle_name,
             'vehicle_type' => $request->vehicle_type,
-            'model' => $request->model,
+            'fueltype' => $request->fueltype,
             'year' => $request->year,
             'status_id' => $request->status_id,
-            'ownership' => $request->ownership,
             'group' => $request->group,
             'vehicle_image' => $vehicleImage,
-            'in_service_date' => $request->in_service_date,
-            'in_service_odometer' => $request->in_service_odometer,
-            'out_of_service_date' => $request->out_of_service_date,
-            'out_of_service_odometer' => $request->out_of_service_odometer,
-            'purchase_vendor' => $request->purchase_vendor,
-            'purchase_date' => $request->purchase_date,
-            'odometer' => $request->odometer,
-            'purchase_price' => $request->purchase_price,
-            'purchase_type' => $request->purchase_type,
-            'lender' => $request->lender,
-            'date_of_loan' => $request->date_of_loan,
-            'amount_of_loan' => $request->amount_of_loan,
-            'annual_percentage_rate' => $request->annual_percentage_rate,
-            'down_payment' => $request->down_payment,
-            'first_payment_date' => $request->first_payment_date,
-            'monthly_payment' => $request->monthly_payment,
-            'number_of_payment' => $request->number_of_payment,
-            'loan_end_date' => $request->loan_end_date,
-            'account_number' => $request->account_number,
+
+            'engine_no' => $request->engine_no,
+            'chassis_no' => $request->chassis_no,
+            'vehicle_tyre_size' => $request->vehicle_tyre_size,
+            'vehicle_tons' => $request->vehicle_tons,
+            'odometer_reading' => $request->odometer_reading,
+
+            'owner' => $request->owner,
+            'location' => $request->location,
+            'brand_id' => $request->brand_id,
+            'model_id' => $request->model_id,
+
+            // Document Dates
+            'insurance_no' => $request->insurance_no,
+            'insurance_start_date' => $request->insurance_start_date,
+            'insurance_end_date' => $request->insurance_end_date,
+            'roadtex_no' => $request->roadtex_no,
+            'roadtex_last_date' => $request->roadtex_last_date,
+            'permit_no' => $request->permit_no,
+            'permit_last_date' => $request->permit_last_date,
+            'puc_no' => $request->puc_no,
+            'puc_last_date' => $request->puc_last_date,
+            'registration_no' => $request->registration_no,
+            'registration_valid_from' => $request->registration_valid_from,
+            'registration_valid_to' => $request->registration_valid_to,
+            'state_permit_start_date' => $request->state_permit_start_date,
+            'state_permit_end_date' => $request->state_permit_end_date,
+            'national_permit_start_date' => $request->national_permit_start_date,
+            'national_permit_end_date' => $request->national_permit_end_date,
+            'fitness_certificate_start_date' => $request->fitness_certificate_start_date,
+            'fitness_certificate_end_date' => $request->fitness_certificate_end_date,
+            'explosive_certificate_start_date' => $request->explosive_certificate_start_date,
+            'explosive_certificate_end_date' => $request->explosive_certificate_end_date,
+            'enviornment_tax_start_date' => $request->enviornment_tax_start_date,
+            'enviornment_tax_end_date' => $request->enviornment_tax_end_date,
         ]);
 
         return redirect()->route('vehicle.vehicle')->with('success', 'Vehicle added successfully.');

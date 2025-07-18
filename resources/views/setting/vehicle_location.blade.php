@@ -31,7 +31,7 @@
 
 
                         <!-- Delete Form -->
-                        <form action="" method=" POST" style="display: inline;">
+                        <form action="" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-outline-danger"
@@ -46,8 +46,9 @@
                 <div class="modal fade" id="addLocationModal" tabindex="-1" aria-labelledby="addLocationModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
-                        <form action="" method="GET">
+                        <form action="{{ route('location.store') }}" method="POST">
                             @csrf
+                            @method('POST')
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="addLocationModalLabel">Add Vehicle Location</h5>
