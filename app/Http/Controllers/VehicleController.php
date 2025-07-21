@@ -30,8 +30,13 @@ class VehicleController extends Controller
         $statuses = VehicleStatus::all();
         $vendors = Vendor::all();
         $contacts = ContactForm::all();
+        $fueltypes = Fuel_Type::all();
+        $locations = Location::all();
+        $brands = VehicleBrand::all();
 
-        $query = Vehicle::with('status'); // eager load relationships
+
+
+        $query = Vehicle::with(['brand', 'model', 'status']); // eager load relationships
 
         if ($request->has('name') && !empty($request->name)) {
             $search = $request->name;
@@ -45,7 +50,7 @@ class VehicleController extends Controller
 
         $vehicles = $query->orderBy('id', 'desc')->paginate(10);
 
-        return view('vehicle.vehiclelist', compact('vehicles', 'types', 'statuses', 'vendors', 'contacts'));
+        return view('vehicle.vehiclelist', compact('vehicles', 'types', 'statuses', 'vendors', 'contacts', 'fueltypes', 'locations', 'brands'));
     }
 
 
@@ -185,46 +190,113 @@ class VehicleController extends Controller
     {
         $vehicle = Vehicle::findOrFail($id);
 
-        $vehicle->vin = $request->vin;
-        $vehicle->vehicle_name = $request->vehicle_name;
-        $vehicle->vehicle_type = $request->vehicle_type;
-        $vehicle->model = $request->model;
-        $vehicle->year = $request->year;
+        // Validate inputs
+        $request->validate([
+            'vin' => 'required|unique:vehicles,vin,' . $vehicle->id,
+            'vehicle_name' => 'required|string',
+            'vehicle_type' => 'required|string',
+            'fueltype' => 'required|string',
+            'year' => 'required|numeric',
+            'status_id' => 'required|exists:statuses,id',
+            'group' => 'required|string',
+            'vehicle_image' => 'nullable|image|max:2048',
 
-        $vehicle->ownership = $request->ownership;
-        $vehicle->group = $request->group;
+            'engine_no' => 'nullable|string',
+            'chassis_no' => 'nullable|string',
+            'vehicle_tyre_size' => 'nullable|string',
+            'vehicle_tons' => 'nullable|string',
+            'odometer_reading' => 'nullable|numeric',
 
+            'owner' => 'nullable|string',
+            'location' => 'nullable|string',
+            'brand_id' => 'nullable|exists:vehicle_brands,id',
+            'model_id' => 'nullable|exists:vehicle_models,id',
+
+            // Reminder & Document Fields
+            'insurance_no' => 'nullable|string',
+            'insurance_start_date' => 'nullable|date',
+            'insurance_end_date' => 'nullable|date',
+            'roadtex_no' => 'nullable|string',
+            'roadtex_last_date' => 'nullable|date',
+            'permit_no' => 'nullable|string',
+            'permit_last_date' => 'nullable|date',
+            'puc_no' => 'nullable|string',
+            'puc_last_date' => 'nullable|date',
+            'registration_no' => 'nullable|string',
+            'registration_valid_from' => 'nullable|date',
+            'registration_valid_to' => 'nullable|date',
+            'state_permit_start_date' => 'nullable|date',
+            'state_permit_end_date' => 'nullable|date',
+            'national_permit_start_date' => 'nullable|date',
+            'national_permit_end_date' => 'nullable|date',
+            'fitness_certificate_start_date' => 'nullable|date',
+            'fitness_certificate_end_date' => 'nullable|date',
+            'explosive_certificate_start_date' => 'nullable|date',
+            'explosive_certificate_end_date' => 'nullable|date',
+            'enviornment_tax_start_date' => 'nullable|date',
+            'enviornment_tax_end_date' => 'nullable|date',
+        ]);
+
+        // Handle vehicle image if uploaded
         if ($request->hasFile('vehicle_image')) {
-            $imagePath = $request->file('vehicle_image')->store('vehicle_images', 'public');
-            $vehicle->vehicle_image = $imagePath;
+            // Optional: delete old image
+            if ($vehicle->vehicle_image) {
+                Storage::disk('public')->delete($vehicle->vehicle_image);
+            }
+
+            $vehicleImage = $request->file('vehicle_image')->store('vehicles', 'public');
+            $vehicle->vehicle_image = $vehicleImage;
         }
 
-        $vehicle->in_service_date = $request->in_service_date;
-        $vehicle->in_service_odometer = $request->in_service_odometer;
-        $vehicle->out_of_service_date = $request->out_of_service_date;
-        $vehicle->out_of_service_odometer = $request->out_of_service_odometer;
+        // Update all fields
+        $vehicle->update([
+            'vin' => $request->vin,
+            'vehicle_name' => $request->vehicle_name,
+            'vehicle_type' => $request->vehicle_type,
+            'fueltype' => $request->fueltype,
+            'year' => $request->year,
+            'status_id' => $request->status_id,
+            'group' => $request->group,
 
-        $vehicle->purchase_vendor = $request->purchase_vendor;
-        $vehicle->purchase_date = $request->purchase_date;
-        $vehicle->purchase_price = $request->purchase_price;
-        $vehicle->odometer = $request->odometer;
-        $vehicle->purchase_type = $request->purchase_type;
+            'engine_no' => $request->engine_no,
+            'chassis_no' => $request->chassis_no,
+            'vehicle_tyre_size' => $request->vehicle_tyre_size,
+            'vehicle_tons' => $request->vehicle_tons,
+            'odometer_reading' => $request->odometer_reading,
 
-        $vehicle->lender = $request->lender;
-        $vehicle->date_of_loan = $request->date_of_loan;
-        $vehicle->amount_of_loan = $request->amount_of_loan;
-        $vehicle->annual_percentage_rate = $request->annual_percentage_rate;
-        $vehicle->down_payment = $request->down_payment;
-        $vehicle->first_payment_date = $request->first_payment_date;
-        $vehicle->monthly_payment = $request->monthly_payment;
-        $vehicle->number_of_payment = $request->number_of_payment;
-        $vehicle->loan_end_date = $request->loan_end_date;
-        $vehicle->account_number = $request->account_number;
+            'owner' => $request->owner,
+            'location' => $request->location,
+            'brand_id' => $request->brand_id,
+            'model_id' => $request->model_id,
 
-        $vehicle->save();
+            // Document fields
+            'insurance_no' => $request->insurance_no,
+            'insurance_start_date' => $request->insurance_start_date,
+            'insurance_end_date' => $request->insurance_end_date,
+            'roadtex_no' => $request->roadtex_no,
+            'roadtex_last_date' => $request->roadtex_last_date,
+            'permit_no' => $request->permit_no,
+            'permit_last_date' => $request->permit_last_date,
+            'puc_no' => $request->puc_no,
+            'puc_last_date' => $request->puc_last_date,
+            'registration_no' => $request->registration_no,
+            'registration_valid_from' => $request->registration_valid_from,
+            'registration_valid_to' => $request->registration_valid_to,
+            'state_permit_start_date' => $request->state_permit_start_date,
+            'state_permit_end_date' => $request->state_permit_end_date,
+            'national_permit_start_date' => $request->national_permit_start_date,
+            'national_permit_end_date' => $request->national_permit_end_date,
+            'fitness_certificate_start_date' => $request->fitness_certificate_start_date,
+            'fitness_certificate_end_date' => $request->fitness_certificate_end_date,
+            'explosive_certificate_start_date' => $request->explosive_certificate_start_date,
+            'explosive_certificate_end_date' => $request->explosive_certificate_end_date,
+            'enviornment_tax_start_date' => $request->enviornment_tax_start_date,
+            'enviornment_tax_end_date' => $request->enviornment_tax_end_date,
+        ]);
 
-        return redirect()->route('vehicle.vehicle')->with('success', 'Vehicle updated successfully!');
+        return redirect()->route('vehicle.vehicle')->with('success', 'Vehicle updated successfully.');
     }
+
     public function updateStatus(Request $request, $id)
     {
         $request->validate([

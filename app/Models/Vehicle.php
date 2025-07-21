@@ -45,8 +45,8 @@ class Vehicle extends Model
         'fitness_certificate_end_date',
         'explosive_certificate_start_date',
         'explosive_certificate_end_date',
-        'environment_tax_start_date',
-        'environment_tax_end_date',
+        'enviornment_tax_start_date',
+        'enviornment_tax_end_date',
         'vehicle_image'
 
 
@@ -57,6 +57,17 @@ class Vehicle extends Model
     public function status()
     {
         return $this->belongsTo(VehicleStatus::class, 'status_id');
+    }
+
+    // In Vehicle.php
+    public function brand()
+    {
+        return $this->belongsTo(VehicleBrand::class);
+    }
+
+    public function model()
+    {
+        return $this->belongsTo(VehicleModel::class, 'model_id');
     }
 
 

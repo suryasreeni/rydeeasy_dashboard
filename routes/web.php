@@ -38,6 +38,18 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 
+// reminders
+Route::get('/InsuranceList', [HomeController::class, 'InsuranceList'])->name('insurance.list');
+Route::get('/RegistrationList', [HomeController::class, 'RegistrationList'])->name('registration.list');
+Route::get('/RoadtaxList', [HomeController::class, 'RoadtaxList'])->name('roadtax.list');
+Route::get('/PUCList', [HomeController::class, 'PUCList'])->name('puc.list');
+Route::get('/StatePermitList', [HomeController::class, 'StatePermitList'])->name('statepermit.list');
+
+
+
+
+
+
 // vehicles
 Route::get('/VehicleList', [VehicleController::class, 'VehicleList'])->name('vehicle.vehicle');
 Route::get('/AddVehicle', [VehicleController::class, 'AddVehicle'])->name('vehicle.addvehicle');

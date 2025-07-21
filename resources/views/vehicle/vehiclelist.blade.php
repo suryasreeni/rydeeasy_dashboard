@@ -289,12 +289,15 @@
 
                                                 <!-- Vehicle Name -->
                                                 <div class="body-text">
-                                                    {{ $vehicle->vehicle_name }} [{{ $vehicle->year }}
-                                                    {{ $vehicle->model }}]
+                                                    {{ $vehicle->vehicle_name }}
+                                                    [{{ $vehicle->year }}
+                                                    {{ optional($vehicle->model)->model_name ?? 'N/A' }}]
                                                 </div>
 
+
                                                 <div class="body-text">{{ $vehicle->year }}</div>
-                                                <div class="body-text">{{ $vehicle->model }}</div>
+                                                <div class="body-text">
+                                                    {{ optional($vehicle->model)->model_name ?? 'N/A' }}</div>
                                                 <div class="body-text">{{ $vehicle->vehicle_type }}</div>
                                                 <div class="body-text">{{ $vehicle->group }}</div>
 

@@ -12,6 +12,8 @@
                 <form action="{{ route('vehicle.update', $vehicle->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="container py-3">
+                        <h5 class="form-title">Basic Details</h5><br>
+
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="vin">VIN/SN</label>
@@ -23,7 +25,7 @@
                                     value="{{ $vehicle->vehicle_name }}">
                             </div>
                             <div class="col-md-4">
-                                <label for="vehicle_type">Type</label>
+                                <label for="vehicle_type">Vehicle Type</label>
                                 <select name="vehicle_type" class="form-select"
                                     style="height:48px;border-radius:10px;color:black;font-size:13px;font-weight:500;">
                                     <option value="" disabled>Please select</option>
@@ -38,8 +40,16 @@
 
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label for="model">Model</label>
-                                <input type="text" name="model" class="form-control" value="{{ $vehicle->model }}">
+                                <label for="fueltype">Fuel Type</label>
+                                <select name="fueltype" class="form-select"
+                                    style="height:48px;border-radius:10px;color:black;font-size:13px;font-weight:500;">
+                                    <option value="" disabled>Please select</option>
+                                    @foreach($fueltypes as $fuel)
+                                        <option value="{{ $fuel->fuel_type }}" {{ $vehicle->fueltype == $fuel->fuel_type ? 'selected' : '' }}>
+                                            {{ $fuel->fuel_type }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-md-4">
                                 <label for="year">Year</label>
@@ -67,19 +77,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="ownership">Ownership</label>
-                                <select name="ownership" class="form-select"
-                                    style="height:48px;border-radius:10px;color:black;font-size:13px;font-weight:500;">
-                                    <option value="" disabled>Select</option>
-                                    <option value="Owned" {{ $vehicle->ownership == 'Owned' ? 'selected' : '' }}>Owned
-                                    </option>
-                                    <option value="Leased" {{ $vehicle->ownership == 'Leased' ? 'selected' : '' }}>Leased
-                                    </option>
-                                    <option value="Rented" {{ $vehicle->ownership == 'Rented' ? 'selected' : '' }}>Rented
-                                    </option>
-                                </select>
-                            </div>
+
                             <div class="col-md-4">
                                 <label for="group">Group</label>
                                 <select name="group" class="form-select"
@@ -91,18 +89,219 @@
                                     </option>
                                     <option value="Pickup & Delivery" {{ $vehicle->group == 'Pickup & Delivery' ? 'selected' : '' }}>Pickup & Delivery
                                     </option>
-                                    <option value="Service Vehicle" {{ $vehicle->group == 'Service Vehicle' ? 'selected' : '' }}>Service Vehicle
-                                    </option>
-                                    <option value="Replacement Vehicle" {{ $vehicle->group == 'Replacement Vehicle' ? 'selected' : '' }}>Replacement Vehicle
-                                    </option>
-                                    <option value="Demo/Test Drive" {{ $vehicle->group == 'Demo/Test Drive' ? 'selected' : '' }}>Demo/Test Drive
-                                    </option>
-                                    <option value="Customer Travel" {{ $vehicle->group == 'Customer Travel' ? 'selected' : '' }}>Customer Travel
-                                    </option>
-                                    <option value="Standby" {{ $vehicle->group == 'Standby' ? 'selected' : '' }}>Standby
-                                    </option>
+
                                 </select>
                             </div>
+                            <div class="col-md-4">
+                                <label for="engine_no">Engine No</label>
+                                <input type="text" name="engine_no" class="form-control" value="{{ $vehicle->engine_no }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="chassis_no">Chassis Number</label>
+                                <input type="text" name="chassis_no" class="form-control"
+                                    value="{{ $vehicle->chassis_no }}">
+                            </div>
+
+                        </div><br>
+
+
+                        <h5 class="form-title">Advance Details</h5><br>
+
+                        <div class="row mb-3">
+
+                            <div class="col-md-3">
+                                <label for="owner">Owner</label>
+                                <select name="owner" class="form-select"
+                                    style="height:48px;border-radius:10px;color:black;font-size:13px;font-weight:500;">
+                                    <option value="" disabled>Select Owner</option>
+                                    @foreach($contacts as $contact)
+                                        <option value="{{ $contact->id }}" {{ $vehicle->owner == $contact->id ? 'selected' : '' }}>{{ $contact->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="location_name">Location</label>
+                                <select name="location" class="form-select"
+                                    style="height:48px;border-radius:10px;color:black;font-size:13px;font-weight:500;">
+                                    <option value="" disabled>Select Vendor</option>
+                                    @foreach($locations as $location)
+                                        <option value="{{ $location->id }}" {{ $vehicle->location == $location->id ? 'selected' : '' }}>
+                                            {{ $location->location_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="brand_id">Vehicle Brand</label>
+                                <select id="brand_id" name="brand_id" class="form-select"
+                                    style="height:48px;border-radius:10px;color:black;font-size:13px;font-weight:500;">
+                                    <option value="">-- Select Brand --</option>
+                                    @foreach($brands as $brand)
+                                        <option value="{{ $brand->id }}" {{ $vehicle->brand_id == $brand->id ? 'selected' : '' }}>
+                                            {{ $brand->brand_name }}
+                                        </option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="model_id">Vehicle Model</label>
+                                <select id="model_id" name="model_id" class="form-select"
+                                    style="height:48px;border-radius:10px;color:black;font-size:13px;font-weight:500;">
+                                    <option value="">-- Select Model --</option>
+                                </select>
+
+                            </div>
+                            <div class="col-md-4">
+                                <label for="vehicle_tyre_size">Vehicle Tyre Size</label>
+                                <input type="text" name="vehicle_tyre_size" class="form-control"
+                                    value="{{ $vehicle->vehicle_tyre_size }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="vehicle_tons">Vehicle Tons</label>
+                                <input type="text" name="vehicle_tons" class="form-control"
+                                    value="{{ $vehicle->vehicle_tons }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="odometer_reading">Odometer Reading</label>
+                                <input type="text" name="odometer_reading" class="form-control"
+                                    value="{{ $vehicle->odometer_reading }}">
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- Loan Form -->
+                        <div class="row" style="margin-top: 20px;">
+                            <div class="col-md-12">
+                                <h5 class="form-title">Remainder Date</h5>
+                            </div><br>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="insurance_no">Insurance No</label>
+                                <input type="text" id="insurance_no" name="insurance_no" class="form-control"
+                                    value="{{ $vehicle->insurance_no }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="insurance_start_date">Insurance Start Date</label>
+                                <input type="date" id="insurance_start_date" name="insurance_start_date"
+                                    class="form-control" value="{{ $vehicle->insurance_start_date }}">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="insurance_end_date">Insurance End Date</label>
+                                <input type="date" id="insurance_end_date" name="insurance_end_date" class="form-control"
+                                    value="{{ $vehicle->insurance_end_date }}">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="roadtex_no">RoadTex No</label>
+                                <input type="text" id="roadtex_no" name="roadtex_no" class="form-control"
+                                    value="{{ $vehicle->roadtex_no }}">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="roadtex_last_date">RoadTex Last Date</label>
+                                <input type="date" id="roadtex_last_date" name="roadtex_last_date" class="form-control"
+                                    value="{{ $vehicle->roadtex_last_date }}">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="permit_no">Permit No</label>
+                                <input type="text" id="permit_no" name="permit_no" class="form-control"
+                                    value="{{ $vehicle->permit_no }}">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="permit_last_date">Permit Last Date</label>
+                                <input type="date" id="permit_last_date" name="permit_last_date" class="form-control"
+                                    value="{{ $vehicle->permit_last_date }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="puc_no">PUC No</label>
+                                <input type="text" id="puc_no" name="puc_no" class="form-control"
+                                    value="{{ $vehicle->puc_no }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="puc_last_date">PUC Last Date</label>
+                                <input type="date" id="puc_last_date" name="puc_last_date" class="form-control"
+                                    value="{{ $vehicle->puc_last_date }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="registration_no">Registration No</label>
+                                <input type="text" id="registration_no" name="registration_no" class="form-control"
+                                    value="{{ $vehicle->registration_no }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="registration_valid_from">Registration Valid From</label>
+                                <input type="date" id="registration_valid_from" name="registration_valid_from"
+                                    class="form-control" value="{{ $vehicle->registration_valid_from }}">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="registration_valid_to">Registration Valid To</label>
+                                <input type="date" id="registration_valid_to" name="registration_valid_to"
+                                    class="form-control" value="{{ $vehicle->registration_valid_to }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="state_permit_start_date">State Permit Start</label>
+                                <input type="date" id="state_permit_start_date" name="state_permit_start_date"
+                                    class="form-control" value="{{ $vehicle->state_permit_start_date }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="state_permit_end_date">State Permit End</label>
+                                <input type="date" id="state_permit_end_date" name="state_permit_end_date"
+                                    class="form-control" value="{{ $vehicle->state_permit_end_date }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="national_permit_start_date">National Permit Start Date</label>
+                                <input type="date" id="national_permit_start_date" name="national_permit_start_date"
+                                    class="form-control" value="{{ $vehicle->national_permit_start_date }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="national_permit_end_date">National Permit End Date</label>
+                                <input type="date" id="national_permit_end_date" name="national_permit_end_date"
+                                    class="form-control" value="{{ $vehicle->national_permit_end_date }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="fitness_certificate_start_date">Fitness Certificate Start Date</label>
+                                <input type="date" id="fitness_certificate_start_date" name="fitness_certificate_start_date"
+                                    class="form-control" value="{{ $vehicle->fitness_certificate_start_date }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="fitness_certificate_end_date">Fitness Certificate End Date</label>
+                                <input type="date" id="fitness_certificate_end_date" name="fitness_certificate_end_date"
+                                    class="form-control" value="{{ $vehicle->fitness_certificate_end_date }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="explosive_certificate_start_date">Explosive Certificate Start Date</label>
+                                <input type="date" id="explosive_certificate_start_date"
+                                    name="explosive_certificate_start_date" class="form-control"
+                                    value="{{ $vehicle->explosive_certificate_start_date }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="explosive_certificate_end_date">Explosive Certificate End Date</label>
+                                <input type="date" id="explosive_certificate_end_date" name="explosive_certificate_end_date"
+                                    class="form-control" value="{{ $vehicle->explosive_certificate_end_date }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="enviornment_tax_start_date">Enviornmental Tax Start Date</label>
+                                <input type="date" id="enviornment_tax_start_date" name="enviornment_tax_start_date"
+                                    class="form-control" value="{{ $vehicle->enviornment_tax_start_date }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="enviornment_tax_end_date">Enviornment Tax End Date</label>
+                                <input type="date" id="enviornment_tax_end_date" name="enviornment_tax_end_date"
+                                    class="form-control" value="{{ $vehicle->enviornment_tax_end_date }}">
+                            </div>
+
+
+                        </div>
+                        <div class="row" style="margin-top: 20px;">
+                            <div class="col-md-12">
+                                <h5 class="form-title">Image</h5>
+                            </div>
+
                             <div class="col-md-4">
                                 <label for="vehicle_image">Vehicle Image</label><br>
                                 @if($vehicle->vehicle_image)
@@ -110,147 +309,6 @@
                                         class="img-thumbnail mb-2" style="max-height: 100px;">
                                 @endif
                                 <input type="file" name="vehicle_image" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="in_service_date">In-Service Date</label>
-                                <input type="date" name="in_service_date" class="form-control"
-                                    value="{{ $vehicle->in_service_date }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="in_service_odometer">In-Service Odometer</label>
-                                <input type="text" name="in_service_odometer" class="form-control"
-                                    value="{{ $vehicle->in_service_odometer }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="out_of_service_date">Out-of-Service Date</label>
-                                <input type="date" name="out_of_service_date" class="form-control"
-                                    value="{{ $vehicle->out_of_service_date }}">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="out_of_service_odometer">Out-of-Service Odometer</label>
-                                <input type="text" name="out_of_service_odometer" class="form-control"
-                                    value="{{ $vehicle->out_of_service_odometer }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="purchase_vendor">Purchase Vendor</label>
-                                <select name="purchase_vendor" class="form-select"
-                                    style="height:48px;border-radius:10px;color:black;font-size:13px;font-weight:500;">
-                                    <option value="" disabled>Select Vendor</option>
-                                    @foreach($vendors as $vendor)
-                                        <option value="{{ $vendor->id }}" {{ $vehicle->purchase_vendor == $vendor->id ? 'selected' : '' }}>{{ $vendor->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="purchase_date">Purchase Date</label>
-                                <input type="date" name="purchase_date" class="form-control"
-                                    value="{{ $vehicle->purchase_date }}">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="odometer">Odometer (mi)</label>
-                                <input type="text" name="odometer" class="form-control" value="{{ $vehicle->odometer }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="purchase_price">Purchase Price</label>
-                                <input type="text" name="purchase_price" class="form-control"
-                                    value="{{ $vehicle->purchase_price }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="purchase_type">Purchase Type</label>
-                                <select name="purchase_type" class="form-select"
-                                    style="height:48px;border-radius:10px;color:black;font-size:13px;font-weight:500;">
-                                    <option value="loan" {{ $vehicle->purchase_type == 'loan' ? 'selected' : '' }}>Loan
-                                    </option>
-                                    <option value="lease" {{ $vehicle->purchase_type == 'lease' ? 'selected' : '' }}>Lease
-                                    </option>
-                                    <option value="none" {{ $vehicle->purchase_type == 'none' ? 'selected' : '' }}>None
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Loan Form -->
-                        <div id="loan-form" class="row" style="margin-top: 20px;">
-                            <div class="col-md-12">
-                                <h5 class="form-title">Loan Details</h5>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="lender" style="font-size:12px;">Lender Name</label>
-                                <select id="lender" name="lender" class="form-select"
-                                    style="height:48px;border-radius:10px;color:black;font-size:13px;font-weight:500;">
-                                    <option value="" disabled {{ !$vehicle->lender ? 'selected' : '' }}>Please select
-                                    </option>
-                                    @foreach ($contacts as $contact)
-                                        <option value="{{ $contact->id }}" {{ $vehicle->lender == $contact->id ? 'selected' : '' }}>
-                                            {{ $contact->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="date_of_loan">Date of Loan</label>
-                                <input type="date" id="date_of_loan" name="date_of_loan" class="form-control"
-                                    value="{{ $vehicle->date_of_loan }}">
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="amount_of_loan">Amount of Loan</label>
-                                <input type="text" id="amount_of_loan" name="amount_of_loan" class="form-control"
-                                    value="{{ $vehicle->amount_of_loan }}">
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="annual_percentage_rate">Annual Percentage Rate (APR)(%)</label>
-                                <input type="text" id="annual_percentage_rate" name="annual_percentage_rate"
-                                    class="form-control" value="{{ $vehicle->annual_percentage_rate }}">
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="down_payment">Down Payment</label>
-                                <input type="text" id="down_payment" name="down_payment" class="form-control"
-                                    value="{{ $vehicle->down_payment }}">
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="first_payment_date">First Payment Date</label>
-                                <input type="date" id="first_payment_date" name="first_payment_date" class="form-control"
-                                    value="{{ $vehicle->first_payment_date }}">
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="monthly_payment">Monthly Payment</label>
-                                <input type="text" id="monthly_payment" name="monthly_payment" class="form-control"
-                                    value="{{ $vehicle->monthly_payment }}">
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="number_of_payment">Number of Payments</label>
-                                <input type="text" id="number_of_payment" name="number_of_payment" class="form-control"
-                                    value="{{ $vehicle->number_of_payment }}">
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="loan_end_date">Loan End Date</label>
-                                <input type="date" id="loan_end_date" name="loan_end_date" class="form-control"
-                                    value="{{ $vehicle->loan_end_date }}">
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="account_number">Account Number</label>
-                                <input type="text" id="account_number" name="account_number" class="form-control"
-                                    value="{{ $vehicle->account_number }}">
                             </div>
                         </div>
 
@@ -282,6 +340,47 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const brandSelect = document.getElementById('brand_id');
+            const modelSelect = document.getElementById('model_id');
+
+            const currentBrandId = '{{ $vehicle->brand_id }}';
+            const currentModelId = '{{ $vehicle->model_id }}';
+
+            // Function to fetch and populate model list
+            function loadModels(brandId, selectedModelId = null) {
+                modelSelect.innerHTML = '<option value="">-- Select Model --</option>';
+
+                if (brandId) {
+                    fetch(`/vehicle/models/fetch?brand_id=${brandId}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            for (const id in data) {
+                                const option = document.createElement('option');
+                                option.value = id;
+                                option.text = data[id];
+                                if (selectedModelId && id == selectedModelId) {
+                                    option.selected = true;
+                                }
+                                modelSelect.appendChild(option);
+                            }
+                        });
+                }
+            }
+
+            // Auto-load model options on page load if editing
+            if (currentBrandId) {
+                loadModels(currentBrandId, currentModelId);
+            }
+
+            // Reload model list when brand changes
+            brandSelect.addEventListener('change', function () {
+                loadModels(this.value);
+            });
+        });
+    </script>
+
     <style>
         #loan-form {
             display: none;
