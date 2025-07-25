@@ -185,6 +185,13 @@ class VehicleController extends Controller
         return view('vehicle.vehicle-model', compact('vehicle'));
     }
 
+    public function VehicleDetails($id)
+    {
+        $vehicle = Vehicle::with(['brand', 'model', 'status', 'location'])->findOrFail($id);
+
+        return view('vehicle.vehicledetails', compact('vehicle'));
+    }
+
 
     public function update(Request $request, $id)
     {
@@ -670,7 +677,115 @@ class VehicleController extends Controller
 
         return redirect()->back()->with('success', 'Assignment deleted successfully.');
     }
+    // update reminders
+    public function UpdateInsurance(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->update([
+            'insurance_start_date' => $request->insurance_start_date,
+            'insurance_end_date' => $request->insurance_end_date,
+        ]);
 
+        return redirect()->route('insurance.list')->with('success', 'Insurance Reminder updated successfully.');
+
+    }
+
+    public function UpdateRegistrationList(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->update([
+            'registration_valid_from' => $request->registration_valid_from,
+            'registration_valid_to' => $request->registration_valid_to,
+        ]);
+
+        return redirect()->route('registration.list')->with('success', 'Registration Reminder updated successfully.');
+
+    }
+
+    public function UpdateRoadtaxList(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->update([
+            'roadtex_last_date' => $request->roadtex_last_date,
+        ]);
+
+        return redirect()->route('roadtax.list')->with('success', 'RoadTax Reminder updated successfully.');
+
+    }
+
+    public function UpdatePucList(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->update([
+            'puc_last_date' => $request->puc_last_date,
+        ]);
+
+        return redirect()->route('puc.list')->with('success', 'PUC Reminder updated successfully.');
+
+    }
+    public function UpdateStatePermitList(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->update([
+            'state_permit_start_date' => $request->state_permit_start_date,
+
+            'state_permit_end_date' => $request->state_permit_end_date,
+        ]);
+
+        return redirect()->route('statepermit.list')->with('success', 'State Permit Reminder updated successfully.');
+
+    }
+
+    public function UpdateNationalPermitList(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->update([
+            'national_permit_start_date' => $request->national_permit_start_date,
+
+            'national_permit_end_date' => $request->national_permit_end_date,
+        ]);
+
+        return redirect()->route('nationalpermit.list')->with('success', 'National Permit Reminder updated successfully.');
+
+    }
+
+    public function UpdateFitnessList(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->update([
+            'fitness_certificate_start_date' => $request->fitness_certificate_start_date,
+
+            'fitness_certificate_end_date' => $request->fitness_certificate_end_date,
+        ]);
+
+        return redirect()->route('fitness.list')->with('success', 'Fitness Certificate Reminder updated successfully.');
+
+    }
+
+    public function UpdateExplosiveList(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->update([
+            'explosive_certificate_start_date' => $request->explosive_certificate_start_date,
+
+            'explosive_certificate_end_date' => $request->explosive_certificate_end_date,
+        ]);
+
+        return redirect()->route('explosive.list')->with('success', 'Explosive Certificate Reminder updated successfully.');
+
+    }
+    public function UpdateEnviornmentList(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->update([
+            'enviornment_tax_start_date' => $request->enviornment_tax_start_date,
+
+            'enviornment_tax_end_date' => $request->enviornment_tax_end_date,
+        ]);
+
+        return redirect()->route('enviornmental.list')->with('success', 'Enviornment Certificate Reminder updated successfully.');
+
+    }
 
     public function MeterHistory()
     {

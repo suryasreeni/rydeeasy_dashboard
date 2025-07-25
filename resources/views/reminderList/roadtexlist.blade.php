@@ -143,6 +143,7 @@
                                                 <li class="body-title">Vehicle Name</li>
                                                 <li class="body-title">RoadTax No</li>
                                                 <li class="body-title">RoadTax Last Date</li>
+                                                <li class="body-title">Action</li>
 
                                                 <li class="body-title column-action">Status</li>
                                             </ul>
@@ -158,30 +159,129 @@
                                                         </div>
 
                                                         <div class="body-text">
-                                                            @php
-                                                                $today = \Carbon\Carbon::now();
-                                                                $roadtaxEnd =
-                                                                    \Carbon\Carbon::parse($roadtax->roadtex_last_date);
-                                                            @endphp
-
-                                                            @if (
-                                                                    $roadtaxEnd->isToday() ||
-                                                                    $roadtaxEnd->isBetween(
-                                                                        $today,
-                                                                        $today->copy()->addDays(7)
-                                                                    )
+                                                            @if($roadtax->roadtex_last_date < now()) <span
+                                                                class="badge bg-danger">Overdue</span>
+                                                            @elseif(
+                                                                    $roadtax->roadtex_last_date <= now()->
+                                                                        addWeek()
                                                                 )
-                                                                <span class="text-warning">Due Soon</span>
-                                                            @elseif ($roadtaxEnd->lt($today))
-                                                                <span class="text-danger">Overdue</span>
+                                                                <span class="badge bg-warning text-dark">Due Soon</span>
                                                             @else
-                                                                <span class="text-success">Active</span>
-                                                            @endif
+                                                                        <span class="badge bg-success">Valid</span>
+                                                                    @endif
+
                                                         </div>
+
+                                                        <div class="body-text">
+                                                            <a href="{{ route('vehicle.detail', $roadtax->id) }}"
+                                                                class="btn btn-outline-primary">
+                                                                View
+                                                            </a>
+                                                            <button type="button" class="btn btn-outline-secondary"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#UpdateModal{{ $roadtax->id }}">
+                                                                Update
+                                                            </button>
+                                                        </div>
+
+
+
                                                     </li>
+                                                    <div class="modal fade" id="UpdateModal{{ $roadtax->id }}" tabindex="-1"
+                                                        role="dialog" aria-labelledby="UpdateModalLabel{{ $roadtax->id }}"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg" role="document">
+                                                            <div class="modal-content">
+                                                                <form method="POST"
+                                                                    action="{{ route('roadtax.update', $roadtax->id) }}">
+                                                                    @csrf
+                                                                    @method('PUT')
+
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title"
+                                                                            id="UpdateModalLabel{{ $roadtax->id }}">
+                                                                            Update RoadTax
+                                                                        </h5>
+                                                                        <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                    </div>
+
+                                                                    <div class="modal-body">
+                                                                        <div class="row g-3">
+                                                                            <div class="col-md-6">
+                                                                                <label class="form-label">RoadTax No</label>
+                                                                                <input type="text" class="form-control"
+                                                                                    value="{{ $roadtax->roadtex_no }}"
+                                                                                    min="{{ date('Y-m-d') }}" readonly>
+                                                                            </div>
+
+                                                                            <!-- RoadTax Last Date -->
+                                                                            <div class="col-md-6">
+                                                                                <label class="form-label">RoadTax Last
+                                                                                    Date</label>
+                                                                                <input type="date" class="form-control"
+                                                                                    id="roadtex_last_date_{{ $roadtax->id }}"
+                                                                                    name="roadtex_last_date"
+                                                                                    value="{{ \Carbon\Carbon::parse($roadtax->roadtex_last_date)->format('Y-m-d') }}"
+                                                                                    min="{{ date('Y-m-d') }}">
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <!-- Quick Date Buttons -->
+                                                                        <div class="row mt-3">
+                                                                            <div class="col-12">
+                                                                                <label class="form-label">Quick Set Due
+                                                                                    Date:</label>
+                                                                                <div class="btn-group d-block" role="group">
+                                                                                    <!-- +5 Year -->
+                                                                                    <!-- +5 Year -->
+                                                                                    <button type="button"
+                                                                                        class="btn btn-outline-primary btn-sm"
+                                                                                        onclick="
+                                                                        var today = new Date();
+                                                                        today.setFullYear(today.getFullYear() + 5);
+                                                                        var yyyy = today.getFullYear();
+                                                                        var mm = String(today.getMonth() + 1).padStart(2, '0');
+                                                                        var dd = String(today.getDate()).padStart(2, '0');
+                                                                        document.getElementById('roadtex_last_date_{{ $roadtax->id }}').value = yyyy + '-' + mm + '-' + dd;
+                                                                    ">
+                                                                                        +5 Year
+                                                                                    </button>
+
+                                                                                    <!-- +15 Year -->
+                                                                                    <button type="button"
+                                                                                        class="btn btn-outline-primary btn-sm"
+                                                                                        onclick="
+                                                                        var today = new Date();
+                                                                        today.setFullYear(today.getFullYear() + 15);
+                                                                        var yyyy = today.getFullYear();
+                                                                        var mm = String(today.getMonth() + 1).padStart(2, '0');
+                                                                        var dd = String(today.getDate()).padStart(2, '0');
+                                                                        document.getElementById('roadtex_last_date_{{ $roadtax->id }}').value = yyyy + '-' + mm + '-' + dd;
+                                                                    ">
+                                                                                        +15 Year
+                                                                                    </button>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-primary">
+                                                                            Save changes
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 @empty
                                                     <li class="product-item text-center py-4">
-                                                        <div class="body-text w-100 text-muted">No registration data
+                                                        <div class="body-text w-100 text-muted">No roadtax data
                                                             available.
                                                         </div>
                                                     </li>
@@ -213,19 +313,18 @@
 
 
         @include('home.bottomlinks')
-        <script>
-            function filterTable() {
-                let input = document.getElementById("searchInput");
-                let filter = input.value.toUpperCase();
-                let table = document.querySelector(".wg-table");
-                let rows = table.getElementsByTagName("li");
+        <scr ipt>
+            func tion filterTable() {
+            let input = document.getElementById("searchInput");
+            let filter = input.value.toUpperCase();
+            let table = document.querySelector(".wg-table");
+            let rows = table.getElementsByTagName("li");
 
-                for (let i = 1; i < rows.length; i++) {
-                    let txtValue = rows[i].textContent || rows[i].innerText;
-                    rows[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+            for (let i = 1; i < rows.length; i++) { let txtValue=rows[i].textContent || rows[i].innerText;
+                rows[i].style.display=txtValue.toUpperCase().indexOf(filter)> -1 ? "" : "none";
                 }
-            }
-        </script>
+                }
+                </script>
 
 </body>
 

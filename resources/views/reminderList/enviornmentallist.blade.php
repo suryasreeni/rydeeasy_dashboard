@@ -108,7 +108,7 @@
                         <div class="main-content-inner">
                             <div class="main-content-wrap">
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <h3>Registration Reminder List
+                                    <h3>Enviornment Tax Certificate Reminder List
 
                                     </h3>
 
@@ -141,34 +141,33 @@
                                             <ul class="table-title">
                                                 <li class="body-title column-name">Vehicle VIN</li>
                                                 <li class="body-title">Vehicle Name</li>
-                                                <li class="body-title">Registration Number</li>
-                                                <li class="body-title">Registration Start Date</li>
+                                                <li class="body-title">Enviornment Tax Certificate Start Date</li>
+                                                <li class="body-title">Enviornment Tax Certificate End Date</li>
 
-                                                <li class="body-title">Registration End Date</li>
                                                 <li class="body-title column-action">Status</li>
                                                 <li class="body-title column-action">Action</li>
-
 
                                             </ul>
 
                                             <!-- Table Body -->
                                             <ul>
-                                                @forelse ($registrationList as $registration)
+                                                @forelse ($enviornmentalList as $enviornment)
                                                     <li class="product-item">
-                                                        <div class="body-text">{{ $registration->vin }}</div>
-                                                        <div class="body-text">{{ $registration->vehicle_name }}</div>
-                                                        <div class="body-text">{{ $registration->registration_no }}</div>
-                                                        <div class="body-text">{{ $registration->registration_valid_from }}
+                                                        <div class="body-text">{{ $enviornment->vin }}</div>
+                                                        <div class="body-text">{{ $enviornment->vehicle_name }}</div>
+                                                        <div class="body-text">
+                                                            {{ $enviornment->enviornment_tax_start_date }}
                                                         </div>
                                                         <div class="body-text">
-                                                            {{ $registration->registration_valid_to }}
+                                                            {{ $enviornment->enviornment_tax_end_date }}
+                                                        </div>
 
-                                                        </div>
                                                         <div class="body-text">
-                                                            @if($registration->registration_valid_to < now()) <span
-                                                                class="badge bg-danger">Overdue</span>
+                                                            @if($enviornment->enviornment_tax_end_date < now()) <span
+                                                                class="badge bg-danger">
+                                                                Overdue</span>
                                                             @elseif(
-                                                                    $registration->registration_valid_to <= now()->
+                                                                    $enviornment->enviornment_tax_end_date <= now()->
                                                                         addWeek()
                                                                 )
                                                                 <span class="badge bg-warning text-dark">Due Soon</span>
@@ -180,7 +179,7 @@
                                                         <div class="body-text">
 
 
-                                                            <a href="{{ route('vehicle.detail', $registration->id) }}"
+                                                            <a href="{{ route('vehicle.detail', $enviornment->id) }}"
                                                                 class="btn btn-outline-primary">
                                                                 View
                                                             </a>
@@ -188,26 +187,27 @@
 
                                                             <button type="button" class="btn btn-outline-secondary"
                                                                 data-bs-toggle="modal"
-                                                                data-bs-target="#UpdateModal{{  $registration->id }}">
+                                                                data-bs-target="#UpdateModal{{ $enviornment->id }}">
                                                                 Update
                                                             </button>
+
+
                                                         </div>
-                                                        <div class="modal fade" id="UpdateModal{{ $registration->id }}"
+                                                        <div class="modal fade" id="UpdateModal{{ $enviornment->id }}"
                                                             tabindex="-1" role="dialog"
-                                                            aria-labelledby="UpdateModalLabel{{ $registration->id }}"
+                                                            aria-labelledby="UpdateModalLabel{{ $enviornment->id }}"
                                                             aria-hidden="true">
                                                             <div class="modal-dialog modal-lg" role="document">
                                                                 <div class="modal-content">
                                                                     <form method="POST"
-                                                                        action=" {{ route('registration.update', $registration->id) }}">
-
+                                                                        action="{{ route('enviornment.update', $enviornment->id) }}">
                                                                         @csrf
                                                                         @method('PUT')
 
                                                                         <div class="modal-header">
                                                                             <h5 class="modal-title"
-                                                                                id="UpdateModalLabel{{ $registration->id }}">
-                                                                                Update Registration
+                                                                                id="UpdateModalLabel{{ $enviornment->id }}">
+                                                                                Update Enviornment Tax Certificate
                                                                             </h5>
                                                                             <button type="button" class="btn-close"
                                                                                 data-bs-dismiss="modal"
@@ -216,32 +216,31 @@
 
                                                                         <div class="modal-body">
                                                                             <div class="row g-3">
-                                                                                <div class="col-md-6">
-                                                                                    <label class="form-label">Registration
-                                                                                        No</label>
-                                                                                    <input type="text" class="form-control"
-                                                                                        value="{{ $registration->registration_no }}"
-                                                                                        min="{{ date('Y-m-d') }}" readonly>
-                                                                                </div>
+
                                                                                 <!-- Start Date -->
                                                                                 <div class="col-md-6">
-                                                                                    <label class="form-label">Registration
-                                                                                        Valid From</label>
+                                                                                    <label class="form-label">Enviornment
+                                                                                        Tax
+                                                                                        Certificate
+                                                                                        Start Date</label>
                                                                                     <input type="date" class="form-control"
-                                                                                        id="registration_valid_from_{{ $registration->id }}"
-                                                                                        name="registration_valid_from"
+                                                                                        id="enviornment_tax_start_date_{{ $enviornment->id }}"
+                                                                                        name="enviornment_tax_start_date"
                                                                                         value="{{ date('Y-m-d') }}"
                                                                                         min="{{ date('Y-m-d') }}">
                                                                                 </div>
 
                                                                                 <!-- End Date -->
                                                                                 <div class="col-md-6">
-                                                                                    <label class="form-label">Registration
-                                                                                        Valid To</label>
+                                                                                    <label class="form-label">Enviornment
+                                                                                        Tax
+                                                                                        Certificate
+                                                                                        End Date</label>
                                                                                     <input type="date" class="form-control"
-                                                                                        id="registration_valid_to_{{ $registration->id }}"
-                                                                                        name="registration_valid_to"
-                                                                                        required>
+                                                                                        id="enviornment_tax_end_date_{{ $enviornment->id }}"
+                                                                                        name="enviornment_tax_end_date"
+                                                                                        value="{{ date('Y-m-d') }}"
+                                                                                        min="{{ date('Y-m-d') }}" required>
                                                                                 </div>
                                                                             </div>
 
@@ -253,34 +252,49 @@
                                                                                     <div class="btn-group d-block"
                                                                                         role="group">
                                                                                         <button type="button"
-                                                                                            class="btn btn-outline-primary btn-sm"
+                                                                                            class="btn btn-outline-primary btn-sm me-2"
                                                                                             onclick="
-                                                                                                                                                                            var startDate = document.getElementById('registration_valid_from_{{ $registration->id }}').value;
-                                                                                                                                                                            if (!startDate) { alert('Please select a start date first'); return; }
-                                                                                                                                                                            var date = new Date(startDate);
-                                                                                                                                                                            date.setMonth(date.getMonth() + 60);
-                                                                                                                                                                            if (date.getDate() !== new Date(startDate).getDate()) { date.setDate(0); }
-                                                                                                                                                                            var yyyy = date.getFullYear();
-                                                                                                                                                                            var mm = String(date.getMonth() + 1).padStart(2, '0');
-                                                                                                                                                                            var dd = String(date.getDate()).padStart(2, '0');
-                                                                                                                                                                            document.getElementById('registration_valid_to_{{ $registration->id }}').value = yyyy + '-' + mm + '-' + dd;
-                                                                                                                                                                        ">
-                                                                                            +5 Year
+                                                                                                                                                                                    var startDate = document.getElementById('enviornment_tax_start_date_{{ $enviornment->id }}').value;
+                                                                                                                                                                                    if (!startDate) { alert('Please select a start date first'); return; }
+                                                                                                                                                                                    var date = new Date(startDate);
+                                                                                                                                                                                    date.setMonth(date.getMonth() + 3);
+                                                                                                                                                                                    if (date.getDate() !== new Date(startDate).getDate()) { date.setDate(0); }
+                                                                                                                                                                                    var yyyy = date.getFullYear();
+                                                                                                                                                                                    var mm = String(date.getMonth() + 1).padStart(2, '0');
+                                                                                                                                                                                    var dd = String(date.getDate()).padStart(2, '0');
+                                                                                                                                                                                    document.getElementById('enviornment_tax_end_date_{{ $enviornment->id }}').value = yyyy + '-' + mm + '-' + dd;
+                                                                                                                                                                                ">
+                                                                                            +3 Months
+                                                                                        </button>
+                                                                                        <button type="button"
+                                                                                            class="btn btn-outline-primary btn-sm me-2"
+                                                                                            onclick="
+                                                                                                                                                                                    var startDate = document.getElementById('enviornment_tax_start_date_{{ $enviornment->id }}').value;
+                                                                                                                                                                                    if (!startDate) { alert('Please select a start date first'); return; }
+                                                                                                                                                                                    var date = new Date(startDate);
+                                                                                                                                                                                    date.setMonth(date.getMonth() + 6);
+                                                                                                                                                                                    if (date.getDate() !== new Date(startDate).getDate()) { date.setDate(0); }
+                                                                                                                                                                                    var yyyy = date.getFullYear();
+                                                                                                                                                                                    var mm = String(date.getMonth() + 1).padStart(2, '0');
+                                                                                                                                                                                    var dd = String(date.getDate()).padStart(2, '0');
+                                                                                                                                                                                    document.getElementById('enviornment_tax_end_date_{{ $enviornment->id }}').value = yyyy + '-' + mm + '-' + dd;
+                                                                                                                                                                                ">
+                                                                                            +6 Months
                                                                                         </button>
                                                                                         <button type="button"
                                                                                             class="btn btn-outline-primary btn-sm"
                                                                                             onclick="
-                                                                                                                                                                            var startDate = document.getElementById('registration_valid_from_{{ $registration->id }}').value;
-                                                                                                                                                                            if (!startDate) { alert('Please select a start date first'); return; }
-                                                                                                                                                                            var date = new Date(startDate);
-                                                                                                                                                                            date.setMonth(date.getMonth() + 180);
-                                                                                                                                                                            if (date.getDate() !== new Date(startDate).getDate()) { date.setDate(0); }
-                                                                                                                                                                            var yyyy = date.getFullYear();
-                                                                                                                                                                            var mm = String(date.getMonth() + 1).padStart(2, '0');
-                                                                                                                                                                            var dd = String(date.getDate()).padStart(2, '0');
-                                                                                                                                                                            document.getElementById('registration_valid_to_{{ $registration->id }}').value = yyyy + '-' + mm + '-' + dd;
-                                                                                                                                                                        ">
-                                                                                            +15 Year
+                                                                                                                                                                                    var startDate = document.getElementById('enviornment_tax_start_date_{{ $enviornment->id }}').value;
+                                                                                                                                                                                    if (!startDate) { alert('Please select a start date first'); return; }
+                                                                                                                                                                                    var date = new Date(startDate);
+                                                                                                                                                                                    date.setMonth(date.getMonth() + 12);
+                                                                                                                                                                                    if (date.getDate() !== new Date(startDate).getDate()) { date.setDate(0); }
+                                                                                                                                                                                    var yyyy = date.getFullYear();
+                                                                                                                                                                                    var mm = String(date.getMonth() + 1).padStart(2, '0');
+                                                                                                                                                                                    var dd = String(date.getDate()).padStart(2, '0');
+                                                                                                                                                                                    document.getElementById('enviornment_tax_end_date_{{ $enviornment->id}}').value = yyyy + '-' + mm + '-' + dd;
+                                                                                                                                                                                ">
+                                                                                            +1 Year
                                                                                         </button>
                                                                                     </div>
                                                                                 </div>
@@ -298,11 +312,12 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                     </li>
                                                 @empty
                                                     <li class="product-item text-center py-4">
-                                                        <div class="body-text w-100 text-muted">No registration data
+                                                        <div class="body-text w-100 text-muted">No Enviornment Tax
+                                                            Certificate
+                                                            data
                                                             available.
                                                         </div>
                                                     </li>

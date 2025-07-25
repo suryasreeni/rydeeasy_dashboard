@@ -70,5 +70,11 @@ class Vehicle extends Model
         return $this->belongsTo(VehicleModel::class, 'model_id');
     }
 
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'location', 'id');
+    }
+
+
 
 }

@@ -10,38 +10,47 @@
         color: #fff;
         font-weight: bold;
         text-align: center;
-        padding: 10px;
-        margin-bottom: 20px;
+        padding: 12px;
+        font-size: 18px;
+        border-radius: 4px;
+        margin-bottom: 25px;
     }
 
     .reminder-cards {
         display: flex;
         flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
+        justify-content: flex-start;
     }
 
     .reminder-card {
+        display: block;
+        width: 100%;
         background: #fff;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        border-radius: 6px;
-        width: 160px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        border-radius: 8px;
+        padding: 20px;
         text-align: center;
-        padding: 20px 10px;
-        font-family: sans-serif;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+        color: #000;
+        text-decoration: none;
+    }
+
+    .reminder-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background-color: #f9f9f9;
     }
 
     .reminder-card h5 {
         font-size: 16px;
-        margin-bottom: 8px;
-        font-weight: bold;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
     }
 
     .reminder-card p {
-        font-size: 20px;
-        font-weight: bold;
-        color: #000;
-        margin: 0;
+        font-size: 15px;
+        margin: 5px 0;
     }
 </style>
 
@@ -319,109 +328,131 @@
 
                                     </div>
                                     <!-- /best-shop-sellers -->
-                                    <!-- product-overview -->
                                     <div class="wg-box">
                                         <div class="reminder-wrapper">
-                                            <div class="reminder-title">UPCOMING EXPIRY DATE REMINDERS FOR VEHICLES
+                                            <div class="reminder-title">UPCOMING EXPIRY DATE REMINDERS FOR VEHICLE
                                                 DOCUMENTS</div>
-                                            <div class="reminder-cards">
+                                            <div class="reminder-cards row">
+                                                @php
+                                                    $reminderItems = [
+                                                        [
+                                                            'title' => 'Insurance',
+                                                            'key' => 'insurance',
+                                                            'route' =>
+                                                                route('insurance.list')
+                                                        ],
+                                                        [
+                                                            'title' => 'Registrations',
+                                                            'key' => 'registration',
+                                                            'route' =>
+                                                                route('registration.list')
+                                                        ],
+                                                        [
+                                                            'title' => 'RoadTax',
+                                                            'key' => 'roadtax',
+                                                            'route' =>
+                                                                route('roadtax.list')
+                                                        ],
+                                                        ['title' => 'PUC', 'key' => 'puc', 'route' => route('puc.list')],
+                                                        [
+                                                            'title' => 'State Permit',
+                                                            'key' => 'state_permit',
+                                                            'route' =>
+                                                                route('statepermit.list')
+                                                        ],
+                                                        [
+                                                            'title' => 'National Permit',
+                                                            'key' => 'national_permit',
+                                                            'route' =>
+                                                                route('nationalpermit.list')
+                                                        ],
+                                                        [
+                                                            'title' => 'Fitness',
+                                                            'key' => 'fitness',
+                                                            'route' =>
+                                                                route('fitness.list')
+                                                        ],
+                                                        [
+                                                            'title' => 'Explosive',
+                                                            'key' => 'explosive',
+                                                            'route' =>
+                                                                route('explosive.list')
+                                                        ],
+                                                        [
+                                                            'title' => 'Environmental',
+                                                            'key' => 'environmental',
+                                                            'route' =>
+                                                                route('enviornmental.list')
+                                                        ],
+                                                    ];
+                                                @endphp
 
-                                                <div class="reminder-card">
-                                                    <a href="{{ route('insurance.list') }}">
-                                                        <h5>Insurance</h5>
-                                                        <p>{{ $reminders['insurance'] ?? 0 }}</p>
-                                                    </a>
-                                                </div>
-
-
-
-                                                <div class="reminder-card">
-                                                    <a href="{{ route('registration.list') }}">
-
-                                                        <h5>Registrations</h5>
-                                                        <p>{{ $reminders['registration'] ?? 0 }}</p>
-                                                    </a>
-                                                </div>
-                                                <div class="reminder-card">
-                                                    <a href="{{ route('roadtax.list') }}">
-
-                                                        <h5>RoadTax</h5>
-                                                        <p>{{ $reminders['roadtax'] ?? 0 }}</p>
-                                                    </a>
-                                                </div>
-                                                <div class="reminder-card">
-                                                    <a href="{{ route('puc.list') }}">
-                                                        <h5>PUC</h5>
-                                                        <p>{{ $reminders['puc'] ?? 0 }}</p>
-                                                    </a>
-                                                </div>
-                                                <div class="reminder-card">
-                                                    <h5>State Permit</h5>
-                                                    <p>{{ $reminders['state_permit'] ?? 0 }}</p>
-                                                </div>
-                                                <div class="reminder-card">
-                                                    <h5>National Permit</h5>
-                                                    <p>{{ $reminders['national_permit'] ?? 0 }}</p>
-                                                </div>
-                                                <div class="reminder-card">
-                                                    <h5>Fitness</h5>
-                                                    <p>{{ $reminders['fitness'] ?? 0 }}</p>
-                                                </div>
-                                                <div class="reminder-card">
-                                                    <h5>Explosive</h5>
-                                                    <p>{{ $reminders['explosive'] ?? 0 }}</p>
-                                                </div>
-                                                <div class="reminder-card">
-                                                    <h5>Environmental</h5>
-                                                    <p>{{ $reminders['environmental'] ?? 0 }}</p>
-                                                </div>
+                                                @foreach ($reminderItems as $item)
+                                                    <div class="col-md-4 col-sm-6 col-12 mb-4">
+                                                        <a href="{{ $item['route'] }}" class="reminder-card">
+                                                            <h5>{{ $item['title'] }}</h5>
+                                                            <p
+                                                                class="{{ ($reminders[$item['key']]['due_soon'] ?? 0) > 0 ? 'text-warning fw-bold' : 'text-secondary' }}">
+                                                                Due Soon: {{ $reminders[$item['key']]['due_soon'] ?? 0 }}
+                                                            </p>
+                                                            <p
+                                                                class="{{ ($reminders[$item['key']]['overdue'] ?? 0) > 0 ? 'text-danger fw-bold' : 'text-secondary' }}">
+                                                                Overdue: {{ $reminders[$item['key']]['overdue'] ?? 0 }}
+                                                            </p>
+                                                        </a>
+                                                    </div>
+                                                @endforeach
                                             </div>
                                         </div>
-
-
-                                        <!-- /product-overview -->
                                     </div>
 
 
 
-                                    <!-- /top-countries -->
+
+
+                                    <!-- /product-overview -->
                                 </div>
 
 
 
-                                <!-- /main-content -->
+                                <!-- /top-countries -->
                             </div>
-                            <!-- /section-content-right -->
+
+
+
+                            <!-- /main-content -->
                         </div>
-                        <!-- /layout-wrap -->
+                        <!-- /section-content-right -->
                     </div>
-                    <!-- /#page -->
+                    <!-- /layout-wrap -->
                 </div>
-                <!-- /#wrapper -->
+                <!-- /#page -->
+            </div>
+            <!-- /#wrapper -->
 
-                @include('home.bottomlinks')
+            @include('home.bottomlinks')
 
-                <script>
-                func tion loadDueAssignments() {
-                        fetc h("{{ route('assignments.due') }}")
-                            .then(res => res.json())
-                            .the n(data => {
-                            const badge = document.getElementById('reminder-badge');
-    
-                                // If no reminders
-                            if (data.length === 0) {
-                                    docu ment.getElementById('due-tomorrow-body').innerHTML =
-                                        '<p>No upcoming assignments.</p>';
-                                    badge.style.display = 'none'; // Hide badge if no due
-                                    return;
-                            }
-    
-                                // Show count or dot
-                                badge.style.display = 'inline-block';
-                            badge.textContent = data.length > 9 ? '9+' : data.length;
-   
-                                 // Build table
-                            let html = `<div style="overflow-x:auto;">
+            <script>
+            func tion loadDueAssignments() {
+                  fetc   h("{{ route('assignments.due') }}")
+                        .then(res => res.json())
+                    .the     n(data => {
+                        const badge = document.getElementById('reminder-badge');
+  
+                              // If no reminders
+                        if (data.length === 0) {
+                            docu     ment.getElementById('due-tomorrow-body').innerHTML =
+                                    '<p>No upcoming assignments.</p>';
+                                badge.style.display = 'none'; // Hide badge if no due
+                                return;
+                        }
+  
+                              // Show count or dot
+                            badge.style.display = 'inline-block';
+                        badge.textContent = data.length > 9 ? '9+' : data.length;
+ 
+                               // Build table
+                        let html = `<div style="overflow-x:auto;">
                 <table class="table" style="min-width: 600px; font-size: 17px; border-radius: 12px; overflow: hidden;">
                     <thead style="background: #f8f9fa;">
                         <tr style="font-weight: bold;">
@@ -431,31 +462,31 @@
                         </tr>
                     </thead>
                     <tbody>`;
+  
+                           data   .forEach(row => {
+                               let  bg = '',
+                                    badgeStyle = '',
+                                label = '';
 
-                                 data   .forEach(row => {
-                                   let  bg = '',
-                                        badgeStyle = '',
-                                    label = '';
-
-                                     if (   row.status === 'overdue') {
-                                        bg = '#fff5f5';
-                                        badgeStyle = 'background:#ef4444; color:white;';
-                                        label = 'Overdue';
-                                }
-                                    el se
-                                  if (  row.status === 'today') {
-                                        bg = '#fffbe6';
-                                        badgeStyle = 'background:#eab308; color:white;';
-                                        label = 'Due Today';
-                                }
-                                    el se
-                                    if (row.status === 'tomorrow') {
-                                        bg = '#f0fdf4';
-                                        badgeStyle = 'background:#22c55e; color:white;';
-                                        label = 'Due Tomorrow';
-                                }
-    
-                                html += `<tr style="background-color: ${bg};">
+                                  if (  row.status === 'overdue') {
+                                    bg = '#fff5f5';
+                                    badgeStyle = 'background:#ef4444; color:white;';
+                                    label = 'Overdue';
+                            }
+                                el se
+                              if (  row.status === 'today') {
+                                    bg = '#fffbe6';
+                                    badgeStyle = 'background:#eab308; color:white;';
+                                    label = 'Due Today';
+                            }
+                                el se
+                               if ( row.status === 'tomorrow') {
+                                    bg = '#f0fdf4';
+                                    badgeStyle = 'background:#22c55e; color:white;';
+                                    label = 'Due Tomorrow';
+                            }
+  
+                              html += `<tr style="background-color: ${bg};">
                     <td style="padding: 14px; font-weight: 500;">${row.vin}</td>
                     <td style="padding: 14px;">${row.expected_return}</td>
                     <td style="padding: 14px;">
@@ -463,19 +494,19 @@
                             ${label}
                         </span>
                     </td>
-                  </tr>`;
-                                });
- 
-                                   html += `</tbody></table></div>`;
-                                document.getElementById('due-tomorrow-body').innerHTML = html;
-                                })
-                               .cat  ch(err => {
-                            console.error(err);
-                                 docu    ment.getElementById('due-tomorrow-body').innerHTML =
-                                        '<p class="text-danger">Error loading data.</p>';
-                            });
-                }
-                </script>
+                                      </tr>`;
+                        });
+  
+                              html += `</tbody></table></div>`;
+                            document.getElementById('due-tomorrow-body').innerHTML = html;
+                            })
+                         .cat    ch(err => {
+                        console.error(err);
+                           docu      ment.getElementById('due-tomorrow-body').innerHTML =
+                                    '<p class="text-danger">Error loading data.</p>';
+                        });
+            }
+            </script>
 
 
 

@@ -89,6 +89,21 @@
             border: 1px solid #ccc;
             width: 350px;
         }
+
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
@@ -142,8 +157,12 @@
                                                 <li class="body-title column-name">Vehicle VIN</li>
                                                 <li class="body-title">Vehicle Name</li>
                                                 <li class="body-title">Insurance Number</li>
+                                                <li class="body-title">Insurance Start Date</li>
+
                                                 <li class="body-title">Insurance End Date</li>
                                                 <li class="body-title column-action">Status</li>
+                                                <li class="body-title column-action">Action</li>
+
                                             </ul>
 
                                             <!-- Table Body -->
@@ -153,24 +172,155 @@
                                                         <div class="body-text">{{ $insurance->vin }}</div>
                                                         <div class="body-text">{{ $insurance->vehicle_name }}</div>
                                                         <div class="body-text">{{ $insurance->insurance_no }}</div>
+                                                        <div class="body-text">{{ $insurance->insurance_start_date }}</div>
+
                                                         <div class="body-text">{{ $insurance->insurance_end_date }}</div>
                                                         <div class="body-text">
-                                                            @php
-                                                                $today = \Carbon\Carbon::now();
-                                                                $insuranceEnd =
-                                                                    \Carbon\Carbon::parse($insurance->insurance_end_date);
-                                                            @endphp
 
-                                                            @if (
-                                                                    $insuranceEnd->isToday() ||
-                                                                    $insuranceEnd->isBetween($today, $today->copy()->addDays(7))
-                                                                )
-                                                                <span class="text-warning">Due Soon</span>
-                                                            @elseif ($insuranceEnd->lt($today))
-                                                                <span class="text-danger">Overdue</span>
+                                                            @if($insurance->insurance_end_date < now()) <span
+                                                                class="badge bg-danger">Overdue</span>
+                                                            @elseif($insurance->insurance_end_date <= now()->addWeek())
+                                                                <span class="badge bg-warning text-dark">Due Soon</span>
                                                             @else
-                                                                <span class="text-success">Active</span>
+                                                                <span class="badge bg-success">Valid</span>
                                                             @endif
+
+                                                        </div>
+                                                        <div class="body-text">
+
+
+                                                            <a href="{{ route('vehicle.detail', $insurance->id) }}"
+                                                                class="btn btn-outline-primary">
+                                                                View
+                                                            </a>
+
+
+                                                            <button type="button" class="btn btn-outline-secondary"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#UpdateModal{{ $insurance->id }}">
+                                                                Update
+                                                            </button>
+
+
+                                                        </div>
+                                                        <div class="modal fade" id="UpdateModal{{ $insurance->id }}"
+                                                            tabindex="-1" role="dialog"
+                                                            aria-labelledby="UpdateModalLabel{{ $insurance->id }}"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg" role="document">
+                                                                <div class="modal-content">
+                                                                    <form method="POST"
+                                                                        action="{{ route('insurance.update', $insurance->id) }}">
+                                                                        @csrf
+                                                                        @method('PUT')
+
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title"
+                                                                                id="UpdateModalLabel{{ $insurance->id }}">
+                                                                                Update Insurance
+                                                                            </h5>
+                                                                            <button type="button" class="btn-close"
+                                                                                data-bs-dismiss="modal"
+                                                                                aria-label="Close"></button>
+                                                                        </div>
+
+                                                                        <div class="modal-body">
+                                                                            <div class="row g-3">
+                                                                                <div class="col-md-6">
+                                                                                    <label class="form-label">Insurance
+                                                                                        No</label>
+                                                                                    <input type="text" class="form-control"
+                                                                                        value="{{ $insurance->insurance_no }}"
+                                                                                        min="{{ date('Y-m-d') }}" readonly>
+                                                                                </div>
+                                                                                <!-- Start Date -->
+                                                                                <div class="col-md-6">
+                                                                                    <label class="form-label">Insurance
+                                                                                        Start Date</label>
+                                                                                    <input type="date" class="form-control"
+                                                                                        id="insurance_start_date_{{ $insurance->id }}"
+                                                                                        name="insurance_start_date"
+                                                                                        value="{{ date('Y-m-d') }}"
+                                                                                        min="{{ date('Y-m-d') }}">
+                                                                                </div>
+
+                                                                                <!-- End Date -->
+                                                                                <div class="col-md-6">
+                                                                                    <label class="form-label">Next Insurance
+                                                                                        Due Date</label>
+                                                                                    <input type="date" class="form-control"
+                                                                                        id="insurance_end_date_{{ $insurance->id }}"
+                                                                                        name="insurance_end_date" required>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Quick Date Buttons -->
+                                                                            <div class="row mt-3">
+                                                                                <div class="col-12">
+                                                                                    <label class="form-label">Quick Set Due
+                                                                                        Date:</label>
+                                                                                    <div class="btn-group d-block"
+                                                                                        role="group">
+                                                                                        <button type="button"
+                                                                                            class="btn btn-outline-primary btn-sm me-2"
+                                                                                            onclick="
+                                                                                                var startDate = document.getElementById('insurance_start_date_{{ $insurance->id }}').value;
+                                                                                                if (!startDate) { alert('Please select a start date first'); return; }
+                                                                                                var date = new Date(startDate);
+                                                                                                date.setMonth(date.getMonth() + 3);
+                                                                                                if (date.getDate() !== new Date(startDate).getDate()) { date.setDate(0); }
+                                                                                                var yyyy = date.getFullYear();
+                                                                                                var mm = String(date.getMonth() + 1).padStart(2, '0');
+                                                                                                var dd = String(date.getDate()).padStart(2, '0');
+                                                                                                document.getElementById('insurance_end_date_{{ $insurance->id }}').value = yyyy + '-' + mm + '-' + dd;
+                                                                                            ">
+                                                                                            +3 Months
+                                                                                        </button>
+                                                                                        <button type="button"
+                                                                                            class="btn btn-outline-primary btn-sm me-2"
+                                                                                            onclick="
+                                                                                                var startDate = document.getElementById('insurance_start_date_{{ $insurance->id }}').value;
+                                                                                                if (!startDate) { alert('Please select a start date first'); return; }
+                                                                                                var date = new Date(startDate);
+                                                                                                date.setMonth(date.getMonth() + 6);
+                                                                                                if (date.getDate() !== new Date(startDate).getDate()) { date.setDate(0); }
+                                                                                                var yyyy = date.getFullYear();
+                                                                                                var mm = String(date.getMonth() + 1).padStart(2, '0');
+                                                                                                var dd = String(date.getDate()).padStart(2, '0');
+                                                                                                document.getElementById('insurance_end_date_{{ $insurance->id }}').value = yyyy + '-' + mm + '-' + dd;
+                                                                                            ">
+                                                                                            +6 Months
+                                                                                        </button>
+                                                                                        <button type="button"
+                                                                                            class="btn btn-outline-primary btn-sm"
+                                                                                            onclick="
+                                                                                                var startDate = document.getElementById('insurance_start_date_{{ $insurance->id }}').value;
+                                                                                                if (!startDate) { alert('Please select a start date first'); return; }
+                                                                                                var date = new Date(startDate);
+                                                                                                date.setMonth(date.getMonth() + 12);
+                                                                                                if (date.getDate() !== new Date(startDate).getDate()) { date.setDate(0); }
+                                                                                                var yyyy = date.getFullYear();
+                                                                                                var mm = String(date.getMonth() + 1).padStart(2, '0');
+                                                                                                var dd = String(date.getDate()).padStart(2, '0');
+                                                                                                document.getElementById('insurance_end_date_{{ $insurance->id }}').value = yyyy + '-' + mm + '-' + dd;
+                                                                                            ">
+                                                                                            +1 Year
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary"
+                                                                                data-bs-dismiss="modal">Close</button>
+                                                                            <button type="submit"
+                                                                                class="btn btn-primary">Save
+                                                                                changes</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </li>
                                                 @empty
@@ -178,6 +328,8 @@
                                                         <div class="body-text w-100 text-muted">No insurance data available.
                                                         </div>
                                                     </li>
+                                                    <!-- update insurance list -->
+
                                                 @endforelse
                                             </ul>
 
@@ -219,6 +371,9 @@
                 }
             }
         </script>
+
+
+
 
 </body>
 

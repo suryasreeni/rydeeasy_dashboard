@@ -15,21 +15,67 @@ class HomeController extends Controller
         $vehicles = Vehicle::with('status')->paginate(6);
         $assignments = Assignment::paginate(6);
 
-        $oneWeekFromNow = now()->addWeek()->toDateString();
-        $today = now()->toDateString();
+        $today = Carbon::today()->toDateString();
+        $sevenDaysFromNow = Carbon::today()->addDays(7)->toDateString();
 
-        // Count documents expiring within one week
         $reminders = [
-            'insurance' => Vehicle::whereBetween('insurance_end_date', [$today, $oneWeekFromNow])->count(),
-            'registration' => Vehicle::whereBetween('registration_valid_to', [$today, $oneWeekFromNow])->count(),
-            'roadtax' => Vehicle::whereBetween('roadtex_last_date', [$today, $oneWeekFromNow])->count(),
-            'puc' => Vehicle::whereBetween('puc_last_date', [$today, $oneWeekFromNow])->count(),
-            'state_permit' => Vehicle::whereBetween('state_permit_end_date', [$today, $oneWeekFromNow])->count(),
-            'national_permit' => Vehicle::whereBetween('national_permit_end_date', [$today, $oneWeekFromNow])->count(),
-            'fitness' => Vehicle::whereBetween('fitness_certificate_end_date', [$today, $oneWeekFromNow])->count(),
-            'explosive' => Vehicle::whereBetween('explosive_certificate_end_date', [$today, $oneWeekFromNow])->count(),
-            'environmental' => Vehicle::whereBetween('enviornment_tax_end_date', [$today, $oneWeekFromNow])->count(),
+            'insurance' => [
+                'due_soon' => Vehicle::whereNotNull('insurance_end_date')
+                    ->whereBetween('insurance_end_date', [$today, $sevenDaysFromNow])->count(),
+                'overdue' => Vehicle::whereNotNull('insurance_end_date')
+                    ->whereDate('insurance_end_date', '<', $today)->count(),
+            ],
+            'registration' => [
+                'due_soon' => Vehicle::whereNotNull('registration_valid_to')
+                    ->whereBetween('registration_valid_to', [$today, $sevenDaysFromNow])->count(),
+                'overdue' => Vehicle::whereNotNull('registration_valid_to')
+                    ->whereDate('registration_valid_to', '<', $today)->count(),
+            ],
+            'roadtax' => [
+                'due_soon' => Vehicle::whereNotNull('roadtex_last_date')
+                    ->whereBetween('roadtex_last_date', [$today, $sevenDaysFromNow])->count(),
+                'overdue' => Vehicle::whereNotNull('roadtex_last_date')
+                    ->whereDate('roadtex_last_date', '<', $today)->count(),
+            ],
+            'puc' => [
+                'due_soon' => Vehicle::whereNotNull('puc_last_date')
+                    ->whereBetween('puc_last_date', [$today, $sevenDaysFromNow])->count(),
+                'overdue' => Vehicle::whereNotNull('puc_last_date')
+                    ->whereDate('puc_last_date', '<', $today)->count(),
+            ],
+            'state_permit' => [
+                'due_soon' => Vehicle::whereNotNull('state_permit_end_date')
+                    ->whereBetween('state_permit_end_date', [$today, $sevenDaysFromNow])->count(),
+                'overdue' => Vehicle::whereNotNull('state_permit_end_date')
+                    ->whereDate('state_permit_end_date', '<', $today)->count(),
+            ],
+            'national_permit' => [
+                'due_soon' => Vehicle::whereNotNull('national_permit_end_date')
+                    ->whereBetween('national_permit_end_date', [$today, $sevenDaysFromNow])->count(),
+                'overdue' => Vehicle::whereNotNull('national_permit_end_date')
+                    ->whereDate('national_permit_end_date', '<', $today)->count(),
+            ],
+            'fitness' => [
+                'due_soon' => Vehicle::whereNotNull('fitness_certificate_end_date')
+                    ->whereBetween('fitness_certificate_end_date', [$today, $sevenDaysFromNow])->count(),
+                'overdue' => Vehicle::whereNotNull('fitness_certificate_end_date')
+                    ->whereDate('fitness_certificate_end_date', '<', $today)->count(),
+            ],
+            'explosive' => [
+                'due_soon' => Vehicle::whereNotNull('explosive_certificate_end_date')
+                    ->whereBetween('explosive_certificate_end_date', [$today, $sevenDaysFromNow])->count(),
+                'overdue' => Vehicle::whereNotNull('explosive_certificate_end_date')
+                    ->whereDate('explosive_certificate_end_date', '<', $today)->count(),
+            ],
+            'environmental' => [
+                'due_soon' => Vehicle::whereNotNull('enviornment_tax_end_date')
+                    ->whereBetween('enviornment_tax_end_date', [$today, $sevenDaysFromNow])->count(),
+                'overdue' => Vehicle::whereNotNull('enviornment_tax_end_date')
+                    ->whereDate('enviornment_tax_end_date', '<', $today)->count(),
+            ],
         ];
+
+
 
 
         return view('home.homepage', compact('vehicles', 'assignments', 'reminders'));
@@ -62,23 +108,22 @@ class HomeController extends Controller
     }
     public function InsuranceList()
     {
-        $today = now()->toDateString();
-        $oneWeekFromNow = now()->addWeek()->toDateString();
-
         $insuranceList = Vehicle::select(
+            'id',
             'vehicle_name',
             'vin',
             'insurance_no',
+            'insurance_start_date',
+
             'insurance_end_date'
         )
-            ->whereBetween('insurance_end_date', [$today, $oneWeekFromNow])
             ->whereNotNull('insurance_end_date')
             ->orderBy('insurance_end_date', 'asc')
             ->get();
 
         return view('reminderList.insurancelist', compact('insuranceList'));
-
     }
+
 
     public function RegistrationList()
     {
@@ -86,40 +131,36 @@ class HomeController extends Controller
         $oneWeekFromNow = now()->addWeek()->toDateString();
 
         $registrationList = Vehicle::select(
+            'id',
             'vehicle_name',
             'vin',
             'registration_no',
             'registration_valid_from',
             'registration_valid_to'
         )
-            ->whereBetween('registration_valid_to', [$today, $oneWeekFromNow])
             ->whereNotNull('registration_valid_to')
             ->orderBy('registration_valid_to', 'asc')
             ->get();
-
         return view('reminderList.registrationlist', compact('registrationList'));
 
     }
 
     public function RoadtaxList()
     {
-        $today = now()->toDateString();
-        $oneWeekFromNow = now()->addWeek()->toDateString();
-
         $roadTaxList = Vehicle::select(
+            'id',
             'vehicle_name',
             'vin',
             'roadtex_no',
             'roadtex_last_date'
         )
-            ->whereBetween('roadtex_last_date', [$today, $oneWeekFromNow])
             ->whereNotNull('roadtex_last_date')
             ->orderBy('roadtex_last_date', 'asc')
             ->get();
 
         return view('reminderList.roadtexlist', compact('roadTaxList'));
-
     }
+
 
     public function PUCList()
     {
@@ -127,17 +168,117 @@ class HomeController extends Controller
         $oneWeekFromNow = now()->addWeek()->toDateString();
 
         $pucList = Vehicle::select(
+            'id',
             'vehicle_name',
             'vin',
             'puc_no',
             'puc_last_date'
         )
-            ->whereBetween('puc_last_date', [$today, $oneWeekFromNow])
             ->whereNotNull('puc_last_date')
             ->orderBy('puc_last_date', 'asc')
             ->get();
 
+
         return view('reminderList.puclist', compact('pucList'));
+
+    }
+    public function StatePermitList()
+    {
+        $today = now()->toDateString();
+        $oneWeekFromNow = now()->addWeek()->toDateString();
+
+        $statepermitList = Vehicle::select(
+            'id',
+            'vehicle_name',
+            'vin',
+            'state_permit_start_date',
+            'state_permit_end_date'
+        )
+            ->whereNotNull('state_permit_end_date')
+            ->orderBy('state_permit_end_date', 'asc')
+            ->get();
+
+        return view('reminderList.statepermitlist', compact('statepermitList'));
+
+    }
+
+    public function NationalPermitList()
+    {
+        $today = now()->toDateString();
+        $oneWeekFromNow = now()->addWeek()->toDateString();
+
+        $nationalpermitList = Vehicle::select(
+            'id',
+            'vehicle_name',
+            'vin',
+            'national_permit_start_date',
+            'national_permit_end_date'
+        )
+            ->whereNotNull('national_permit_end_date')
+            ->orderBy('national_permit_end_date', 'asc')
+            ->get();
+
+        return view('reminderList.nationalpermitlist', compact('nationalpermitList'));
+
+    }
+
+    public function FitnessList()
+    {
+        $today = now()->toDateString();
+        $oneWeekFromNow = now()->addWeek()->toDateString();
+
+        $fitnesstList = Vehicle::select(
+            'id',
+            'vehicle_name',
+            'vin',
+            'fitness_certificate_start_date',
+            'fitness_certificate_end_date'
+        )
+            ->whereNotNull('fitness_certificate_end_date')
+            ->orderBy('fitness_certificate_end_date', 'asc')
+            ->get();
+
+        return view('reminderList.fitnesslist', compact('fitnesstList'));
+
+    }
+
+    public function ExplosiveList()
+    {
+        $today = now()->toDateString();
+        $oneWeekFromNow = now()->addWeek()->toDateString();
+
+        $explosiveList = Vehicle::select(
+            'id',
+            'vehicle_name',
+            'vin',
+            'explosive_certificate_start_date',
+            'explosive_certificate_end_date'
+        )
+            ->whereNotNull('explosive_certificate_end_date')
+            ->orderBy('explosive_certificate_end_date', 'asc')
+            ->get();
+
+        return view('reminderList.explosivelist', compact('explosiveList'));
+
+    }
+
+    public function EnviornmentalList()
+    {
+        $today = now()->toDateString();
+        $oneWeekFromNow = now()->addWeek()->toDateString();
+
+        $enviornmentalList = Vehicle::select(
+            'id',
+            'vehicle_name',
+            'vin',
+            'enviornment_tax_start_date',
+            'enviornment_tax_end_date'
+        )
+            ->whereNotNull('enviornment_tax_end_date')
+            ->orderBy('enviornment_tax_end_date', 'asc')
+            ->get();
+
+        return view('reminderList.enviornmentallist', compact('enviornmentalList'));
 
     }
 

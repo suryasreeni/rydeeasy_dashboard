@@ -279,12 +279,13 @@
                                             <li class="product-item">
                                                 <!-- VIN + Image -->
                                                 <div class="body-text"
-                                                    style="width: 500px; align-items: center; gap: 10px; cursor: pointer;"
-                                                    onclick="viewContact({{ $vehicle->id }})">
-                                                    <img src="{{ asset('storage/' . $vehicle->vehicle_image) }}"
-                                                        alt="Vehicle Image"
-                                                        style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
-                                                    <span>{{ $vehicle->vin }}</span>
+                                                    style="width: 500px; align-items: center; gap: 10px; cursor: pointer;">
+                                                    <a href="{{ url('/VehicleDetails',$vehicle->id) }}">
+                                                        <img src="{{ asset('storage/' . $vehicle->vehicle_image) }}"
+                                                            alt="Vehicle Image"
+                                                            style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
+                                                        <span>{{ $vehicle->vin }}</span>
+                                                    </a>
                                                 </div>
 
                                                 <!-- Vehicle Name -->

@@ -44,6 +44,31 @@ Route::get('/RegistrationList', [HomeController::class, 'RegistrationList'])->na
 Route::get('/RoadtaxList', [HomeController::class, 'RoadtaxList'])->name('roadtax.list');
 Route::get('/PUCList', [HomeController::class, 'PUCList'])->name('puc.list');
 Route::get('/StatePermitList', [HomeController::class, 'StatePermitList'])->name('statepermit.list');
+Route::get('/NationalPermitList', [HomeController::class, 'NationalPermitList'])->name('nationalpermit.list');
+Route::get('/FitnessList', [HomeController::class, 'FitnessList'])->name('fitness.list');
+Route::get('/ExplosiveList', [HomeController::class, 'ExplosiveList'])->name('explosive.list');
+Route::get('/EnviornmentalList', [HomeController::class, 'EnviornmentalList'])->name('enviornmental.list');
+
+//update reminders
+Route::put('/InsuranceList/UpdateInsurance/{id}', [VehicleController::class, 'UpdateInsurance'])->name('insurance.update');
+Route::put('/RegistrationList/UpdateRegistrationList/{id}', [VehicleController::class, 'UpdateRegistrationList'])->name('registration.update');
+Route::put('/RoadtaxList/UpdateRoadtaxList/{id}', [VehicleController::class, 'UpdateRoadtaxList'])->name('roadtax.update');
+Route::put('/PUCList/UpdatePucList/{id}', [VehicleController::class, 'UpdatePucList'])->name('puc.update');
+Route::put('/StatePermitList/UpdateStatePermitList/{id}', [VehicleController::class, 'UpdateStatePermitList'])->name('statepermit.update');
+Route::put('/NationalPermitList/UpdateNationalPermitList/{id}', [VehicleController::class, 'UpdateNationalPermitList'])->name('nationalpermit.update');
+Route::put('/FitnessList/UpdateFitnessList/{id}', [VehicleController::class, 'UpdateFitnessList'])->name('fitness.update');
+Route::put('/ExplosiveList/UpdateExplosiveList/{id}', [VehicleController::class, 'UpdateExplosiveList'])->name('explosive.update');
+Route::put('/EnviornmentalList/UpdateEnviornmentList/{id}', [VehicleController::class, 'UpdateEnviornmentList'])->name('enviornment.update');
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -52,6 +77,8 @@ Route::get('/StatePermitList', [HomeController::class, 'StatePermitList'])->name
 
 // vehicles
 Route::get('/VehicleList', [VehicleController::class, 'VehicleList'])->name('vehicle.vehicle');
+Route::get('/VehicleDetails/{id}', [VehicleController::class, 'VehicleDetails'])->name('vehicle.detail');
+
 Route::get('/AddVehicle', [VehicleController::class, 'AddVehicle'])->name('vehicle.addvehicle');
 Route::post('/vehicle/store', [VehicleController::class, 'vehiclestore'])->name('vehicle.store');
 Route::get('/vehicle-detail/{id}', [VehicleController::class, 'showAjax']);
