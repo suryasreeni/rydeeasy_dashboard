@@ -57,6 +57,17 @@
                                         <div class="text">Vehicles</div>
                                     </a>
                                 </li>
+
+                            </ul>
+                        </li>
+                        <li
+                            class="menu-item has-children {{ request()->is('VehicleList') || request()->is('VehicleAssignment') || request()->is('MeterHistory') || request()->is('ExpenseHistory') || request()->is('ReplacementAnalysis') ? 'active' : '' }}">
+                            <a href="javascript:void(0);" class="menu-item-button">
+                                <div class="icon"><i class="fas fa-car"></i></div>
+                                <div class="text">Assign Management</div>
+                            </a>
+                            <ul class="sub-menu">
+
                                 <li class="sub-menu-item {{ request()->is('VehicleAssignment') ? 'active' : '' }}">
                                     <a href="{{url('/VehicleAssignment')}}">
                                         <div class="text">Vehicle Assignments</div>

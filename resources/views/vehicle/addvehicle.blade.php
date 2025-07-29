@@ -670,46 +670,7 @@
                                                 </fieldset>
 
                                             </div>
-                                            <div style="display: flex; gap: 20px; align-items: center;">
 
-                                                <fieldset class="input-group" style="flex:1">
-                                                    <label for="explosive_certificate_start_date">Explosive Certificate
-                                                        Start
-                                                        Date</label>
-                                                    <input type="date" id="explosive_certificate_start_date"
-                                                        name="explosive_certificate_start_date">
-
-                                                </fieldset>
-                                                <fieldset class="input-group" style="flex:1">
-                                                    <label for="explosive_certificate_end_date">Explosive Certificate
-                                                        End
-                                                        Date</label>
-                                                    <input type="date" id="explosive_certificate_end_date"
-                                                        name="explosive_certificate_end_date">
-
-                                                </fieldset>
-
-                                            </div>
-                                            <div style="display: flex; gap: 20px; align-items: center;">
-
-                                                <fieldset class="input-group" style="flex:1">
-                                                    <label for="enviornment_tax_start_date">Enviornmental Tax
-                                                        Start
-                                                        Date</label>
-                                                    <input type="date" id="enviornment_tax_start_date"
-                                                        name="enviornment_tax_start_date">
-
-                                                </fieldset>
-                                                <fieldset class="input-group" style="flex:1">
-                                                    <label for="enviornment_tax_end_date">Enviornmental Tax
-                                                        End
-                                                        Date</label>
-                                                    <input type="date" id="enviornment_tax_end_date"
-                                                        name="enviornment_tax_end_date">
-
-                                                </fieldset>
-
-                                            </div>
                                         </div>
 
 

@@ -46,8 +46,6 @@ Route::get('/PUCList', [HomeController::class, 'PUCList'])->name('puc.list');
 Route::get('/StatePermitList', [HomeController::class, 'StatePermitList'])->name('statepermit.list');
 Route::get('/NationalPermitList', [HomeController::class, 'NationalPermitList'])->name('nationalpermit.list');
 Route::get('/FitnessList', [HomeController::class, 'FitnessList'])->name('fitness.list');
-Route::get('/ExplosiveList', [HomeController::class, 'ExplosiveList'])->name('explosive.list');
-Route::get('/EnviornmentalList', [HomeController::class, 'EnviornmentalList'])->name('enviornmental.list');
 
 //update reminders
 Route::put('/InsuranceList/UpdateInsurance/{id}', [VehicleController::class, 'UpdateInsurance'])->name('insurance.update');
@@ -57,22 +55,6 @@ Route::put('/PUCList/UpdatePucList/{id}', [VehicleController::class, 'UpdatePucL
 Route::put('/StatePermitList/UpdateStatePermitList/{id}', [VehicleController::class, 'UpdateStatePermitList'])->name('statepermit.update');
 Route::put('/NationalPermitList/UpdateNationalPermitList/{id}', [VehicleController::class, 'UpdateNationalPermitList'])->name('nationalpermit.update');
 Route::put('/FitnessList/UpdateFitnessList/{id}', [VehicleController::class, 'UpdateFitnessList'])->name('fitness.update');
-Route::put('/ExplosiveList/UpdateExplosiveList/{id}', [VehicleController::class, 'UpdateExplosiveList'])->name('explosive.update');
-Route::put('/EnviornmentalList/UpdateEnviornmentList/{id}', [VehicleController::class, 'UpdateEnviornmentList'])->name('enviornment.update');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // vehicles
@@ -162,15 +144,26 @@ Route::delete('/vendor/{id}', [VendorController::class, 'destroy'])->name('vendo
 // Fuel and Energy
 Route::get('/FuelHistory', action: [FuelController::class, 'FuelHistory'])->name('fuel.fuelhistory');
 Route::get('/AddFuelHistory', action: [FuelController::class, 'AddFuelHistory'])->name('fuel.addfuelhistory');
+Route::post('/StoreFuelHistory', action: [FuelController::class, 'StoreFuelHistory'])->name('store.fuelhistory');
+Route::put('/UpdateFuelHistory/{id}', action: [FuelController::class, 'UpdateFuelHistory'])->name('update.fuelhistory');
+Route::delete('/DeleteFuelHistory/{id}', action: [FuelController::class, 'DeleteFuelHistory'])->name('fuelhistory.destroy');
+
+
+
 
 Route::get('/ChargingHistory', action: [FuelController::class, 'ChargingHistory'])->name('fuel.charginghistory');
-;
+
 Route::get('/AddChargingHistory', action: [FuelController::class, 'AddChargingHistory'])->name('fuel.addcharginghistory');
-;
 
 // parts
-Route::get('/Part', action: [PartController::class, 'Part']);
+Route::get('/Part', action: [PartController::class, 'Part'])->name('part.list');
 Route::get('/AddPart', action: [PartController::class, 'AddPart']);
+Route::post('/StorePart', action: [PartController::class, 'StorePart'])->name('part.store');
+Route::put('/UpdatePart/{id}', action: [PartController::class, 'UpdatePart'])->name('part.update');
+Route::delete('/DeletePart/{id}', action: [PartController::class, 'DeletePart'])->name('part.delete');
+
+
+
 
 // places
 Route::get('/Place', action: [PlaceController::class, 'Place'])->name('place.place');
@@ -215,3 +208,10 @@ Route::get('/check-vin', function (\Illuminate\Http\Request $request) {
     $exists = \App\Models\Vehicle::where('vin', $request->vin)->exists();
     return response()->json(['exists' => $exists]);
 });
+
+
+Route::post(uri: '/Setting/storepartcategory', action: [SettingController::class, 'StorePartCategory'])->name('partcategory.store');
+Route::delete(uri: '/Setting/deletepartcategory/{id}', action: [SettingController::class, 'DeletePartCategory'])->name('partcategory.delete');
+
+Route::post(uri: '/Setting/storemeasurement', action: [SettingController::class, 'StoreMeasurement'])->name('measurement.store');
+Route::delete(uri: '/Setting/deletemeasurement/{id}', action: [SettingController::class, 'DeleteMeasurement'])->name('measurement.destroy');

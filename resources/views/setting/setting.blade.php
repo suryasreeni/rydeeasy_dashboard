@@ -285,18 +285,15 @@
         </ul>
         <!-- end seventh section -->
         <!-- start eigth section -->
-        <h2>Parts & Inventory</h2>
+        <h2>Parts & Tools</h2>
         <ul>
-            <li><a href="#part_location" class="tab-link">Part Locations</a></li>
-            <li><a href="#part_categories" class="tab-link">Part Categories</a></li>
-            <li><a href="#Part_manufacturers" class="tab-link">Part Manufacturers</a></li>
+            <li><a href="#part_categories" class="tab-link">Categories</a></li>
             <li><a href="#Measurement_units" class="tab-link">Measurement Units</a></li>
         </ul>
         <!-- end eigth section -->
         <!-- start nine section -->
         <h2>Fuel & Energy</h2>
         <ul>
-            <li><a href="#fuel_energy_setting" class="tab-link">Fuel & Energy Settings</a></li>
             <li><a href="#fuel_type" class="tab-link">Fuel Types</a></li>
         </ul>
         <!-- end nine section -->
@@ -407,22 +404,9 @@
         </div>
         <!-- end seventh section -->
         <!-- start eigth section -->
-        <div id="part_location" class="tab-content">
-            <h3>part location</h3>
-            <p>Update your profile information here.</p>
-        </div>
-        <div id="part_categories" class="tab-content">
-            <h3>part category</h3>
-            <p>Update your profile information here.</p>
-        </div>
-        <div id="Part_manufacturers" class="tab-content">
-            <h3>part manufacturer</h3>
-            <p>Update your profile information here.</p>
-        </div>
-        <div id="Measurement_units" class="tab-content">
-            <h3>measurement units</h3>
-            <p>Update your profile information here.</p>
-        </div>
+
+
+        @include('setting.parts')
         @include('setting.fuel_type')
 
 

@@ -119,10 +119,7 @@ class VehicleController extends Controller
             'national_permit_end_date' => 'nullable|date',
             'fitness_certificate_start_date' => 'nullable|date',
             'fitness_certificate_end_date' => 'nullable|date',
-            'explosive_certificate_start_date' => 'nullable|date',
-            'explosive_certificate_end_date' => 'nullable|date',
-            'enviornment_tax_start_date' => 'nullable|date',
-            'enviornment_tax_end_date' => 'nullable|date',
+
         ]);
 
 
@@ -171,10 +168,7 @@ class VehicleController extends Controller
             'national_permit_end_date' => $request->national_permit_end_date,
             'fitness_certificate_start_date' => $request->fitness_certificate_start_date,
             'fitness_certificate_end_date' => $request->fitness_certificate_end_date,
-            'explosive_certificate_start_date' => $request->explosive_certificate_start_date,
-            'explosive_certificate_end_date' => $request->explosive_certificate_end_date,
-            'enviornment_tax_start_date' => $request->enviornment_tax_start_date,
-            'enviornment_tax_end_date' => $request->enviornment_tax_end_date,
+
         ]);
 
         return redirect()->route('vehicle.vehicle')->with('success', 'Vehicle added successfully.');
@@ -238,10 +232,7 @@ class VehicleController extends Controller
             'national_permit_end_date' => 'nullable|date',
             'fitness_certificate_start_date' => 'nullable|date',
             'fitness_certificate_end_date' => 'nullable|date',
-            'explosive_certificate_start_date' => 'nullable|date',
-            'explosive_certificate_end_date' => 'nullable|date',
-            'enviornment_tax_start_date' => 'nullable|date',
-            'enviornment_tax_end_date' => 'nullable|date',
+
         ]);
 
         // Handle vehicle image if uploaded
@@ -295,10 +286,7 @@ class VehicleController extends Controller
             'national_permit_end_date' => $request->national_permit_end_date,
             'fitness_certificate_start_date' => $request->fitness_certificate_start_date,
             'fitness_certificate_end_date' => $request->fitness_certificate_end_date,
-            'explosive_certificate_start_date' => $request->explosive_certificate_start_date,
-            'explosive_certificate_end_date' => $request->explosive_certificate_end_date,
-            'enviornment_tax_start_date' => $request->enviornment_tax_start_date,
-            'enviornment_tax_end_date' => $request->enviornment_tax_end_date,
+
         ]);
 
         return redirect()->route('vehicle.vehicle')->with('success', 'Vehicle updated successfully.');
@@ -762,30 +750,6 @@ class VehicleController extends Controller
 
     }
 
-    public function UpdateExplosiveList(Request $request, $id)
-    {
-        $vehicle = Vehicle::findOrFail($id);
-        $vehicle->update([
-            'explosive_certificate_start_date' => $request->explosive_certificate_start_date,
-
-            'explosive_certificate_end_date' => $request->explosive_certificate_end_date,
-        ]);
-
-        return redirect()->route('explosive.list')->with('success', 'Explosive Certificate Reminder updated successfully.');
-
-    }
-    public function UpdateEnviornmentList(Request $request, $id)
-    {
-        $vehicle = Vehicle::findOrFail($id);
-        $vehicle->update([
-            'enviornment_tax_start_date' => $request->enviornment_tax_start_date,
-
-            'enviornment_tax_end_date' => $request->enviornment_tax_end_date,
-        ]);
-
-        return redirect()->route('enviornmental.list')->with('success', 'Enviornment Certificate Reminder updated successfully.');
-
-    }
 
     public function MeterHistory()
     {

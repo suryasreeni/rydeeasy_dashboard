@@ -224,7 +224,7 @@
                                 </div>
 
                                 <!-- add-new-user -->
-                                <form class="form-add-new-user form-style-2" action="{{ route('contact.post') }}"
+                                <form class="form-add-new-user form-style-2" action="{{ route('part.store') }}"
                                     method="POST" enctype="multipart/form-data">
                                     @csrf
 
@@ -237,169 +237,188 @@
                                             <div class="left">
                                                 <h5 class="mb-4">Details</h5>
                                             </div><br><br><br>
-
-
-                                            <fieldset class="email mb-24">
-                                                <div class="body-title mb-10">Part Number</div>
-                                                <input type="text" placeholder="Enter Name" name="email" tabindex="0"
-                                                    value="" aria-required="true" required="">
-                                                <p style="font-size:10px;">Internal part identifier. Must be unique per
-                                                    part.
-
-                                                </p>
-                                            </fieldset>
-
-
-
-                                            <fieldset class="name mb-24">
-                                                <div class="body-title mb-10">
-                                                    Description</div>
-                                                <textarea name="group" tabindex="0" value="" aria-required="true"
-                                                    required=""></textarea>
-
-
-                                            </fieldset>
                                             <div class="row" style="display: flex;gap: 20px;">
-                                                <fieldset class="md-6" style="flex: 1;">
-                                                    <div class="body-title">Photo</div>
-                                                    <div class="upload-container">
-                                                        <label class="upload-btn" for="photoFile">
-                                                            Pick File
-                                                        </label>
-                                                        <div class="drop-area">Or drop file here</div>
-                                                        <input type="file" id="photoFile" name="photoFile" hidden>
-                                                    </div>
-                                                    <div class="file-status" id="photoStatus">No file selected</div>
+                                                <fieldset class="col-md-4 email mb-24" style="flex: 1;">
+                                                    <div class="body-title mb-10">Part Number</div>
+                                                    <input type="text" name="part_no" value="{{ $nextPartNo ?? '' }}"
+                                                        readonly tabindex="0" aria-required="true">
                                                 </fieldset>
-                                                <fieldset class="md-6" style="flex: 1;">
-                                                    <div class="body-title">Document</div>
-                                                    <div class="upload-container">
-                                                        <label class="upload-btn" for="documentFile">
-                                                            Pick File
-                                                        </label>
-                                                        <div class="drop-area">Or drop file here</div>
-                                                        <input type="file" id="documentFile" name="documentFile" hidden>
-                                                    </div>
-                                                    <div class="file-status" id="documentStatus">No file selected</div>
+                                                <fieldset class="col-md-4 email mb-24" style="flex: 1;">
+                                                    <div class="body-title mb-10">Part Category</div>
+                                                    <select id="part_category" name="part_category">
+                                                        <option value="">Please select Part Category</option>
+                                                        @foreach ($partcategories as $part)
+                                                            <option value="{{$part->part_category_name}}">
+                                                                {{$part->part_category_name}}
+                                                            </option>
+
+                                                        @endforeach
+                                                    </select>
                                                 </fieldset>
-                                            </div>
-                                            <fieldset class="name mb-24">
-                                                <div class="body-title mb-10">Category</div>
-                                                <select id=" purchase-vendor" name="label" required>
-                                                    <option value="" disabled selected style="font-size:12px;">
-                                                        Please select</option>
-                                                    <option value="vendor1">label 1</option>
-                                                    <option value="vendor2">label 2</option>
-                                                    <option value="vendor1">label 1</option>
-                                                    <option value="vendor2">label 2</option>
-
-                                                </select>
-                                                <p style="font-size:10px;">Use labels to categorize, group and more.
-                                                    (e.g. Electrical)
-
-
-                                                </p>
-                                            </fieldset>
-                                            <fieldset class="name mb-24">
-                                                <div class="body-title mb-10">Manufacturer</div>
-                                                <select id=" purchase-vendor" name="label" required>
-                                                    <option value="" disabled selected style="font-size:12px;">
-                                                        Please select</option>
-                                                    <option value="vendor1">label 1</option>
-                                                    <option value="vendor2">label 2</option>
-                                                    <option value="vendor1">label 1</option>
-                                                    <option value="vendor2">label 2</option>
-
-                                                </select>
-                                                <p style="font-size:10px;">Use labels to categorize, group and more.
-                                                    (e.g. Electrical)
-
-
-                                                </p>
-                                            </fieldset>
-                                            <div class="row" style="display: flex;gap: 20px;">
-                                                <fieldset class="md-6" style="flex: 1;">
-
-
-                                                    <div class="body-title mb-10">Manufacturer Part</div>
-                                                    <input type="text" name="email" tabindex="0" value=""
-                                                        aria-required="true" required="">
-
-
-
+                                                <fieldset class=" col-md-4 email mb-24" style="flex: 1;">
+                                                    <div class="body-title mb-10">Part Name</div>
+                                                    <input type="text" name="part_name" tabindex="0"
+                                                        aria-required="true">
 
                                                 </fieldset>
-                                                <fieldset class="md-6" style="flex: 1;">
 
 
-                                                    <div class="body-title mb-10">UPC</div>
-                                                    <input type="text" name="email" tabindex="0" value=""
-                                                        aria-required="true" required="">
-                                                    <p style="font-size:10px;">Manufacturer specific part number that
-                                                        can differentiate the part from an internal part number.
-
-                                                    </p>
-
-
-                                                </fieldset>
                                             </div>
                                             <div class="row" style="display: flex;gap: 20px;">
-                                                <fieldset class="md-6" style="flex: 1;">
-                                                    <div class="body-title mb-10">Unit Cost </div>
-                                                    <input type="number" name="email" tabindex="0" value=""
-                                                        aria-required="true" required="">
+
+                                                <fieldset class="col-md-3 email mb-24" style="flex: 1;">
+                                                    <div class="body-title mb-10">Type of Unit</div>
+                                                    <select id="measurement_unit" name="measurement_unit">
+                                                        <option value=""> select Type of Unit</option>
+                                                        @foreach ($measurements as $measure)
+                                                            <option value="{{$measure->measurement_unit_name}}">
+                                                                {{$measure->measurement_unit_name}}
+                                                            </option>
+
+                                                        @endforeach
+                                                    </select>
                                                 </fieldset>
-                                                <fieldset class="md-6" style="flex: 1;">
+                                                <fieldset class="col-md-3 email mb-24" style="flex: 1;">
+                                                    <div class="body-title mb-10">Part Quantity</div>
+                                                    <input type="number" name="part_qty" id="part_qty" tabindex="0"
+                                                        aria-required="true">
+                                                </fieldset>
+
+                                                <fieldset class="col-md-3 email mb-24" style="flex: 1;">
+                                                    <div class="body-title mb-10">Price Per Unit</div>
+                                                    <input type="number" name="price_per_unit" id="price_per_unit"
+                                                        tabindex="0" aria-required="true">
+                                                </fieldset>
+
+                                                <fieldset class="col-md-3 email mb-24" style="flex: 1;width:50%;">
+                                                    <div class="body-title mb-10">Total Price</div>
+                                                    <input type="number" name="total_price" id="total_price"
+                                                        tabindex="0" aria-required="true" readonly>
+                                                </fieldset>
 
 
-                                                    <div class="body-title mb-10">Measurement Unit</div>
-                                                    <select id=" purchase-vendor" name="label" required>
-                                                        <option value="" disabled selected style="font-size:12px;">
-                                                            Please select</option>
-                                                        <option value="vendor1">label 1</option>
-                                                        <option value="vendor2">label 2</option>
-                                                        <option value="vendor1">label 1</option>
-                                                        <option value="vendor2">label 2</option>
+                                            </div>
+
+
+                                            <fieldset class="col-md-4" style="width:100%;">
+                                                <div class="col-md-4">
+                                                    <div class="body-title mb-10">Vendor Type</div>
+
+                                                    <select id="vendor_type" name="vendor_type"
+                                                        onchange="toggleVendorFields()">
+                                                        <option value="">-- Select Type --</option>
+                                                        <option value="regular">Regular Vendor</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+                                            </fieldset>
+                                            <!-- Regular Vendor Dropdown -->
+                                            <div class="row mb-3" id="regular_vendor_section"
+                                                style="display: none;margin-top:50px;">
+                                                <div class="col-md-4">
+                                                    <div class="body-title mb-10">Select Vendor</div>
+
+                                                    <select id="regular_vendor_id" name="regular_vendor_id"
+                                                        onchange="populateVendorDetails()">
+                                                        <option value="">-- Select Vendor --</option>
+                                                        @foreach($vendors as $vendor)
+                                                            <option value="{{ $vendor->id }}"
+                                                                data-shop="{{ $vendor->name }}"
+                                                                data-address="{{ $vendor->address1 }}"
+                                                                data-phone="{{ $vendor->contact_phone }}">
+                                                                {{ $vendor->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="body-title mb-10">Shop Name</div>
+
+                                                    <input type="text" class="form-control" id="vendor_shop" readonly>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="body-title mb-10">Address</div>
+
+                                                    <input type="text" class="form-control" id="vendor_address"
+                                                        readonly>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="body-title mb-10">Phone</div>
+
+                                                    <input type="text" class="form-control" id="vendor_phone" readonly>
+                                                </div>
+                                            </div>
+
+                                            <!-- Other Vendor Fields -->
+                                            <div class="row mb-3" id="other_vendor_section"
+                                                style="display: none;margin-top:50px;">
+                                                <div class="col-md-4">
+                                                    <div class="body-title mb-10">Vendor Name</div>
+
+                                                    <input type="text" class="form-control" name="other_vendor_name">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="body-title mb-10">Address</div>
+
+                                                    <input type="text" class="form-control" name="other_vendor_address">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="body-title mb-10">Phone</div>
+
+                                                    <input type="text" class="form-control" name="other_vendor_phone">
+                                                </div>
+                                            </div>
+
+                                            <div class="row" style="display: flex;gap: 20px;margin-top:30px;">
+
+
+                                                <fieldset class=" col-md-3 email mb-24" style="flex: 1;">
+                                                    <div class="body-title mb-10">Purchase Date</div>
+                                                    <input type="date" name="purchase_date" tabindex="0"
+                                                        aria-required="true" min="{{ date('Y-m-d') }}">
+
+                                                </fieldset>
+
+                                                <fieldset class="col-md-3 email mb-24" style="flex: 1;">
+                                                    <div class="body-title mb-10">Part Color</div>
+                                                    <input type="text" name="part_color" tabindex="0"
+                                                        aria-required="true">
+
+
+                                                </fieldset>
+                                                <fieldset class="col-md-3 email mb-24" style="flex: 1;width:50%;">
+                                                    <div class="body-title mb-10">Part Status</div>
+
+                                                    <select name="part_status">
+                                                        <option value="">Select Part Status</option>
+                                                        <option value="active">Active</option>
+                                                        <option value="inactive">Inactive</option>
+
 
                                                     </select>
 
-
-
                                                 </fieldset>
+                                                <fieldset class="col-md-4 email mb-24" style="flex: 1;">
+                                                    <div class="body-title mb-10">Part Photo</div>
+                                                    <input type="file" name="part_photo" tabindex="0"
+                                                        aria-required="true">
+                                                </fieldset>
+
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="wg-box">
 
 
 
-                                        <div class="right flex-grow">
-                                            <div class="left">
-                                                <h5 class="mb-4">Location</h5>
-                                            </div><br><br><br>
 
-
-                                            <fieldset class="email mb-24">
-                                                <div class="body-title mb-10">You do not have access to any Part
-                                                    Locations</div>
-                                                <select id=" purchase-vendor" name="label" required>
-                                                    <option value="" disabled selected style="font-size:12px;">
-                                                        Please select</option>
-                                                    <option value="vendor1">label 1</option>
-                                                    <option value="vendor2">label 2</option>
-                                                    <option value="vendor1">label 1</option>
-                                                    <option value="vendor2">label 2</option>
-
-                                                </select>
-                                            </fieldset>
 
                                         </div>
+
                                     </div>
+
                                     <div>
-                                        <button class="submit-btn" type="button"
-                                            onclick="window.location.href='{{ route('vehicle.vehicle') }}';">Cancel</button>
-                                        <button class="submit-btn" type="button" style="right:0;position:absolute;"
-                                            onclick="window.location.href='{{ route('vehicle.vehicle') }}';">Save</button>
+                                        <button class="submit-btn" type="button">Cancel</button>
+                                        <button class="submit-btn" type="submit" style="float:end">Save</button>
+
                                     </div>
 
                                 </form>
@@ -430,6 +449,33 @@
         handleFileChange("photoFile", "photoStatus");
         handleFileChange("documentFile", "documentStatus");
     </script>
+    <script>
+        function toggleVendorFields() {
+            const type = document.getElementById("vendor_type").value;
+            document.getElementById("regular_vendor_section").style.display = type === "regular" ? "flex" : "none";
+            document.getElementById("other_vendor_section").style.display = type === "other" ? "flex" : "none";
+        }
+
+        function populateVendorDetails() {
+            const select = document.getElementById("regular_vendor_id");
+            const selected = select.options[select.selectedIndex];
+            document.getElementById("vendor_shop").value = selected.dataset.shop || '';
+            document.getElementById("vendor_address").value = selected.dataset.address || '';
+            document.getElementById("vendor_phone").value = selected.dataset.phone || '';
+        }
+
+        document.getElementById("part_qty").addEventListener("input", calculateTotal);
+        document.getElementById("price_per_unit").addEventListener("input", calculateTotal);
+
+        function calculateTotal() {
+            let qty = parseFloat(document.getElementById("part_qty").value) || 0;
+            let unitPrice = parseFloat(document.getElementById("price_per_unit").value) || 0;
+            document.getElementById("total_price").value = (qty * unitPrice).toFixed(2);
+        }
+    </script>
+
+
+
 </body>
 
 </html>

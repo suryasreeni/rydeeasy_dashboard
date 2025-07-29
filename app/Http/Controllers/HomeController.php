@@ -61,18 +61,7 @@ class HomeController extends Controller
                 'overdue' => Vehicle::whereNotNull('fitness_certificate_end_date')
                     ->whereDate('fitness_certificate_end_date', '<', $today)->count(),
             ],
-            'explosive' => [
-                'due_soon' => Vehicle::whereNotNull('explosive_certificate_end_date')
-                    ->whereBetween('explosive_certificate_end_date', [$today, $sevenDaysFromNow])->count(),
-                'overdue' => Vehicle::whereNotNull('explosive_certificate_end_date')
-                    ->whereDate('explosive_certificate_end_date', '<', $today)->count(),
-            ],
-            'environmental' => [
-                'due_soon' => Vehicle::whereNotNull('enviornment_tax_end_date')
-                    ->whereBetween('enviornment_tax_end_date', [$today, $sevenDaysFromNow])->count(),
-                'overdue' => Vehicle::whereNotNull('enviornment_tax_end_date')
-                    ->whereDate('enviornment_tax_end_date', '<', $today)->count(),
-            ],
+
         ];
 
 
@@ -242,45 +231,7 @@ class HomeController extends Controller
 
     }
 
-    public function ExplosiveList()
-    {
-        $today = now()->toDateString();
-        $oneWeekFromNow = now()->addWeek()->toDateString();
 
-        $explosiveList = Vehicle::select(
-            'id',
-            'vehicle_name',
-            'vin',
-            'explosive_certificate_start_date',
-            'explosive_certificate_end_date'
-        )
-            ->whereNotNull('explosive_certificate_end_date')
-            ->orderBy('explosive_certificate_end_date', 'asc')
-            ->get();
-
-        return view('reminderList.explosivelist', compact('explosiveList'));
-
-    }
-
-    public function EnviornmentalList()
-    {
-        $today = now()->toDateString();
-        $oneWeekFromNow = now()->addWeek()->toDateString();
-
-        $enviornmentalList = Vehicle::select(
-            'id',
-            'vehicle_name',
-            'vin',
-            'enviornment_tax_start_date',
-            'enviornment_tax_end_date'
-        )
-            ->whereNotNull('enviornment_tax_end_date')
-            ->orderBy('enviornment_tax_end_date', 'asc')
-            ->get();
-
-        return view('reminderList.enviornmentallist', compact('enviornmentalList'));
-
-    }
 
 
 

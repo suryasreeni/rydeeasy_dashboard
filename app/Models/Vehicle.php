@@ -43,10 +43,6 @@ class Vehicle extends Model
         'national_permit_end_date',
         'fitness_certificate_start_date',
         'fitness_certificate_end_date',
-        'explosive_certificate_start_date',
-        'explosive_certificate_end_date',
-        'enviornment_tax_start_date',
-        'enviornment_tax_end_date',
         'vehicle_image'
 
 

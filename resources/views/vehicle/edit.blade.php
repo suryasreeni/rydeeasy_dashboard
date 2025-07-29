@@ -273,27 +273,7 @@
                                 <input type="date" id="fitness_certificate_end_date" name="fitness_certificate_end_date"
                                     class="form-control" value="{{ $vehicle->fitness_certificate_end_date }}">
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="explosive_certificate_start_date">Explosive Certificate Start Date</label>
-                                <input type="date" id="explosive_certificate_start_date"
-                                    name="explosive_certificate_start_date" class="form-control"
-                                    value="{{ $vehicle->explosive_certificate_start_date }}">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="explosive_certificate_end_date">Explosive Certificate End Date</label>
-                                <input type="date" id="explosive_certificate_end_date" name="explosive_certificate_end_date"
-                                    class="form-control" value="{{ $vehicle->explosive_certificate_end_date }}">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="enviornment_tax_start_date">Enviornmental Tax Start Date</label>
-                                <input type="date" id="enviornment_tax_start_date" name="enviornment_tax_start_date"
-                                    class="form-control" value="{{ $vehicle->enviornment_tax_start_date }}">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="enviornment_tax_end_date">Enviornment Tax End Date</label>
-                                <input type="date" id="enviornment_tax_end_date" name="enviornment_tax_end_date"
-                                    class="form-control" value="{{ $vehicle->enviornment_tax_end_date }}">
-                            </div>
+
 
 
                         </div>

@@ -370,23 +370,7 @@
                     <div class="data-value">{{ $vehicle->fitness_certificate_end_date }}</div>
                 </div>
 
-                <div class="data-item">
-                    <div class="data-label">Explosive Certificate Start</div>
-                    <div class="data-value">{{ $vehicle->explosive_certificate_start_date }}</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">Explosive Certificate End</div>
-                    <div class="data-value">{{ $vehicle->explosive_certificate_end_date }}</div>
-                </div>
 
-                <div class="data-item">
-                    <div class="data-label">Environment Tax Start</div>
-                    <div class="data-value">{{ $vehicle->enviornment_tax_start_date }}</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">Environment Tax End</div>
-                    <div class="data-value">{{ $vehicle->enviornment_tax_end_date }}</div>
-                </div>
             </div>
         </div>
 

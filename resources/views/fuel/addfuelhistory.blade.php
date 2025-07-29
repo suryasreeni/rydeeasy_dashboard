@@ -132,7 +132,8 @@
                                 </div>
 
                                 <!-- Add New Place Form -->
-                                <form class="form-add-new-user form-style-2" action="" method="POST">
+                                <form class="form-add-new-user form-style-2" action="{{ route('store.fuelhistory') }}"
+                                    method="POST" enctype="multipart/form-data">
                                     @csrf
 
                                     <div class="wg-box">
@@ -149,15 +150,28 @@
                                                 <fieldset class="mb-24" style="flex: 1;">
                                                     <div class="body-title mb-10">Select Vehicle</div>
                                                     <select id="fuel_vehicle" name="fuel_vehicle">
-                                                        <option>
-
-                                                        </option>
+                                                        <option value="">Select Vehicle</option>
+                                                        @foreach ($vehicles as $vehicle)
+                                                            <option value="{{ $vehicle->vin }}"
+                                                                data-vehicle_name="{{ $vehicle->vehicle_name }}"
+                                                                data-fuel_type="{{ $vehicle->fueltype }}">
+                                                                {{ $vehicle->vin }}
+                                                            </option>
+                                                        @endforeach
                                                     </select>
                                                 </fieldset>
+
+                                                <fieldset class="mb-24" style="flex: 1;">
+                                                    <div class="body-title mb-10">Vehicle name</div>
+                                                    <input type="text" id="fuel_vehicle_name" name="fuel_vehicle_name"
+                                                        readonly>
+                                                </fieldset>
+
                                                 <fieldset class="mb-24" style="flex: 1;">
                                                     <div class="body-title mb-10">Fuel Type</div>
-                                                    <input type="text" id="fuel_type" name="fuel_type">
+                                                    <input type="text" id="fuel_type" name="fuel_type" readonly>
                                                 </fieldset>
+
 
                                             </div>
                                             <div style="display: flex; gap: 20px; align-items: center;">
@@ -167,17 +181,19 @@
                                                 </fieldset>
                                                 <fieldset class="mb-24" style="flex: 1;">
                                                     <div class="body-title mb-10">Per Liter Price</div>
-                                                    <input type="number" id="per_ltr_price" name="per_ltr_price">
+                                                    <input type="number" id="per_ltr_price" name="per_ltr_price"
+                                                        step="0.01" min="0">
                                                 </fieldset>
+
                                                 <fieldset class="mb-24" style="flex: 1;">
                                                     <div class="body-title mb-10">Qty in Ltr</div>
-                                                    <input type="number" id="qty_in_ltr" name="qty_in_ltr">
+                                                    <input type="number" id="qty_in_ltr" name="qty_in_ltr" min="0">
                                                 </fieldset>
                                             </div>
                                             <div style="display: flex; gap: 20px; align-items: center;">
                                                 <fieldset class="mb-24" style="flex: 1;">
                                                     <div class="body-title mb-10">Total Amount</div>
-                                                    <input type="number" id="total_amount" name="total_amount">
+                                                    <input type="number" id="total_amount" name="total_amount" readonly>
                                                 </fieldset>
                                                 <fieldset class="mb-24" style="flex: 1;">
                                                     <div class="body-title mb-10">Odometer</div>
@@ -190,19 +206,13 @@
                                             </div>
                                             <div style="display: flex; gap: 20px; align-items: center;">
                                                 <fieldset class="md-6" style="flex: 1;">
-                                                    <div class="body-title">Document</div>
-                                                    <div class="upload-container">
-                                                        <label class="upload-btn" for="documentFile">
-                                                            Pick File
-                                                        </label>
-                                                        <div class="drop-area">Or drop file here</div>
-                                                        <input type="file" id="documentFile" name="documentFile" hidden>
-                                                    </div>
-                                                    <div class="file-status" id="documentStatus">No file selected</div>
+                                                    <div class="body-title mb-10">Invoice / Bill Photo</div>
+
+                                                    <input type="file" id="invoice_photo" name="invoice_photo">
+
                                                 </fieldset>
-
-
                                             </div>
+
 
 
                                         </div>
@@ -229,24 +239,29 @@
     @include('home.bottomlinks')
 
     <!-- Leaflet.js for Map -->
+    <script>
+        document.getElementById('fuel_vehicle').addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+
+            const vehicleName = selectedOption.getAttribute('data-vehicle_name') || '';
+            const fuelType = selectedOption.getAttribute('data-fuel_type') || '';
+
+            document.getElementById('fuel_vehicle_name').value = vehicleName;
+            document.getElementById('fuel_type').value = fuelType;
+        });
+    </script>
 
 
     <script>
-        function handleFileChange(inputId, statusId) {
-            const input = document.getElementById(inputId);
-            const status = document.getElementById(statusId);
-
-            input.addEventListener('change', function () {
-                if (input.files.length > 0) {
-                    status.textContent = input.files[0].name;
-                } else {
-                    status.textContent = "No file selected";
-                }
-            });
+        function calculateTotalAmount() {
+            const price = parseFloat(document.getElementById('per_ltr_price').value) || 0;
+            const qty = parseFloat(document.getElementById('qty_in_ltr').value) || 0;
+            const total = (price * qty).toFixed(2);
+            document.getElementById('total_amount').value = total;
         }
 
-        handleFileChange("photoFile", "photoStatus");
-        handleFileChange("documentFile", "documentStatus");
+        document.getElementById('per_ltr_price').addEventListener('input', calculateTotalAmount);
+        document.getElementById('qty_in_ltr').addEventListener('input', calculateTotalAmount);
     </script>
 </body>
 

@@ -10,6 +10,10 @@ use App\Models\RenewalType;
 use App\Models\VehicleBrand;
 use App\Models\VehicleModel;
 use App\Models\Location;
+use App\Models\PartCategory;
+use App\Models\MeasurementUnit;
+
+
 
 
 
@@ -31,8 +35,12 @@ class SettingController extends Controller
         $vehicle_model = VehicleModel::with('brand')->get();
         $renewaltypes = RenewalType::all();
         $fueltypes = Fuel_Type::all();
+        $partcategories = PartCategory::all();
+        $measurements = MeasurementUnit::all();
 
-        return view('setting.setting', compact('statuses', 'types', 'servicetasks', 'renewaltypes', 'vehicle_brand', 'vehicle_model', 'fueltypes'));
+
+
+        return view('setting.setting', compact('statuses', 'types', 'servicetasks', 'renewaltypes', 'vehicle_brand', 'vehicle_model', 'fueltypes', 'partcategories', 'measurements'));
     }
     public function storestatus(Request $request)
     {
@@ -258,5 +266,49 @@ class SettingController extends Controller
         return redirect()->to(route('setting.setting') . '#location')
             ->with('success', 'Fuel Location successfully.');
     }
+
+    public function StorePartCategory(Request $request)
+    {
+        $request->validate([
+            'part_category_name' => 'required|string|max:255',
+        ]);
+
+        PartCategory::create([
+            'part_category_name' => $request->part_category_name,
+        ]);
+
+        return redirect()->to(route('setting.setting') . '#part_categories')
+            ->with('success', 'Part category added successfully.');
+    }
+    public function DeletePartCategory($id)
+    {
+        $category = PartCategory::findOrFail($id);
+        $category->delete();
+
+        return redirect()->to(route('setting.setting') . '#part_categories')
+            ->with('success', 'Part category deleted successfully.');
+    }
+    public function StoreMeasurement(Request $request)
+    {
+        $request->validate([
+            'measurement_unit_name' => 'required|string|max:255',
+        ]);
+
+        MeasurementUnit::create([
+            'measurement_unit_name' => $request->measurement_unit_name,
+        ]);
+
+        return redirect()->to(route('setting.setting') . '#Measurement_units')
+            ->with('success', 'Part Measurement Unit added successfully.');
+    }
+    public function DeleteMeasurement($id)
+    {
+        $measurement = MeasurementUnit::findOrFail($id);
+        $measurement->delete();
+
+        return redirect()->to(route('setting.setting') . '#Measurement_units')
+            ->with('success', 'Part Measurement Unit deleted successfully.');
+    }
+
 
 }
